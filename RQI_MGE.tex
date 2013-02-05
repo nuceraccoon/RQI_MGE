@@ -26,15 +26,9 @@
 % The float package HAS to load before hyperref
 \usepackage{float} % for psuedocode formatting
 \usepackage{xspace}
-
-% from Denovo Methods Manual
 \usepackage{mathrsfs}
-
 \usepackage[pdftex]{hyperref}
-% define a style for pseudocode. This must load AFTER hyperref.
-\floatstyle{ruled}
-\newfloat{algorithm}{h}{lop}
-\floatname{algorithm}{Algorithm}
+
 
 
 %%---------------------------------------------------------------------------%%
@@ -147,6 +141,288 @@
 \section{Introduction}
 
 Introduction
+
+%%---------------------------------------------------------------------------%%
+\section{Past Work}
+This section is a high-level summary of past work in the field and a brief summary of results from the MGE Preconditioner used with fixed source problems or PI, and from unpreconditioned RQI.
+
+\subsection{MGE Preconditioner}
+(JCP MGE paper)
+\begin{enumerate}
+ \item established r, v, w choice guidance w/ small fixed source problem
+ \item demonstrated that using a reduced angle set inside the preconditioner is very valuable with FeC cube
+ \item FeC problem used to show very good energy scaling behavior when full grid-depth is chosen 
+ \item FeC problem also used to who that using a reduced grid depth is just as beneficial as full grid depth (likely makes energy scaling less impressive)
+ \item 3D C5G7 benchmark with PI showed MGE greatly reduced iteration count, but not computation time
+ \item full PWR also showed fewer iterations, but preconditioned PI took way longer than unpreconditioned PI
+\end{enumerate}
+
+\subsection{Unpreconditioned RQI}
+(Physor Paper)
+\begin{enumerate}
+ \item RQI works as well as PI from a time and iteration count perspective for very simple problems
+ \item With an itermediately sized problem RQI got close to the correct $k$, but failed to converge
+ \item RQI did not converge at all on 2D and 3D C5G7 benchmarks: demonstrated need for preconditioning
+\end{enumerate}
+
+%%---------------------------------------------------------------------------%%
+\section{Results}
+%Introductory sentence about studying whether RQI is possible when used with MGE. The preconditioning parameters are the Richardson iteration weight, $w_{k}$, the number of V-cycles per preconditioner application, and the number of relaxations per level. 
+
+%The syntax used throughout this section will be that $w\#$ is the weight, $r\#$ is the number of relaxations per level, and $v\#$ is the number of V-cycles, e.g.\ $w1r1v1$ is one relaxation per level, one V-cycle, and a weight of 1. Using more preconditioning means using larger values of $w$ and/or $r$ and/or $v$. Other issues investigated are changing the depth of the V-cycle, using a different quadrature set inside the preconditioner than in the rest of the problem, and strong scaling. 
+
+%The goal of using the preconditioner is to improve convergence behavior of the multigroup Krylov solves. The best metric for measuring this is the total number of multigroup Krylov iterations used in a calculation because it is the most consistent and fair measure. The number of eigenvalue iterations is also compared for the eigenvalue tests. This is a point of interest rather than a measure of goal attainment. The total number of Krylov iterations is the best proxy for convergence behavior as it encompasses the work that is done within each eigenvalue iteration.  
+
+%Timing comparisons should be considered heuristically unless otherwise specified. In cases where the calculations were done on a single core, the machine was not dedicated to these calculations and times could vary if the same calculations were repeated. Some problems use an optimized version of the code and others use a debug version. These should give the same iteration count, but not necessarily the same relative times between problems. Further, little effort has been made to optimize the preconditioner for speed. Once the multigrid in energy preconditioner has been optimized for efficiency, the preconditioned times should decrease. How much improvement can be gained is a matter for future study. 
+
+%Unless otherwise noted, all test problems used a step characteristic spatial solver, level-symmetric angular quadrature, and the grid depth was determined using the default approach, Equation~\eqref{eq:NumGrids} or Equation~\eqref{eq:multisetGrids}. The Krylov solver was GMRES, which is set to limit the number of multigroup iterations to 1,000 if the problem does not converge earlier. The convergence tolerances are noted for each problem. The tolerance for the multigroup solve is the convergence tolerance used by GMRES in Trilinos \cite{1089021}. The eigenvalue tolerance is used by PI to determine if the eigenvalue has converged. In Denovo, PI also checks the L2-norm and the infinity-norm of the difference in the fission source between iterations. The default L2-norm tolerance is 1.0 and infinity-norm tolerance is 0.01.
+
+\subsection{RQI+MGE Results from Thesis}
+\subsubsection{Parameter and Shifted precond Investigation}
+** Can probably leave this out, or leave out shifted data (maybe discuss in a paragraph why it's a bad idea and state studies showed this) **\\
+vacuum unshifted: base parameter guidance\\
+vacuum shifted: fewer iterations, sometimes incorrect answer\\
+reflecting unshifted: more parameter guidance, a bit different from vacuum
+reflecting shifted: bad news
+
+\subsubsection{Intermediate problem}
+RQI kinda choked on this without preconditioning, but behaved really really poorly with preconditioning. This was the one with negative fluxes and complete crazy behavior that we never explained. Worked fine with MGE+PI. Worked worse with BiCGSTAB instead of GMRES. 
+
+\begin{table}[!h]
+\caption{Infinite Medium Eigenvalue Problem, Preconditioning Results with Rayleigh Quotient Iteration}
+\begin{center}
+\begin{tabular}{| c | c | c | c | l | c | c | c | c |}
+\hline
+$w$ & $r$ & $v$ & $k$ & Krylov & RQI & Max Rel Diff & RMS Err & Rel Time$^{+}$ \\[0.5ex]
+\hline
+0    & 0 & 0 & 0.3970 & 39,025              & 40$^{*}$  & n/a & n/a & 211.03 \\%$5.43 \times 10^{4}$ \\
+1    & 1 & 1 & 0.3982 & 3,014$^{\dag}$ & 4 & $1.67 \times 10^{-1}$ & $3.32 \times 10^{-2}$ & 103.56 \\%$2.66 \times 10^{4}$ \\
+1    & 3 & 1 & 0.3983 & 50                     & 3 & 0.0 & 0.0 & 40.19 \\ %$1.03 \times 10^{4}$ \\
+1    & 4 & 1 & 0.3983 & 44$^{\dag}$      & 3 & 0.0 & 0.0 & 4.51 \\ %$1.16 \times 10^{3}$ \\
+1    & 2 & 2 & 0.3983 & 44$^{\dag}$      & 3 & 0.0 & 0.0 & 1.11 \\ %$2.86 \times 10^{2}$ \\
+1    & 4 & 4 & 0.4001 & 16                     & 3 & $1.67 \times 10^{-1}$ & $3.21 \times 10^{-2}$ & 7.73 \\ %$1.99 \times 10^{3}$ \\
+1    & 5 & 4 & 0.4001 & 14$^{\dag}$     & 3 & $1.67 \times 10^{-1}$ & $3.21 \times 10^{-2}$ & 8.81 \\ %$2.27 \times 10^{2}$ \\
+1.4 & 5 & 4 & -0.4711 & 12$^{\dag}$    & 2 & $1.67 \times 10^{-1}$ & $3.21 \times 10^{-2}$ & 6.77 \\ %$1.74 \times 10^{3}$ \\
+1    & 5 & 5 & -0.4575 & 7$^{\dag}$      & 2 & $3.43 \times 10^{-6}$ & $3.67 \times 10^{-5}$ & 6.13 \\ %$1.58 \times 10^{3}$ \\
+\hline
+1.1 & 4 & 1 & 0.3983 & 43$^{\dag}$      & 3 & 0.0 & 0.0 & 4.51 \\ %$1.16 \times 10^{3}$ \\
+1.1 & 1 & 4 & 0.3983 & 43$^{\dag}$      & 3 & 0.0 & 0.0 & 5.24 \\ %$1.35 \times 10^{3}$ \\
+1.1 & 2 & 2 & 0.3983 & 43$^{\dag}$      & 3 & 0.0 & 0.0 & 4.57 \\ %$1.18 \times 10^{3}$ \\
+\hline
+0.7 & 1 & 1 & 0.3999 & 3,001$^{\dag}$ & 4 & 1.0 & $3.72 \times 10^{-1}$ & 87.34 \\ %$2.25 \times 10^{4}$ \\
+0.7 & 3 & 1 & 0.4001 & 87$^{\dag}$      & 5 & 0.0 & 0.0 & 7.60 \\ %$1.95 \times 10^{3}$ \\
+0.7 & 3 & 3 & 0.4001 & 47$^{\dag}$      & 5 & 0.0 & 0.0 & 11.34 \\ %$2.92 \times 10^{3}$ \\
+0.4 & 3 & 1 & 0.4001 & 1,052$^{\dag}$ & 4 & $1.18 \times 10^{-5}$ & $8.43 \times 10^{-8}$      & 67.57 \\ %$1.74 \times 10^{4}$ \\
+\hline 
+\end{tabular}\\
+$^{+}$compared to unpreconditioned PI, $2.57 \times 10^{2}$ seconds\\
+$^{*}$terminated manually\\
+$^{\dag}$negative flux
+\end{center}
+\label{table:impi RQI}
+\end{table}
+%
+The preconditioned results are shown in Table~\ref{table:impi RQI}. In the table ``Max Rel Diff'' is the maximum over all cells and all groups of the relative difference between the reference flux and the absolute value of the computed flux, $\max[ (\phi_{ref} - \vert\phi_{calc}\vert) / \phi_{ref}]$. ``RMS Err'' is the root mean squared (rms) relative error, $\sqrt{ \sum_{1}^{N}(rel\_err)^{2} / N}$. As a reminder, the total and upscattering tolerances were $1 \times 10^{-4}$, and the $k$ tolerance was $1 \times 10^{-5}$. Recall that if the Krylov iteration count is in the thousands it means the eigenvector did not converge in every iteration. The ``Rel Time'' column is the ratio of the found time to the unpreconditioned PI time of $2.57 \times 10^{-2}$ seconds.
+
+** Should we leave this out?\\
+** Should we try to understand this better?\\
+** Is it unethical to leave out this data?\\
+
+\subsubsection{2D C5G7}
+%Next, the preconditioner was applied to the 2-D C5G7 benchmark using both PI and RQI with the goals of seeing if preconditioned RQI could converge the flux and $k$, to investigate the effect of preconditioning in both RQI and PI, and to see whether the lessons learned about preconditioning parameters still hold in a real problem. The calculation used 16 cores on the small orthanc cluster at Oak Ridge: 4 $x$-blocks, 4 $y$-blocks, 1 $z$-block and 1 energy set. The total and upscattering tolerances were $1 \times 10^{-3}$, with a $k$ tolerance of $1 \times 10^{-5}$. An optimized version of Denovo was used.  
+
+A weight variation study was done with power iteration first. The results using $r1v1$ are plotted as Krylov Iterations vs.\ Weight, and Time in seconds vs.\ Weight in Figure~\ref{fig:2-Dc5g7PI}. The data that is plotted can be found in Appendix~\ref{sec:AppendixD}, Table~\ref{table:2-D c5g7}. All calculated $k$s were within the uncertainty of the benchmark and so are not reported. All preconditioned cases needed 31 power iterations while the unpreconditioned case took 32.
+%
+\begin{figure}[!ht]
+    \begin{center}
+      \includegraphics [width=0.7\textwidth, height=0.7\textheight] {2Dc5g7PI}
+   \end{center}
+   \caption{2-D C5G7 Benchmark, Preconditioner Weight Variation with Power Iteration}
+   \label{fig:2-Dc5g7PI}
+\end{figure}
+
+%This study shows the preconditioner is very effective at reducing the number of Krylov iterations used by power iteration. The unpreconditioned case, corresponding to a weight of 0 on the plot, took 3,129 MG Krylov iterations. As the weight was increased from 1 to 1.4, the number of Krylov iterations and the time to solution both decreased. With $w1.4$, 1,458 MG Krylovs were taken. The time and iteration count both went back up with a weight of 1.5. When the weight was increased beyond 1.5 none of the multigroup iterations converged, and the problem was terminated manually after several power iterations. 
+
+Two other calculations with a higher level of preconditioning were also done. When the parameters were $w1.4r2v2$ the number of Krylov iterations were reduced to 438 and the calculation took $1.77 \times 10^{4}$ seconds, both lower than all the cases using $r1v1$. For $w1r3v3$, 253 Krylov iterations and $2.28 \times 10^{4}$ seconds were required. This had the smallest number of Krylov iterations, but a slightly longer time than all the calculations except $w1.5r1v1$.	
+
+%The results from the RQI study are in Table~\ref{table:2-D c5g7 rqi}. In all cases, except the unpreconditioned one, $k$ was within the uncertainty of the benchmark value. The ``$<$ 1,000?'' column indicates whether or not the multigroup iterations converged during the RQI process. If the value is ``no'' that means the eigenvector only converged during the first iteration. A number indicates the last eigenvalue iteration for which the Krylov method took less than 1,000 iterations. All subsequent iterations required the full 1,000. A ``yes'' means all of the Krylov iterations converged. The relative time is the ratio of the case of interest to the unpreconditioned PI time of $8.54 \times 10^{3}$ seconds.
+%
+\begin{table}[!h]
+\caption{2-D C5G7 Benchmark, Convergence Study with Rayleigh Quotient Iteration}
+\begin{center}
+\begin{tabular}{| c | c | c | l | c | c | c |}
+\hline
+Weight & Relaxations & V-cycles & Krylov & RQI & $<$ 1,000? & Rel Time$^{\dag}$\\[0.5ex]
+\hline
+0    & 0 & 0 & 119,006 & 120$^{*}$ & no & 10.98 \\%$9.38 \times 10^{4}$ \\
+1    & 1 & 1 & 16,007   & 17            & no & 23.65 \\ %$2.02 \times 10^{5}$ \\
+1.2 & 1 & 1 & 40,008   & 41$^{*}$   & no & 13.00 \\ %$2.06 \times 10^{5}$ \\
+1    & 3 & 1 & n/a         & n/a$^{*}$  & 7   & n/a \\
+1    & 2 & 2 & 11,158   & 19            & alternated & 46.72 \\ %$3.99 \times 10^{5}$ \\
+1    & 3 & 2 & 3,320     & 19            & 14 &19.23 \\ % $1.64 \times 10^{5}$ \\
+\hline
+1    & 3 & 3 & 299        & 19            & yes & 3.01 \\ %$2.57 \times 10^{4}$ \\
+1.1 & 3 & 3 & 281        & 19            & yes & 2.80 \\ %$2.40 \times 10^{4}$ \\
+1.3 & 3 & 3 & 254        & 19            & yes & 2.57 \\ %$2.19 \times 10^{4}$ \\
+1.5 & 3 & 3 & n/a         & n/a$^{*}$ & no & n/a \\
+\hline 
+\end{tabular} \\
+$^{\dag}$compared to unpreconditioned PI, $8.54 \times 10^{3}$ seconds\\
+$^{*}$terminated manually
+\end{center}
+\label{table:2-D c5g7 rqi}
+\end{table}
+%
+
+%These results show a few important things. Most significantly, with enough preconditioning the multigroup iterations within RQI can be converged and the right eigenpair can be found. For the first three $w\#r3v3$ cases all of the Krylov iterations converged. In these cases the calculation time decreased by an order of magnitude compared to the ones where they did not converge every time because so many fewer eigenvalue iterations were needed. This test case was the first to demonstrate that the preconditioner can get RQI to converge. 
+
+%For many of the calculations the eigenvector did not converge or did not converge all the time, but the correct eigenvalue was still found (even in the $w1.2r1v1$ case that was terminated manually). As the preconditioning increased, the eigenvector came closer to converging for all iterations. When the Krylov iterations converged, increasing the weight decreased iteration count and wall time for small weights. As in other tests, too much weight caused the calculation not to converge at all. 
+
+%Additionally, it seems that preconditioning held RQI on track enough to get the right eigenvalue when the eigenvector did not quite converge. As was hypothesized for the unpreconditioned infinite medium test, it may be that the eigenvector was close enough to correct that a good approximation to the eigenvalue could still be made from it, even though the vector itself did not converge. 
+
+Only the $w1r3v3$ calculation overlaped between RQI and PI. PI took fewer Krylov iterations, 253 compared to 299, and less time, $2.28 \times 10^{4}$ compared to $2.57 \times 10^{4}$ seconds. For this test preconditioned RQI did not perform as well as preconditioned PI, though the times and iteration counts were close to one another. 
+
+%From the standpoint of comparing eigenvalue solution methods, it is worth noting that RQI required 19 eigenvalue iterations while PI required 31. Both methods use eigenvectors from the inside multigroup solves to compute eigenvalues in the outer iterations. When given eigenvectors that have been converged to the same tolerance, RQI needed fewer eigenvalue iterations than PI. In this case it took more Krylov iterations within each multigroup solve to get the eigenvector to that tolerance, so RQI was not better in terms of total Krylov count.
+
+The RQI problem was also tried with BiCGSTAB as the Krylov solver for an unpreconditioned case and a $w1r3v3$ case. Every multigroup iteration went to the 1,000 iteration limit and the problem was terminated manually after several RQ iterations.
+
+\subsubsection{3D C5G7}
+%The preconditioner using both PI and RQI was also applied to the 3-D C5G7 benchmark with an optimized version of Denovo. The goals of this study were essentially the same as the 2-D study, except that this problem is larger, and the first to approach a real ``grand challenge'' type of calculation. The medium-sized oic cluster at Oak Ridge was used and each problem was given 720 cores with 40 $x$-blocks, 18 $y$-blocks, and 5 $z$-blocks. The total and upscattering tolerances were $1 \times 10^{-4}$, with a $k$ tolerance of $1 \times 10^{-5}$ unless otherwise indicated. The wall time limit was 12 hours. 
+
+%The power iteration results are in Table~\ref{table:3-D c5g7}. The relative time is compared to unpreconditioned PI, $4.46 \times 10^{3}$ seconds. The unpreconditioned power iteration calculation computed a $k$ that was not within the uncertainty bounds of the reported benchmark; it was low by about 0.011. All preconditioned PI and RQI tests computed a $k$ that was within the Denovo $k$ tolerance of the unpreconditioned PI result so they are not reported here. Subsequent to these calculations it was determined that using a more accurate quadrature gives the correct $k$. 
+%
+%\begin{table}[!h]
+%\caption{3-D C5G7 Benchmark, Preconditioning Parameter Scoping with Power Iteration}
+%\begin{center}
+%\begin{tabular}{| c | c | c | c | l | c |}
+%\hline
+%Weight & Relaxations & V-cycles & Krylov & PI & Rel Time$^{\dag}$ \\[0.5ex]
+%\hline
+%0    & 0 & 0 & 1,224 & 32 & 1.00 \\ %$4.46 \times 10^{3}$ \\
+%1    & 1 & 1 & 708    & 32 & 5.90 \\ %$2.12 \times 10^{4}$ \\
+%1.2 & 1 & 2 & 448    & 32 & 5.33 \\ %$2.38 \times 10^{4}$ \\
+%1.2 & 2 & 1 & 448    & 32 & 5.37 \\ %$2.39 \times 10^{4}$ \\
+%1.3 & 2 & 2 & 288    & 32 & 6.37 \\ %$2.84 \times 10^{4}$ \\
+%1    & 3 & 3 & 126    & 14$^{*}$  & 9.05 \\ %$4.04 \times 10^{4}$ \\
+%1.5 & 3 & 3 & 192    & 32 & 8.36 \\ %$3.73 \times 10^{4}$ \\
+%1    & 4 & 4 & n/a     & n/a          & exceeded wall time \\
+%1    & 4 & 4 & n/a     & n/a$^{*}$ & exceeded wall time \\
+%1.5 & 5 & 5 & n/a     & n/a          & exceeded wall time \\
+%\hline 
+%\end{tabular}\\
+%$^{\dag}$compared to unpreconditioned PI, $4.46 \times 10^{3}$ seconds\\
+%$^{*}$tol and upscatter tol = $1 \times 10^{-5}$, $k$ tol = $1 \times 10^{-3}$
+%\end{center}
+%\label{table:3-D c5g7}
+%\end{table}
+
+%The 3-D benchmark study shows the preconditioner with PI can reduce the number of required Krylov iterations substantially for challenging problems. The number of eigenvalue iterations for a given tolerance set were never changed by preconditioning. 
+
+%The effect of preconditioning parameters was consistent with what was observed in other test problems. However, using large values for $r$ and $v$ made the calculation take too long to get results. On the oic machine, if a calculation exceeds wall time there is no way to get any of the results from the scratch space. Therefore, no conclusions can be drawn from this problem about the effect of substantial preconditioning when using power iteration for a real, 3-D problem. 
+
+The RQI results are in Table~\ref{table:3-D c5g7 rqi}. The relative time is compared to unpreconditioned PI, $4.46 \times 10^{3}$ seconds. Many cases did not finish in time to report results. What is likely happening when the problems with lower parameter values run out of time is that the eigenvector is not converging. As was seen before, the calculations take a long time when every eigenvalue iteration uses 1,000 Krylov iterations. Unfortunately, there is no way to confirm this theory or find out if the eigenvalue is close to correct since the output cannot be obtained. 
+%
+\begin{table}[!h]
+\caption{3-D C5G7 Benchmark, Preconditioning Parameter Scoping with Rayleigh Quotient Iteration}
+\begin{center}
+\begin{tabular}{| c | c | c | c | l | c |}
+\hline
+Weight & Relaxations & V-cycles & Krylov & RQI & Rel Time$^{+}$ \\[0.5ex]
+\hline
+0    & 0 & 0 & n/a     & n/a          & exceeded wall time \\
+1    & 1 & 1 & n/a     & n/a          & exceeded wall time \\
+1.5 & 1 & 1 & n/a     & n/a          & exceeded wall time \\
+1.2 & 2 & 1 & n/a     & n/a          & exceeded wall time \\
+1.3 & 2 & 2 & 302    & 19           & 5.20 \\ %$2.32 \times 10^{4}$ \\
+1    & 3 & 3 & 103    & 9$^{*}$    & 6.67 \\ %$3.02 \times 10^{4}$ \\
+1    & 3 & 3 & 164    & 15$^{\dag}$ & 7.59 \\ %$3.38 \times 10^{4}$ \\
+1.5 & 3 & 3 & 187    & 19           & 7.26 \\ %$3.24 \times 10^{4}$ \\
+1    & 4 & 4 & n/a     & n/a          & exceeded wall time \\
+1    & 4 & 4 & 74     & 9$^{*}$    & 5.13 \\ %$2.29 \times 10^{4}$ \\
+1.5 & 5 & 5 & n/a     & n/a          & exceeded wall time \\
+\hline 
+\end{tabular}\\
+$^{+}$compared to unpreconditioned PI, $4.46 \times 10^{3}$ seconds\\
+$^{*}$tol and upscatter tol = $1 \times 10^{-5}$, $k$ tol = $1 \times 10^{-3}$\\
+$^{\dag}$tol and upscatter tol = $1 \times 10^{-4}$, $k$ tol = $5 \times 10^{-5}$
+\end{center}
+\label{table:3-D c5g7 rqi}
+\end{table}  
+
+With an intermediate amount of preconditioning, RQI converged and performed better than the analogous PI cases. There are three cases where both problems finish and the same tolerances were used: $w1.3r2v2$, $w1r3v3$, $w1.5r3v3$. These results are shown together in Table~\ref{table:PI RQI} for ease of comparison. This table displays time instead of relative time since the comparison is between two cases rather than across all cases. In all three the RQI calculations took less time and fewer eigenvalue iterations than PI. In the second two they also took fewer Krylov iterations. RQI even finished in time to get results from the $w1r4v4$ calculation when PI did not. 
+%
+\begin{table}[!h]
+\caption{3-D C5G7 Benchmark, Rayleigh Quotient Iteration and Power Iteration Comparison}
+\begin{center}
+\begin{tabular}{| c | c | c | c | c | c | c |}
+\hline
+Sovler & Weight & Relaxations & V-cycles & Krylov & Eigenvalue & Time (s) \\[0.5ex]
+\hline
+RQI & 1.3 & 2 & 2 & 302    & 19           & $2.32 \times 10^{4}$ \\
+PI    & 1.3 & 2 & 2 & 288    & 32           & $2.84 \times 10^{4}$ \\
+RQI & 1    & 3 & 3 & 103    & 9$^{*}$   & $3.02 \times 10^{4}$ \\
+PI    & 1    & 3 & 3 & 126    & 14$^{*}$ & $4.04 \times 10^{4}$ \\
+RQI & 1.5 & 3 & 3 & 187    & 19           & $3.24 \times 10^{4}$ \\
+PI    & 1.5 & 3 & 3 & 192    & 32           & $3.73 \times 10^{4}$ \\
+\hline 
+\end{tabular}\\
+$^{*}$tol and upscatter tol = $1 \times 10^{-5}$, $k$ tol = $1 \times 10^{-3}$
+\end{center}
+\label{table:PI RQI}
+\end{table}  
+
+%The 3-D benchmark problem shows that for at least some problems, preconditioned RQI converges more quickly in all senses than preconditioned PI. It is pertinent that this is true is the most interesting problem shown so far. It seems, however, that RQI can only be useful if it is preconditioned enough to get the eigenvector to converge. 
+
+%These results continue to confirm that a small amount of weight works well for real problems. Increasing $r$ and $v$ decrease iteration count, but at what can be a high time penalty. An intermediate amount of preconditioning will likely provide the best balance of reduced iteration count for the time invested once the preconditioner is optimized. 
+
+** Could do more of these with better w,r,v choices to have more overlap between RQI and POI; use reduced angle set; not much grid depth to reduce, but could try anyway **
+
+\subsection{PWR 900 new results}
+Most cases: tolerance = 1e-3, L2 tolerance = 1e-3, k tolerance = 1e-3. 578 x 578 x 700 cells (233,858,800 cells), 112 x 112 x 10 partitions (12,544 blocks). $S_{12}$, P0, 44 groups. 1.73 trillion unknowns. k0 = 1. Depth of V-cycle = 2, \SN  in MGE = $S_2$
+\begin{table}[h]
+  \caption{
+    PWR-900 Comparison of PI and RQI with and without preconditioning on 11 energy sets
+  }
+  \label{tab:PWR all}
+  \begin{center}
+    \begin{tabular}{ccccccc}\hline\hline
+      Method & Precond & N Eigen & N Krylov & k & time (m) \\\hline
+      %%
+      RQI & w1r1v1 & 3   & 45   & 1.25201 $\pm$ 1.13e-2 & 120$^*$ \\
+      RQI & w1r2v2 & 5   & 70   & 1.26835 $\pm$ 9.75e-4 & 54.8 \\
+      PI  & none   & 149 & 5602 & 1.27553 $\pm$ 4.34e-6 & 612.2 \\
+      PI  & w1r2v2 & 86  & 946  & 1.27512 $\pm$ 1.43e-5 & 720$^*$ \\
+      \hline
+      PI  & none   & 24  & 901  & 1.27203 $\pm$ 1.01e-4 & 92.1$^\dagger$ \\
+      PI  & w1r2v2 & 28  & 312  & 1.27261 $\pm$ 8.24e-5 & 250.9$^\dagger$ \\
+      \hline\hline
+    \end{tabular}\\
+    $^{*}$did not converge within walltime limit\\
+    $^{\dagger}$tolerance = $1 \times 10^{-2}$, $k$ tolerance = $1 \times 10^{-2}$
+  \end{center}
+\end{table}
+
+\begin{table}[h]
+  \caption{
+    PWR-900 RQI strong scaling w1r2v2 preconditioning
+  }
+  \label{tab:PWR rqi strong scaling}
+  \begin{center}
+    \begin{tabular}{ccccccc}\hline\hline
+      Sets & N Eigen & N Krylov & time (m) & t$_{\text{perfect}}$ & Efficiency \\\hline
+      %%
+      1   & 5 & 70 & 407.8 & 407.8 & 1.000 \\
+      4   & 5 & 70 & 123.4 & 102.0 & 0.826\\
+      11  & 5 & 70 & 54.8  & 37.1  & 0.676\\
+      22  & 5 & 70 & 39.6  & 18.5  & 0.468\\
+      \hline\hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+With a lower tolerance also have: \\
+1) a strong scaling study \\
+2) one reduced angle set comparison
 
 %%---------------------------------------------------------------------------%%
 
