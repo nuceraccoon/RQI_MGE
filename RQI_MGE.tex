@@ -142,42 +142,41 @@
 \section{Introduction}
 \label{sec:intro}
 
+The MG Krylov solver makes it possible to use very large machines and fine energy structures. The addition of this solver is one of the key motivators for the MGE preconditioner because Krylov methods often need to be preconditioned to converge in a small number of iterations. A preconditioner that can scale well and handle many energy groups is essential for using the MG Krylov solver. 
+
 A multigrid in energy preconditioner (MGE) that uses a Krylov solver to do the multigroup transport solves has been added to the code Denovo \cite{Evans2010}. This preconditioner compliments the Rayleigh Quotient Iteration (RQI) eigenvalue solver, also available in Denovo. This paper discusses...
 
 %%---------------------------------------------------------------------------%%
 \section{Background}
 \label{sec:background}
-The eigenvalue form of the steady state Boltzmann transport equation is
-\begin{align}
-   [\hat{\Omega} \cdot \nabla + \Macro(\vec{r}, E)] &\psi(\vec{r}, \hat{\Omega}, E)  = \frac{\chi(E)}{k} \int_0^{\infty} dE' \:\nu \Macro_{f}(\vec{r}, E') \int_{4\pi} d\hat{\Omega'} \:\psi(\vec{r}, \hat{\Omega'}, E') \nonumber \\
-   &+ \int_0^{\infty} dE' \int_{4\pi} d\hat{\Omega'} \:\Macro_{s}(\vec{r}, E' \to E, \hat{\Omega'} \cdot \hat{\Omega}) \psi(\vec{r}, \hat{\Omega'}, E') \:,
-\label{eq:neutron transport}
-\end{align}
-%
-\noindent where the quantities are at location $\vec{r}$, at energy E, and are traveling in direction $\hat{\Omega}$. The angular neutron flux in neutrons per unit length squared per steradian is $\psi(\vec{r}, \hat{\Omega}, E)$, which expresses the location of the neutrons in phase space; $\Macro_{x}$ is the cross section that represents the likelihood of interaction $x$ (here $s$ is for scattering, $f$ is for fission, and no subscript indicates all interactions) in units of inverse length. Here $\chi(E)$ is the spectrum specifying the energy distribution of neutrons born from fission, $k$ is the asymptotic ratio of the number of neutrons in one
-generation to the number in the next, and $\nu$ is the average number of neutrons released per fission. In the fixed source case, the fisission term can be replaced by an external source, $q_{ex}$ \cite{Lewis1993}. 
+% The eigenvalue form of the steady state Boltzmann transport equation is
+% \begin{align}
+%    [\hat{\Omega} \cdot \nabla + \Macro(\vec{r}, E)] &\psi(\vec{r}, \hat{\Omega}, E)  = \frac{\chi(E)}{k} \int_0^{\infty} dE' \:\nu \Macro_{f}(\vec{r}, E') \int_{4\pi} d\hat{\Omega'} \:\psi(\vec{r}, \hat{\Omega'}, E') \nonumber \\
+%    &+ \int_0^{\infty} dE' \int_{4\pi} d\hat{\Omega'} \:\Macro_{s}(\vec{r}, E' \to E, \hat{\Omega'} \cdot \hat{\Omega}) \psi(\vec{r}, \hat{\Omega'}, E') \:,
+% \label{eq:neutron transport}
+% \end{align}
+% %
+% \noindent where the quantities are at location $\vec{r}$, at energy E, and are traveling in direction $\hat{\Omega}$. The angular neutron flux in neutrons per unit length squared per steradian is $\psi(\vec{r}, \hat{\Omega}, E)$, which expresses the location of the neutrons in phase space; $\Macro_{x}$ is the cross section that represents the likelihood of interaction $x$ (here $s$ is for scattering, $f$ is for fission, and no subscript indicates all interactions) in units of inverse length. Here $\chi(E)$ is the spectrum specifying the energy distribution of neutrons born from fission, $k$ is the asymptotic ratio of the number of neutrons in one
+% generation to the number in the next, and $\nu$ is the average number of neutrons released per fission. In the fixed source case, the fisission term can be replaced by an external source, $q_{ex}$ \cite{Lewis1993}. 
+% 
+% To numerically solve Equation~\eqref{eq:neutron transport} it is discretized in space, angle, and energy. This work uses the multigroup energy approximation, the scattering term is expanded in Legendre polynomials ($P_l$), and discrete ordinates (\Sn) are used to treat direction of neutron travel. There are many spatial differencing methods available, the discussion of which is beyond the scope of this document as the proposed work is not dependent upon the spatial discretization employed \cite{Evans2009d}. To ensure the new methods apply to the most general cases, it will be assumed that the matrices resulting from discretization are not necessarily symmetric. 
 
-To numerically solve Equation~\eqref{eq:neutron transport} it is discretized in space, angle, and energy. This work uses the multigroup energy approximation, the scattering term is expanded in Legendre polynomials ($P_l$), and discrete ordinates (\Sn) are used to treat direction of neutron travel. There are many spatial differencing methods available, the discussion of which is beyond the scope of this document as the proposed work is not dependent upon the spatial discretization employed \cite{Evans2009d}. To ensure the new methods apply to the most general cases, it will be assumed that the matrices resulting from discretization are not necessarily symmetric. 
-
-After all of the discretizations are performed, the multigroup \Sn equations can be written in operator form as
+%After all of the discretizations are performed, t
+The multigroup \Sn equations can be written in operator form as
 %
 \begin{alignat}{2}
   \ve{L}\psi &= \ve{MS}\phi + q \:, \qquad &\text{(fixed source)} \label{eq:fxdsource} \\
   \ve{L}\psi &= \ve{MS}\phi + \frac{1}{k}\ve{M}\chi f^{T}\phi \:. \qquad &\text{(eigenvalue)} \label{eq:eigenvalue}
 \end{alignat}
 %
-Here $\ve{L}$ is the first-order linear differential transport operator; $\ve{M}$ is the moment-to-discrete operator that projects the angular flux moments, $\phi$, onto discrete angles; $\ve{S}$ is the scattering matrix; $f$ contains the fission source, $\nu \Macro_{f}$; and $q$ is a source term. The angular flux moments are related to the angular flux through the discrete-to-moment operator: 
-\begin{equation}
- \phi = \mathbf{D} \psi \:. \label{eq:disc to mom}
-\end{equation}
-Using this relationship, Equations \eqref{eq:fxdsource} and \eqref{eq:eigenvalue} can be rearranged such that they are a function of only $\phi$. The formulation is aided by defining $\ve{T} = \ve{DL}^{-1}$ and $\ve{F} = \chi f^{T}$ \cite{Evans2011}:
+Here $\ve{L}$ is the first-order linear differential transport operator; $\ve{M}$ is the moment-to-discrete operator that projects the angular flux moments, $\phi$, onto discrete angles; $\ve{S}$ is the scattering matrix; $f$ contains the fission source, $\nu \Macro_{f}$; and $q$ is a source term. The angular flux moments are related to the angular flux through the discrete-to-moment operator: $\phi = \mathbf{D} \psi \:$. Using this relationship, Equations \eqref{eq:fxdsource} and \eqref{eq:eigenvalue} can be rearranged such that they are a function of only $\phi$. The formulation is aided by defining $\ve{T} = \ve{DL}^{-1}$ and $\ve{F} = \chi f^{T}$ \cite{Evans2011}:
 %
 \begin{alignat}{2}
   (\ve{I} - \ve{TMS})\phi &= q \:, \qquad &\text{(fixed source)} \label{eq:OperatorFxdForm} \\
   (\ve{I} - \ve{TMS})\phi &= \frac{1}{k} \ve{TMF} \phi \:. &\text{(eigenvalue)} \label{eq:OperatorEvalForm}
 \end{alignat}
 
-Once the matrices are multiplied together, a series of single ``within-group'' equations that are each only a function of space and angle result. If the groups are coupled together by neutrons scattering from a low energy group to a higher energy group, then iterative ``multigroup'' solves over the coupled portion of the energy range may be required. If the eigenvalue is desired, an additional ``eigenvalue'' solve is needed \cite{Evans2009}. Any of these solvers can be accelerated with preconditioning. 
+Once the matrices are multiplied together, a series of single ``within-group'' equations that are each only a function of space and angle result. If the groups are coupled together by neutrons scattering from a low energy group to a higher energy group, then iterative ``multigroup'' solves over the coupled portion of the energy range may be required. If the eigenvalue is desired, an additional ``eigenvalue'' solve is needed \cite{Evans2009}. 
 
 \subsection{Block Krylov Solver}
 \label{sec:blockkrylov}
@@ -192,7 +191,7 @@ The first term on the right includes downscattering contributions from higher en
 
 A recently-added multigroup (MG) Krylov solver removes the traditional \\``within-group'' / ``multigroup'' iteration structure. This allows the solver to handle upscattering efficiently, and enables parallelization in the energy dimension. The solver has been shown to successfully scale to hundreds of thousands of cores. For example, a fixed-source test scaled from 69,102 cores to 190,080 cores with 98\% efficiency \cite{Slaybaugh2011}. 
 
-The MG Krylov solver combines the space-angle and energy iterations to make one space-angle-energy iteration level. This allows the energy groups to be decomposed such that they can be solved in parallel. The space-angle-energy iterations are much like the within-group space-angle iterations, except that the iteration is over a block of groups instead of just one group. The block can include all groups or just upscattering groups, in which case the downscattering groups are treated in series as before. An added benefit of this solver is that Krylov methods generally converge more quickly than GS \cite{Trefethen1997}.
+The MG Krylov solver combines the space-angle and energy iterations to make one space-angle-energy iteration level. This allows the energy groups to be decomposed such that they can be solved in parallel. The space-angle-energy iterations are much like the within-group space-angle iterations, except that the iteration is over a block of groups instead of just one group. The block can include all groups or just upscattering groups, in which case the downscattering groups are treated in series as before. An added benefit of this solver is that Krylov methods generally converge more quickly than GS for problems with upscattering \cite{Trefethen1997}.
 
 The multigroup Krylov method applied to the upscattering block is shown here, where $\ve{S}_{\text{up\_block}}$ contains the upscattering groups and $\ve{S}_{\text{up\_source}}$ has the downscattering only groups:
 %
@@ -209,15 +208,16 @@ Trilinos \cite{1089021} provides Denovo's Krylov solver, with a choice of either
   \item return: $v \leftarrow v - z$.
 \end{enumerate}
 
-To implement the energy parallelization, the problem is divided into energy sets, with groups distributed evenly among sets. After each set performs its part of the matrix-vector multiply, a global reduce-plus-scatter is the only required inter-set communication. Since each set uses the entire spatial mesh with the same spatial decomposition, the established performance of spatial scaling does not change. The space-angle decomposition in Denovo comes from the KBA wavefront algorithm \cite{Baker1998}. Evans et al.\ \cite{Evans2009d} showed scaling in space is limited to about 20,000 cores with a 500 million cell spatial mesh. 
+To implement the energy parallelization, the problem is divided into energy sets, with groups distributed evenly among sets. After each set performs its part of the matrix-vector multiply, a global reduce-plus-scatter is the only required inter-set communication. Since each set uses the entire spatial mesh with the same spatial decomposition, the established performance of spatial scaling does not change. The space-angle decomposition in Denovo comes from the KBA wavefront algorithm \cite{Baker1998}. %Evans et al.\ \cite{Evans2009d} showed scaling in space is limited to about 20,000 cores with a 500 million cell spatial mesh. 
 
-The added energy decomposition offers the ability to further decompose a problem, even if the performance limit of spatial decomposition has been reached. The total number of cores is equal to the number of computational domains, that is, the product of the number of energy sets and the number of spatial blocks. For 20,000 spatial blocks and 10 energy sets, which is a reasonable decomposition, 200,000 cores will be used. See Ref. \cite{Evans2011} for more details. 
-
-The MG Krylov solver makes it possible to use very large machines and fine energy structures. The addition of this solver is one of the key motivators for the MGE preconditioner because Krylov methods often need to be preconditioned to converge in a small number of iterations. A preconditioner that can scale well and handle many energy groups is essential for using the MG Krylov solver. 
+The added energy decomposition offers the ability to further decompose a problem, even if the performance limit of spatial decomposition has been reached. The total number of cores is equal to the number of computational domains, that is, the product of the number of energy sets and the number of spatial blocks. For 20,000 spatial blocks and 10 energy sets, which is a reasonable decomposition, 200,000 cores will be used. See Ref.\ \cite{Evans2011} for more details. 
 
 \subsection{Eigenvalue Solvers}
 \label{sec:eigenvalue}
-A common way to solve eigenvalue problems is with PI. This method is attractive because it only requires matrix-vector products and two vectors of storage space. PI uses the form of the problem seen in Eq. \eqref{eq:EnergyDepEval} and then iterates as shown in Eq. \eqref{eq:PowerIteration}, where $i$ is the iteration index. This converts the generalized form of the eigenvalue problem seen in Eq. \eqref{eq:OperatorEvalForm} to the ordinary form. In the generalized form the eigenvector-value pair is $(\phi, \frac{1}{k})$ and in the ordinary form it is $(\phi, k)$. In legacy applications the eigenvector is often the fission source rather than the flux moments \cite{Evans2011}, \cite{Lewis1993}.
+A common way to solve eigenvalue problems is with PI. This method is attractive because it only requires matrix-vector products and two vectors of storage space. PI uses the form of the problem seen in Eq. \eqref{eq:EnergyDepEval} and then iterates as shown in Eq.\ \eqref{eq:PowerIteration}, where $i$ is the iteration index. This converts the generalized form of the eigenvalue problem seen in Eq.\ \eqref{eq:OperatorEvalForm} to the ordinary form. In the generalized form, the eigenvector-value pair is $(\phi, \frac{1}{k})$, and in the ordinary form it is $(\phi, k)$. 
+
+In legacy applications the eigenvector is often the fission source rather than the flux moments \cite{Evans2011}, \cite{Lewis1993}.
+%
 \begin{align}
   \ve{A}\phi &= k\phi \:, \label{eq:EnergyDepEval} \\
   \qquad \text{where}  \qquad \ve{A} &= (\ve{I} - \ve{TMS})^{-1} \ve{TMF} \:, \nonumber \\
@@ -235,19 +235,37 @@ PI's convergence can be very slow for problems of interest. For an $n \times n$ 
 
 Shifted inverse iteration (SII) typically converges more quickly than PI. SII capitalizes on the fact that for some shift $\mu$, $(\ve{A} - \mu \ve{I})$ will have the same eigenvectors as $\ve{A}$. If $\mu \notin \sigma(\ve{A})$, then $(\ve{A} - \mu \ve{I})$ is invertible and $\sigma([\ve{A} - \mu \ve{I}]^{-1}) = \{1/(\lambda - \mu):\lambda \in \sigma(\ve{A})\}$. Eigenvalues of $\ve{A}$ that are near the shift will be transformed to extremal eigenvalues that are well separated from the others. The shifted and inverted matrix is used in a power iteration-type scheme. Given a good shift, $\mu \approx \lambda_1$, SII usually converges more quickly than PI, especially for loosely coupled systems \cite{Trefethen1997}, \cite{Allen2002}.
 
-Wielandt's method is a flavor of SII that has been used widely in the neutron transport community %, though it was originally developed in 1944 in an unrelated context 
-\cite{Zinzani2008}, \cite{Itagaki1996}, \cite{Itagaki2002}. In the transport equation formulation, Wielandt's method changes the eigenvalue problem to $(\ve{I} - \ve{TM}(\ve{S} +\gamma_e \ve{F}))\phi = \delta \gamma \ve{TMF} \phi$, where $\gamma_e$ is the current estimate for the dominant eigenvalue, $\gamma_1 = \frac{1}{k}$, and $\delta \gamma = \gamma_1 - \gamma_e$. The power method is applied to this, giving \cite{Nakamura1977}
+Wielandt's method is a flavor of SII that has been used widely in the neutron transport community, though it was originally developed in 1944 in an unrelated context \cite{Zinzani2008}, \cite{Itagaki1996}, \cite{Itagaki2002}. In the transport equation formulation, Wielandt's method changes the eigenvalue problem to $(\ve{I} - \ve{TM}(\ve{S} +\gamma_e \ve{F}))\phi = \delta \gamma \ve{TMF} \phi$, where $\gamma_e$ is the current estimate for the dominant eigenvalue, $\gamma_1 = \frac{1}{k}$, and $\delta \gamma = \gamma_1 - \gamma_e$. The power method is applied to this, giving \cite{Nakamura1977}
 %
 \begin{equation}
 \phi^{i+1} = \delta \gamma^{i}(\ve{I} - \ve{TM}(\ve{S} + \gamma_e \ve{F}))^{-1}\ve{TMF}\phi^{i} \:. \label{eq:Wielandt}
 \end{equation}
 
-Rayleigh Quotient Iteration is a shifted inverse iteration method that uses an optimal shift. RQI applies a shift to the equations via the scattering matrix in a manner similar to Wielandt's method. This can cause some complications for common fixed source solvers.
+Rayleigh Quotient Iteration is a shifted inverse iteration method similar to Wielandt's method, but it uses an optimal shift: the Rayleigh quotient (RQ). For a generalized eigenvalue problem $\beta \ve{A}x = \alpha \ve{B}x$, where $\gamma = \frac{\alpha}{\beta}$, the RQ is
+%
+\begin{equation}
+  \rho = \frac{y^{T} \ve{A} x}{y^{T} \ve{B} x} \:.
+  \label{eq:RQ}
+\end{equation}
+%
+If $x$ and $y$ are right and left eigenvectors corresponding to $\alpha$ and $\beta$, respectively, then $\alpha = y^{T} \ve{A} x$ and $\beta =  y^{T} \ve{B} x$. In this case, $\rho = \gamma$ \cite{Stewart2001}. 
 
-The scattering matrix is lower triangular for groups that have downscattering. There are entries above the diagonal only when there is upscattering. The fission matrix has an energy-block filled column for every group with fission. Applying the shift as $(\ve{S} + \gamma_e \ve{F})$ makes the scattering matrix energy-block dense even when there is very little upscattering. Traditional solution methods for the fixed source part of the equation do not handle dense scattering matrices well. This has hampered the implementation of SII in multi-group, 3-D codes because solving many groups that have upper-triangular scattering entries will take a long time. To overcome this barrier, a new solver is needed. 
+The RQ provides the minimum residual for the eigenvalue problem in the least squares sense, where equivalence holds only when $\tau = \rho$ and $x \ne 0$:
+%
+\begin{equation}
+  ||(\ve{A} - \tau\ve{B})x||^{2} \ge ||\ve{A}x||^{2} - ||\rho\ve{B}x||^{2} \:.
+\end{equation}
+%
+The Rayleigh quotient is thus an optimal guess for an eigenvalue given a vector close to the corresponding eigenvector. Rayleigh quotient iteration is like SII but rather than using a manually chosen shift, the shift for iteration $i$ is
+%
+\begin{equation}
+  \mu_i = \gamma_{i-1} - \rho_i \:.
+  \label{eq:Shift}
+\end{equation} 
+%
+RQI has better convergence properties than SII since the RQ is an optimal guess for the eigenvalue of interest. For more details on the Rayleigh quotient and RQI in general refer to Ref.\ \cite{Parlett1974}.
 
-RQI has been implemented in Denovo by subtracting $\rho \ve{TMF}$ from both sides of %$(\ve{I} - \ve{TMS})\phi =$ \\ $\gamma \ve{TMF}\phi$. 
-Eq. \eqref{eq:OperatorEvalForm}. This gives the following shifted system where $\gamma \equiv \frac{1}{k}$:
+RQI has been implemented in Denovo, as detailed in Ref.\ \cite{Slaybaugh2012}, by subtracting $\rho \ve{TMF}$ from both sides of Eq.\ \eqref{eq:OperatorEvalForm}. This gives the following shifted system where $\gamma \equiv \frac{1}{k}$:
 %
 \begin{align}
   (\ve{I} - \ve{TM}\ve{\tilde{S}})\phi &=( \gamma - \rho) \ve{TMF} \phi  \:, 
@@ -255,25 +273,24 @@ Eq. \eqref{eq:OperatorEvalForm}. This gives the following shifted system where $
   \text{ where } \ve{\tilde{S}} &\equiv \ve{S} + \rho\ve{F}  \nonumber \:.
 \end{align}
 %
-The new matrix, $\ve{\tilde{S}}$, is energy-block dense since the fission matrix is dense. $\ve{\tilde{S}}$ looks like one big upscattering block and can be treated similarly. By using the new MG Krylov solver over all groups the entire problem can be decomposed in energy and solved efficiently. Note that using GS to solve a problem with a dense $\tilde{\ve{S}}$ would likely take a very long time to converge. More details about RQI in Denovo can be found in Ref.\ \cite{Slaybaugh2012}.
+The new matrix, $\ve{\tilde{S}}$, is energy-block dense since the fission matrix is dense and looks like one big upscattering block. Traditional solution methods for the fixed source part of the equation do not handle dense scattering matrices well. This has hampered the implementation of SII in multi-group, 3-D codes because solving many groups that have upper-triangular scattering entries will take a long time. 
+
+The RQI solver added to Denovo solver uses the MG Krylov solver, which is designed to handle dense scattering matrices effectively, to overcome the use of a dense $\ve{\tilde{S}}$. In addition, RQI can be decomposed in energy and take advantage of the scaling properties of the multigroup solver. Using RQI in combination with a Krylov method, however, raises some concerns about whether or not it can converge. 
+
+%A method's behavior can be affected by characteristics of the mathematical problem as well as by characterisitics of the algorithm. Conditioning is one way to express the perturbation behavior of the mathematical problem. An ill-conditioned problem is one in which some small perturbation of $x$ leads to a large change in $f(x)$. A large condition number corresponds to an ill-conditioned problem, and vice versa. 
+
+On initial consideration it would seem shifted inverse methods might not work well when the shift is very good because the matrix becomes so ill-conditioned. Peters and Wilkinson \cite{Peters1979}, however, proved that ill-conditioning is not a fundamental problem for inverse iteration methods. Trefethen and Bau \cite{Trefethen1997} assert that this is the case as long as the fixed source portion is solved with a backwards stable algorithm. 
+
+Paige et al.\  \cite{Paige2006} demonstrate that GMRES is backwards stable when finding $x$ in $\ve{A}x = b$ for a ``sufficiently nonsingular $\ve{A}$.'' For ill-conditioned systems, then, Krylov methods may not be backwards stable and will tend to converge very slowly. Many researchers have found that Krylov methods must be preconditioned to be able to get good results in practice \cite{Benzi2002}, \cite{Saad1986}, \cite{Trefethen1997} , \cite{Paige2006}. The past work section below demonstrates that the RQI needs preconditioning for convergence in problems of interest.
+
+Denovo also has an Arnoldi Krylov subspace solver avaiable for solving eigenvalue problems. See Ref.\ \cite{Davidson2013} for more information. 
+\textbf{how much should I say about this?}
 
 \subsection{Multigrid in Energy Preconditioner}
 \label{sec:precond}
-For many kinds of problems the total number of multigroup iterations required to adequately converge the transport equation is large. To reduce iteration count, a preconditioner can be applied to transform the system of interest into another equivalent system that has more favorable properties and is easier to solve. 
+For many kinds of problems the total number of multigroup iterations required to adequately converge the transport equation is large. To reduce iteration count, a preconditioner can be applied to transform the system of interest into another equivalent system that has more favorable properties and is easier to solve. Preconditioning is important for increasing the robustness of Krylov methods. This is particularly true for the multigroup Krylov solver. This solver can create large Krylov subspaces because it forms the subspaces with multiple-group-sized vectors. As a result, any reduction in iteration count will have a significant benefit in terms of memory and cost per iteration. 
  
-Right preconditioning leaves the right hand side of the equation unaffected and does not change the norm of the residual, which is used for convergence testing in most iterative methods. Right preconditioning is therefore often preferred over left or split preconditioning for iterative solvers \cite{Knoll2004}. A right preconditioner was implemented in this work, and the remaining discussion will be presented in right preconditioner format. 
-
-Let $\ve{G}$ be a non-singular preconditioner. Then $\ve{A}x=b$ can be transformed as 
-%
-\begin{equation}
-  \ve{AG}^{-1}y = b, \qquad  x = \ve{G}^{-1}y \:.
-\end{equation}
-%
-The matrix $\ve{A}\ve{G}^{-1}$ is not formed in practice. The preconditioner can be applied by using some method to solve $\ve{G}y=c \to y \approx \ve{G}^{-1}c$, or by otherwise implementing the action of $\ve{G}^{-1}$ without explicitly forming and inverting $\ve{G}$ \cite{Benzi2002}.
-
-Preconditioning is important for increasing the robustness of Krylov methods. This is particularly true for the multigroup Krylov solver. This solver can create large Krylov subspaces because it forms the subspaces with multiple-group-sized vectors. As a result, any reduction in iteration count will have a significant benefit in terms of memory and cost per iteration. Prior to this work, there was no preconditioner in Denovo that could work with the MG Krylov solver. 
-
-The new preconditioner does multigrid in the energy dimension. To understand why multigrid in energy makes sense for neutron transport, some highlights about these methods are discussed here. See \emph{A Multigrid Tutorial} by Briggs, Henson, and McCormick~\cite{Briggs2000} for a thorough and approachable explanation of what multigrid methods are and why they work.
+Right preconditioning leaves the right hand side of the equation unaffected and does not change the norm of the residual, which is used for convergence testing in most iterative methods. A right preconditioner designed to work with the MG Krylov solver was implemented in Denovo \cite{Slaybaugh2013}. This preconditioner does multigrid in the energy dimension. To understand why multigrid in energy makes sense for neutron transport, some highlights about these methods are discussed here. See \emph{A Multigrid Tutorial} by Briggs, Henson, and McCormick~\cite{Briggs2000} for a thorough and approachable explanation of what multigrid methods are and why they work.
 
 The error in $x_i$, the $i$th guess for $\ve{A}x_i=b_i$, can be written as a combination of Fourier modes. Each Fourier mode has a frequency, and the frequencies can range from low-frequency (smooth) to high-frequency (oscillatory). Iterative methods, also referred to as smoothers or relaxers, remove high-frequency error components quickly, but take many iterations to remove the low-frequency ones. 
 
@@ -285,7 +302,7 @@ Multigrid methods are differentiated by how many times the V-cycle is done and h
  
 A multigrid method was selected for many reasons. Multigrid methods remove the low-frequency error modes that require many Krylov iterations. The preconditioner was designed to take advantage of the energy decomposition used by the MG Krylov method. Each energy set can do work on its own grids and does not need to communicate with other energy sets. This is a communication savings compared to using grids in space or angle. An additional benefit is the simplicity of energy grids. Energy is one-dimensional, which allows for simpler coarsening and refinement than spatial or angular grids.
 
-Recall that \\$\ve{A} = \ve{I} - \ve{TMS}$. To implement this in Denovo, $y$ is defined as $\ve{G}\phi$ and the problem is broken into two steps: 
+Recall that \\$\ve{A} = \ve{I} - \ve{TMS}$. To implement multigrid in energy as a right preconditioner in Denovo, $y$ is defined as $\ve{G}\phi$ and the problem is broken into two steps: 
 %
 \begin{enumerate}
   \item with a Krylov method solve 
@@ -300,19 +317,22 @@ Recall that \\$\ve{A} = \ve{I} - \ve{TMS}$. To implement this in Denovo, $y$ is 
 
 To build energy grids, the energy group structure is coarsened so that each lower grid has fewer groups. The finest grid is the input energy structure, and the coarsest grid has one or a few groups. Each level has half as many groups as the previous level, rounded up if applicable. If there are $G+1$ groups on the fine grid there will be either $\frac{G+1}{2}$ or $\frac{G+2}{2}$ groups on the coarse grid. This is conceptually straightforward because the energy groups can be combined (restricted) and separated (prolonged) linearly.
 
-The implemented restriction operator is a simple averaging scheme. Neighboring fine data are averaged together to make coarse data. To prolong from a coarse to a fine grid, the points that line up between the grids are mapped directly. To fill in the intermediate points on the fine grid, the adjacent coarse values are averaged. There are other restriction and prolongation operators that are more rigorous and would preserve more accuracy when transferring between grids than those implemented. For example, a full weighting restriction operator would be more rigorous in combination with the current prolongation method than the current restriction operator is \cite{Briggs2000}.
+The implemented restriction operator is a simple averaging scheme. Neighboring fine data are averaged together to make coarse data. To prolong from a coarse to a fine grid, the points that line up between the grids are mapped directly. To fill in the intermediate points on the fine grid, the adjacent coarse values are averaged. There are other restriction and prolongation operators that are more rigorous and would preserve more accuracy when transferring between grids than those implemented. However, the implemented methods were found to be sufficient in practice.
 
-The user chooses the number of V-cycles done for each preconditioner application. One V-cycle proceeds from the finest grid to the coarsest grid and back to the finest. The input option specifies the number of V-cycles that are concatenated together, with a default of 2. Each additional V-cycle should remove more error, but has a computational cost. 
-
-The depth of the V-cycle can also be specified by the user. The default behavior is determined by the number of groups, such that the grids will be coarsened until there is only one energy group. The number of grids needed is given by \cite{BinaryTree2012}
+The user chooses the number of V-cycles done for each preconditioner application. One V-cycle proceeds from the finest grid to the coarsest grid and back to the finest. Each additional V-cycle should remove more error, but has a computational cost. The depth of the V-cycle can also be specified by the user. The default behavior is determined by the number of groups, such that the grids will be coarsened until there is only one energy group. The number of grids needed is given by \cite{BinaryTree2012}
 \begin{equation}
   \text{floor}\bigl( \log_{2}(G-1) \bigr) + 2 \:.
   \label{eq:NumGrids}
 \end{equation}
-%
-How this is handled when using energy sets is discussed below. 
 
-Some number of relaxations are performed on each level while traversing down and up the grids in a V-cycle. The number of relaxations per level is a user input choice with a default of 2. Performing more relaxations per grid should remove more error, but has a computational cost. The implemented relaxation method is weighted Richardson iteration. When applied to the transport equation, we obtain
+When using multiple energy sets, cross-set communication is prohibited by having each set do its own ``mini'' V-cycle. Each set restricts, prolongs, and relaxes on only its own groups. In the case of an unequal number of groups per set, all sets are forced to have the same grid depth to enforce energy load balancing between sets. Thus, each set restricts to one or two group(s), giving approximately $num\_sets$ total groups across all sets at the coarsest level. The number of grids needed is determined by the set with the minimum number of groups, since it will be the first to reach a grid with one group. This modifies Equation~\eqref{eq:NumGrids} to be
+\begin{align}
+  num\_g_{min} &= \text{floor}\bigl(\frac{num\_groups}{num\_sets}\bigr) \:, \\
+  num\_grids &= \text{floor}\bigl( \log_{2}(num\_g_{min}) \bigr) + 2 \:.
+  \label{eq:multisetGrids}
+\end{align}
+
+Some number of relaxations are performed on each level while traversing down and up the grids in a V-cycle. Performing more relaxations per grid should remove more error, but has a computational cost. The implemented relaxation method is weighted Richardson iteration. When applied to the transport equation, we obtain
 %
 \begin{equation}
   \phi^{m} = \bigr(\ve{I} + \omega(\ve{TMS} - \ve{I})\bigl)\phi^{m-1} + \omega b^{m-1} \:,
@@ -322,20 +342,6 @@ Some number of relaxations are performed on each level while traversing down and
 where $\omega$ is a constant selected by the user that defaults to 1. 
 
 An important principle is that the preconditioner is only attempting to approximately invert $\ve{A}$. It is therefore reasonable to use a less accurate angular discretization in the preconditioner than the rest of the code. For example, the whole problem may be solved at $S_{10}$, but the preconditioner could only use $S_{2}$. There is an input option to specify an angular quadrature set to use in the preconditioner different from the angular quadrature set used in the rest of the problem; the default is to use the same set in both. At this time, this option has only been implemented for vacuum boundary conditions. 
-
-The other approach is to prohibit cross-set communication by having each set do its own ``mini'' V-cycle. Each set restricts, prolongs, and relaxes on only its own groups. This strategy requires there to be at least two groups on every set. With an unequal number of groups per set, there is a choice between forcing all sets to have the same grid depth or allowing those with more groups to have deeper Vs. The first option enforces energy load balancing between sets, while the second allows the sets with more groups to remove more error. 
-
-The preconditioner is implemented so that all sets use the same grid depth. The benefit of load balancing is likely to be greater than having some sets use an extra grid. Thus, each set restricts to one or two group(s), giving approximately $num\_sets$ total groups across all sets at the coarsest level. The number of grids needed is determined by the set with the minimum number of groups, since it will be the first to reach a grid with one group. This modifies Equation~\eqref{eq:NumGrids} to be
-\begin{align}
-  num\_g_{min} &= \text{floor}\bigl(\frac{num\_groups}{num\_sets}\bigr) \:, \\
-  num\_grids &= \text{floor}\bigl( \log_{2}(num\_g_{min}) \bigr) + 2 \:.
-  \label{eq:multisetGrids}
-\end{align}
-
-The communication costs and logistical complications of the first strategy seem likely to overwhelm the benefit gained by going to one group instead of $num\_sets$ groups. The second strategy was chosen because it involves much less communication and overhead cost. The value of this choice will become apparent in the results section. 
-
-With the implemented energy set strategy, there are trade-offs between the number of sets and the number of grids for a fixed number of groups. When there are more sets, more cores can be used at once and wall time should decrease. When there are fewer sets each V-cycle can go deeper, so the preconditioner should be more effective at reducing iteration count.  
-
 
 %%---------------------------------------------------------------------------%%
 \section{Past Work}
