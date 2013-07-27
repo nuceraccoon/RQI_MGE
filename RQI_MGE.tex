@@ -143,7 +143,7 @@
 \label{sec:intro}
 The steady-state Boltzmann equation for neutron transport covers six dimensions of phase space. Typical deterministic transport problems today are three-dimensional, have up to thousands $\times$ thousands $\times$ thousands of mesh points, use up to $\sim$150 energy groups, include accurate expansions of scattering terms, and are solved over many angular directions. The next generation of challenging problems are even more highly refined. High-fidelity, coupled, multi-physics calculations are the new ``grand challenge'' problems for reactor analysis, requiring that the finely-resolved neutron flux be calculated quickly and accurately.
 
-Very large computers, such as Titan \cite{Titan2013}, are now available to perform such high-fidelity calculations. Most existing solution methods are not able to take full advantage of new computer architectures, or they have convergence properties that limit their usefulness for difficult problems. The goal of this research is to accelerate transport calculations with methods that use new computers fully and effectively, facilitating the design of better nuclear systems. 
+Very large computers, such as Titan \cite{Titan2013}, are now available to perform such high-fidelity calculations. Many existing solution methods are not able to take full advantage of new computer architectures, or they have convergence properties that limit their usefulness for difficult problems. The goal of this research is to accelerate transport calculations with methods that use new computers fully and effectively, facilitating the design of better nuclear systems. 
 
 Three complimentary methods have been implemented in the code Denovo \cite{Evans2010} that accomplish this goal: a multigroup block (MG) Krylov solver, a Rayleigh quotient iteration (RQI) eigenvalue solver, and a multigrid in energy (MGE) preconditioner. Each individual method has been described before (see \cite{Slaybaugh2012}, \cite{Slaybaugh2013}), but this is the first time they have been demonstrated to work together effectively.
 
@@ -153,7 +153,7 @@ The multigroup Krylov solver was designed to improve convergence when compared t
 
 A multigrid in energy preconditioner was added to Denovo to reduce iteration count for all problem types, and to address convergence issues associated with RQI. The  preconditioner conducts a multigrid method in the energy dimension. A set of energy grids with increasingly coarse energy group structures are created. This is implemented in a way that easily and efficiently takes advantage of the new energy decomposition. The multigrid algorithm is applied within each energy set such that the energy groups are only restricted and prolonged between groups on that set. Sets do not communicate with one another in the preconditioner, so the scaling in energy is very good. 
 
-Theory indicates that RQI should converge in fewer iterations than traditional eigenvalue solvers, particularly for problems that are challenging for those solvers. However, the use of RQI would not be practical without the MG Krylov solver and the MGE precoditioner. The implementation of RQI results in a set of equations that is mathematically equivalent to having up-scattering in every group, so the scattering matrix becomes energy-block dense. Handling energy-block dense systems when there are more than a few energy groups is not tractable with GS as the multigroup solver. It is only the MG Krylov solver that makes RQI reasonable to use when there are many energy groups. The MGE preconditioner is needed to mitigate the slow convergence associated with Krylov methods when trying to solve the ill-conditioned systems created by RQI. 
+Theory indicates that RQI should converge in fewer iterations than traditional eigenvalue solvers like power iteration, particularly for problems that are challenging for those solvers. However, the use of RQI would not be practical without the MG Krylov solver and the MGE precoditioner. The implementation of RQI results in a set of equations that is mathematically equivalent to having up-scattering in every group, so the scattering matrix becomes energy-block dense. Handling energy-block dense systems when there are more than a few energy groups is not tractable with GS as the multigroup solver. It is only the MG Krylov solver that makes RQI reasonable to use when there are many energy groups. The MGE preconditioner is needed to mitigate the slow convergence associated with Krylov methods when trying to solve the ill-conditioned systems created by RQI. 
 
 The remainder of this paper presents information about why these methods are complememtary as well as results demonstrating that they are. Section \ref{sec:background} discusses each of the new methods in the context of commonly-used methods. Section \ref{sec:pastwork} gives an overview of relevant past work. New results from using the three new methods together are shown in Section \ref{sec:results}, and concluding remarks are made in Section \ref{sec:conclusions}.
 
@@ -180,7 +180,7 @@ The multigroup \Sn equations can be written in operator form as
   \ve{L}\psi &= \ve{MS}\phi + \frac{1}{k}\ve{M}\chi f^{T}\phi \:. \qquad &\text{(eigenvalue)} \label{eq:eigenvalue}
 \end{alignat}
 %
-Here $\ve{L}$ is the first-order linear differential transport operator; $\ve{M}$ is the moment-to-discrete operator that projects the angular flux moments, $\phi$, onto discrete angles; $\ve{S}$ is the scattering matrix; $f$ contains the fission source, $\nu \Macro_{f}$; and $q$ is a source term. The angular flux moments are related to the angular flux through the discrete-to-moment operator: $\phi = \mathbf{D} \psi \:$. Using this relationship, Equations \eqref{eq:fxdsource} and \eqref{eq:eigenvalue} can be rearranged such that they are a function of only $\phi$. The formulation is aided by defining $\ve{T} = \ve{DL}^{-1}$ and $\ve{F} = \chi f^{T}$ \cite{Evans2011}:
+Here $\ve{L}$ is the first-order linear differential transport operator; $\ve{M}$ is the moment-to-discrete operator that projects the angular flux moments, $\phi$, onto discrete angles; $\ve{S}$ is the scattering matrix; $f$ contains the fission source, $\nu \Macro_{f}$; $q$ is a source term; and $k$ is the asymptotic ratio of the number of neutrons in one generation to the number in the next. The angular flux moments are related to the angular flux through the discrete-to-moment operator: $\phi = \mathbf{D} \psi \:$. Using this relationship, Equations \eqref{eq:fxdsource} and \eqref{eq:eigenvalue} can be rearranged such that they are a function of only $\phi$. The formulation is aided by defining $\ve{T} = \ve{DL}^{-1}$ and $\ve{F} = \chi f^{T}$ \cite{Evans2011}:
 %
 \begin{alignat}{2}
   (\ve{I} - \ve{TMS})\phi &= q \:, \qquad &\text{(fixed source)} \label{eq:OperatorFxdForm} \\
@@ -204,7 +204,7 @@ The recently-added multigroup (MG) Krylov solver removes the traditional ``withi
 
 The MG Krylov solver combines the space-angle and energy iterations to make one space-angle-energy iteration level. This allows the energy groups to be decomposed such that they can be solved in parallel. The space-angle-energy iterations are much like the within-group space-angle iterations, except that the iteration is over a block of groups instead of just one group. The block can include all groups or just upscattering groups, in which case the downscattering groups are treated in series as before. An added benefit of this solver is that Krylov methods generally converge more quickly than GS for problems with upscattering \cite{Trefethen1997}.
 
-The multigroup Krylov method applied to the upscattering block is shown here, where $\ve{S}_{\text{up\_block}}$ contains the upscattering groups and $\ve{S}_{\text{up\_source}}$ has the downscattering only groups:
+The multigroup Krylov method applied to the upscattering block is shown here, where $\ve{S}_{\text{up\_block}}$ contains the upscattering groups and $\ve{S}_{\text{up\_source}}$ has the downscattering-only groups:
 %
 \begin{equation}
   \underbrace{(\ve{I} - \ve{TMS}_{\text{up\_block}})}_{\tilde{\ve{A}}}\phi_{\text{up\_block}}^{n+1} = \ve{TM}(\ve{S}_{\text{up\_source}}\phi_{\text{up\_source}}^{n+1} + q) \:.
@@ -225,9 +225,7 @@ The added energy decomposition offers the ability to further decompose a problem
 
 \subsection{Eigenvalue Solvers}
 \label{sec:eigenvalue}
-A common way to solve $k$-eigenvalue problems is with Power iteration (PI). This method is attractive because it only requires matrix-vector products and two vectors of storage space. PI uses the form of the problem seen in Eq. \eqref{eq:EnergyDepEval} and then iterates as shown in Eq.\ \eqref{eq:PowerIteration}, where $i$ is the iteration index. This converts the generalized form of the eigenvalue problem seen in Eq.\ \eqref{eq:OperatorEvalForm} to the ordinary form. In the generalized form, the eigenvector-value pair is $(\phi, \frac{1}{k})$, and in the ordinary form it is $(\phi, k)$. 
-
-In legacy applications, the eigenvector is often the fission source rather than the flux moments \cite{Evans2011}, \cite{Lewis1993}.
+A common way to solve $k$-eigenvalue problems is with Power iteration (PI). This method is attractive because it only requires matrix-vector products and two vectors of storage space. 
 %
 \begin{align}
   \ve{A}\phi &= k\phi \:, \label{eq:EnergyDepEval} \\
@@ -237,6 +235,8 @@ In legacy applications, the eigenvector is often the fission source rather than 
   \label{eq:PowerIteration}
 \end{align} 
 %
+PI uses the form of the problem seen in Eq. \eqref{eq:EnergyDepEval} and then iterates as shown in Eq.\ \eqref{eq:PowerIteration}, where $i$ is the iteration index. This converts the generalized form of the eigenvalue problem seen in Eq.\ \eqref{eq:OperatorEvalForm} to the ordinary form. In the generalized form, the eigenvector-value pair is $(\phi, \frac{1}{k})$, and in the ordinary form it is $(\phi, k)$. 
+In legacy applications, the eigenvector is often the fission source rather than the flux moments \cite{Evans2011}, \cite{Lewis1993}.
 Inside of PI, the application of $\ve{A}$ to $\phi$ requires the solution of a multigroup problem that looks like a fixed source problem,
 \begin{equation}
   (\ve{I} - \ve{TMS})y^{i} = \ve{TMF}\phi^{i} \:. \label{eq:EvalDepFxdSource}
@@ -285,7 +285,7 @@ RQI has been implemented in Denovo, as detailed in Ref.\ \cite{Slaybaugh2012}, b
   \text{ where } \ve{\tilde{S}} &\equiv \ve{S} + \rho\ve{F}  \nonumber \:.
 \end{align}
 %
-The new matrix, $\ve{\tilde{S}}$, is energy-block dense since the fission matrix is dense and looks like one big upscattering block. Traditional solution methods for the fixed source part of the equation do not handle dense scattering matrices well. This has hampered the implementation of SII in multi-group, 3-D codes because solving many groups that have upper-triangular scattering entries will take a long time. 
+The new matrix, $\ve{\tilde{S}}$, is energy-block dense since the fission matrix is dense and looks like one big upscattering block. Traditional solution methods for the fixed source part of the equation do not handle dense scattering matrices well. This has hampered the implementation of SII in multi-group, 3-D codes because solving many groups that have upper-triangular scattering entries can be time-prohibitive. 
 
 The RQI solver added to Denovo solver uses the MG Krylov solver, which is designed to handle dense scattering matrices effectively, to overcome the use of a dense $\ve{\tilde{S}}$. In addition, RQI can be decomposed in energy and take advantage of the scaling properties of the multigroup solver. Using RQI in combination with a Krylov method, however, raises some concerns about whether or not it can converge. 
 
@@ -293,10 +293,10 @@ The RQI solver added to Denovo solver uses the MG Krylov solver, which is design
 
 On initial consideration it would seem shifted inverse methods might not work well when the shift is very good because the matrix becomes so ill-conditioned. Peters and Wilkinson \cite{Peters1979}, however, proved that ill-conditioning is not a fundamental problem for inverse iteration methods. Trefethen and Bau \cite{Trefethen1997} assert that this is the case as long as the fixed source portion is solved with a backwards stable algorithm. 
 
-Paige et al.\ \cite{Paige2006} demonstrate that GMRES is backwards stable when finding $x$ in $\ve{A}x = b$ for a ``sufficiently nonsingular $\ve{A}$'', and define associated criteria. For ill-conditioned systems, then, Krylov methods may not be backwards stable and will tend to converge very slowly. Many researchers have found that Krylov methods must be preconditioned to be able to get good results in practice \cite{Benzi2002}, \cite{Saad1986}, \cite{Trefethen1997} , \cite{Paige2006}. The past work section below demonstrates that the RQI needs preconditioning for convergence in problems of interest.
+Paige et al.\ \cite{Paige2006} demonstrated that GMRES is backwards stable when finding $x$ in $\ve{A}x = b$ for a ``sufficiently nonsingular $\ve{A}$'', and define associated criteria. For ill-conditioned systems, then, Krylov methods may not be backwards stable and will tend to converge very slowly. Many researchers have found that Krylov methods must be preconditioned to be able to get good results in practice \cite{Benzi2002}, \cite{Saad1986}, \cite{Trefethen1997} , \cite{Paige2006}. The past work section below demonstrates that RQI does need preconditioning for convergence in problems of interest.
 
-Denovo also has an Arnoldi Krylov subspace solver avaiable for solving eigenvalue problems. See Ref.\ \cite{Davidson2013} for more information. 
-\textbf{how much should I say about this?}
+\textbf{Denovo also has an Arnoldi Krylov subspace solver avaiable for solving eigenvalue problems. See Ref.\ \cite{Davidson2013} for more information. 
+how much should I say about this?}
 
 \subsection{Multigrid in Energy Preconditioner}
 \label{sec:precond}
@@ -309,16 +309,14 @@ The error in $x_i$, the $i$th guess for $\ve{A}x_i=b_i$, can be written as a com
 
 The idea of multigrid methods is to take advantage of the smoothing effects of iterative methods by making smooth errors look oscillatory and thus easier to remove. Errors that are low-frequency on a fine grid can be mapped onto a coarser grid where they are high-frequency. A relaxer is applied on the coarser grid to remove the now oscillatory error components. The remaining error is mapped to a still coarser grid and smoothed again. The problem is restricted to coarser and coarser grids until it is on a grid that is coarse enough to directly invert the equations.
 
-Next, the coarsest result is prolonged back to the next-finer grid and used to correct the solution there. A few relaxations are done on this finer grid. The errors are prolonged back up the chain, continuously correcting on finer grids, until the finest grid is reached. This entire process is called a V-cycle. 
-
-Multigrid methods are differentiated by how many times the V-cycle is done and how many grids are used. The optimal combination of grids and cycles may depend on problem type. The addition of more grids and cycles will reduce error, but at an added cost.
+Next, the coarsest result is prolonged back to the next-finer grid and used to correct the solution there. A few relaxations are done on this finer grid. The errors are prolonged back up the grid structure, continuously correcting on finer grids, until the finest grid is reached. This entire process is called a V-cycle. %Multigrid methods are differentiated by how many times the V-cycle is done and how many grids are used. The optimal combination of grids and cycles may depend on problem type. The addition of more grids and cycles will reduce error, but at an added cost.
  
 Thus, multigrid methods remove the low-frequency error modes that require many Krylov iterations. The preconditioner was designed to take advantage of the energy decomposition used by the MG Krylov method. Each energy set does work only on its own grids and does not need to communicate with other energy sets. This is a communication savings compared to using grids in space or angle. An additional benefit is the simplicity of energy grids. Energy is one-dimensional, which allows for simpler coarsening and refinement than spatial or angular grids.
 
-Recall that $\ve{A} = \ve{I} - \ve{TMS}$. To implement multigrid in energy as a right preconditioner in Denovo, $\ve{G}^{-1}$ represents the appication of the preconditioner, $y$ is defined as $\ve{G}\phi$, and the problem is broken into two steps: 
+To implement multigrid in energy as a right preconditioner in Denovo, the problem is broken into two steps shown below. Here $\ve{G}^{-1}$ represents the appication of the preconditioner, and $y$ is defined as $\ve{G}\phi$; recall that $\ve{A} = \ve{I} - \ve{TMS}$.  
 %
 \begin{enumerate}
-  \item with a Krylov method solve 
+  \item With a Krylov method solve 
     \begin{equation}
       \ve{AG}^{-1}y = b \:, \label{eq:PrecondKrylov} 
     \end{equation}
@@ -328,19 +326,19 @@ Recall that $\ve{A} = \ve{I} - \ve{TMS}$. To implement multigrid in energy as a 
     \end{equation}
 \end{enumerate}
 
-Note: it is possible to implement the preconditioner using the shifted operator (used in RQI) rather than the unshifted operator. It is expected that the unshifted operator will be a much better choice for the obvious reasons of stability. However, we implemented the option to use either for investigation purposed. 
+%Note: it is possible to implement the preconditioner using the shifted operator (used in RQI) rather than the unshifted operator. It is expected that the unshifted operator will be a much better choice for the obvious reasons of stability. However, we implemented the option to use either for investigation purposes. 
 
-In this preconditioner the grids are in energy, where the energy group structure is coarsened so that each lower grid has fewer groups. The finest grid is the input energy structure, and the coarsest grid has one or a few groups. Each level has half as many groups as the previous level, rounded up if applicable. If there are $G+1$ groups on the fine grid there will be either $\frac{G+1}{2}$ or $\frac{G+2}{2}$ groups on the coarse grid. This is conceptually straightforward because the energy groups can be combined (restricted) and separated (prolonged) linearly.
+In this preconditioner the grids are in energy, where the energy group structure is coarsened so that each lower grid has fewer groups. The finest grid is the input energy structure, and the coarsest grid has one or a few groups. Each level has half as many groups as the previous level, rounded up if applicable. If there are $G+1$ groups on the fine grid there will be either $\frac{G+1}{2}$ or $\frac{G+2}{2}$ groups on the coarse grid. This is conceptually straightforward because the energy groups can be combined (restricted) and separated (prolonged) linearly. For details on the implementation of the preconditioner consult Ref. \cite{Slaybaugh2013}
+%
+%The implemented restriction operator is a simple averaging scheme. Neighboring fine data are averaged together to make coarse data. To prolong from a coarse to a fine grid, the points that line up between the grids are mapped directly. To fill in the intermediate points on the fine grid, the adjacent coarse values are averaged. There are other restriction and prolongation operators that are more rigorous and would preserve more accuracy when transferring between grids than those implemented. However, the implemented methods were found to be sufficient in practice.
 
-The implemented restriction operator is a simple averaging scheme. Neighboring fine data are averaged together to make coarse data. To prolong from a coarse to a fine grid, the points that line up between the grids are mapped directly. To fill in the intermediate points on the fine grid, the adjacent coarse values are averaged. There are other restriction and prolongation operators that are more rigorous and would preserve more accuracy when transferring between grids than those implemented. However, the implemented methods were found to be sufficient in practice.
+The user chooses the number of V-cycles done for each preconditioner application. One V-cycle proceeds from the finest grid to the coarsest grid and back to the finest. Each additional V-cycle should remove more error, but has a computational cost. The depth of the V-cycle can also be specified by the user. The default behavior is determined by the number of groups, such that the grids will be coarsened until there is only one energy group. The number of grids needed is $\text{floor}\bigl( \log_{2}(G-1) \bigr) + 2$ \cite{BinaryTree2012}.% given by \cite{BinaryTree2012}
+%\begin{equation}
+%  num\_grids = \text{floor}\bigl( \log_{2}(G-1) \bigr) + 2 \:.
+%  \label{eq:NumGrids}
+%\end{equation}
 
-The user chooses the number of V-cycles done for each preconditioner application. One V-cycle proceeds from the finest grid to the coarsest grid and back to the finest. Each additional V-cycle should remove more error, but has a computational cost. The depth of the V-cycle can also be specified by the user. The default behavior is determined by the number of groups, such that the grids will be coarsened until there is only one energy group. The number of grids needed is given by \cite{BinaryTree2012}
-\begin{equation}
-  num\_grids = \text{floor}\bigl( \log_{2}(G-1) \bigr) + 2 \:.
-  \label{eq:NumGrids}
-\end{equation}
-
-When using multiple energy sets, cross-set communication is prohibited by having each set do its own ``mini'' V-cycle. Each set restricts, prolongs, and relaxes on only its own groups. In the case of an unequal number of groups per set, all sets are forced to have the same grid depth to enforce energy load balancing between sets. Thus, each set restricts to one or two groups, giving approximately $num\_sets$ total groups across all sets at the coarsest level. The number of grids needed is determined by the set with the minimum number of groups, since it will be the first to reach a grid with one group. This modifies Equation~\eqref{eq:NumGrids} to be
+When using multiple energy sets, cross-set communication is prohibited by having each set do its own ``mini'' V-cycle. Each set restricts, prolongs, and relaxes on only its own groups. In the case of an unequal number of groups per set, all sets are forced to have the same grid depth to enforce energy load balancing between sets. Thus, each set restricts to one or two groups, giving approximately $num\_sets$ total groups across all sets at the coarsest level. The number of grids needed is determined by the set with the minimum number of groups, since it will be the first to reach a grid with one group:%. This modifies Equation~\eqref{eq:NumGrids} to be
 \begin{align}
   num\_g_{min} &= \text{floor}\bigl(\frac{num\_groups}{num\_sets}\bigr) \:, \\
   num\_grids &= \text{floor}\bigl( \log_{2}(num\_g_{min}) \bigr) + 2 \:.
@@ -396,7 +394,8 @@ The goal of using this system of solvers is to improve convergence behavior of t
 
 Timing comparisons should be considered heuristically unless otherwise specified. In cases where the calculations were done on a single core, the machine was not dedicated to these calculations and times could vary if the same calculations were repeated. Some problems use an optimized version of the code and others use a debug version. These should give the same iteration count, but not necessarily the same relative times between problems. Further, little effort has been made to optimize the preconditioner for speed. Once the multigrid in energy preconditioner has been optimized for efficiency, the preconditioned times should decrease. How much improvement can be gained is a matter for future study. 
 
-Unless otherwise noted, all test problems used a step characteristic spatial solver, level-symmetric angular quadrature, and the grid depth was determined using the default approach, Equation~\eqref{eq:NumGrids} or Equation~\eqref{eq:multisetGrids}. The Krylov solver was GMRES, which is set to limit the number of multigroup iterations to 1,000 if the problem does not converge earlier. The convergence tolerances are noted for each problem. The tolerance for the multigroup solve is the convergence tolerance used by GMRES in Trilinos \cite{1089021}. The eigenvalue tolerance is used by PI to determine if the eigenvalue has converged. In Denovo, PI also checks the L2-norm and the infinity-norm of the difference in the fission source between iterations. The default L2-norm tolerance is 1.0 and infinity-norm tolerance is 0.01.
+Unless otherwise noted, all test problems used a step characteristic spatial solver, level-symmetric angular quadrature, and the grid depth was determined using the default approach.%, Equation~\eqref{eq:NumGrids} or Equation~\eqref{eq:multisetGrids}. 
+The Krylov solver was GMRES, which is set to limit the number of multigroup iterations to 1,000 if the problem does not converge earlier. The convergence tolerances are noted for each problem. The tolerance for the multigroup solve is the convergence tolerance used by GMRES in Trilinos \cite{1089021}. The eigenvalue tolerance is used by PI to determine if the eigenvalue has converged. In Denovo, PI also checks the L2-norm and the infinity-norm of the difference in the fission source between iterations. The default L2-norm tolerance is 1.0 and infinity-norm tolerance is 0.01.
 
 \subsection{Initial Investigation}
 A variety of small problems were solved to verify code functionality, ensure that total Krylov count is reduced by the addition of MGE, verify MGE parameter choice when used in combination with RQI, and confirm that the preconditioner should \emph{not} use the shifted version of the operator.
