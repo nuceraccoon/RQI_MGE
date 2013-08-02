@@ -359,31 +359,31 @@ An important principle is that the preconditioner is only attempting to approxim
 %%---------------------------------------------------------------------------%%
 \section{Past Work}
 \label{sec:pastwork}
-This section is a high-level summary of past work in the field and a brief summary of results from the MGE Preconditioner used with fixed source problems or PI, and from unpreconditioned RQI.
+This section is a summary of results using RQI with preconditioning \cite{Slaybaugh2012} and the MGE Preconditioner used with fixed source problems or PI \cite{Slaybaugh2013}. The purpose of this section is to highlight the capabilities that have been demonstrated, and point out the short-comings that can be overcome by using the MG Krylov solver, RQI eigenvalue solver, and MGE preconditioner together.
 
 \subsection{Unpreconditioned RQI}
-(Physor Paper)
-\begin{enumerate}
- \item RQI works as well as PI from a time and iteration count perspective for very simple problems. (simple eigenvalue test problem)
- \item With an itermediately-sized problem RQI got close to the correct $k$, but failed to converge
- \item RQI did not converge at all on 2D and 3D C5G7 benchmarks: demonstrated need for preconditioning
-\end{enumerate}
+We solved two small eigenvalue test problems, one with vacuum boundaries and one with reflecting, that had small dominance ratios. We found that RQI got the correct answer and converged in fewer iterations than power iteration. However, an itermediately-sized problem did not work so well. Each multigroup solve, except the first, used the maximum number of Krylov multigroup iterations per eigenvalue iteration. This means the eigenvector did not converge after the first iteration. The value of $k$ oscillated between 0.3966 and 0.3967 (the correct value was 0.4) until the calculation was manually terminated. In two more realistic calculations, the 2D and 3D C5G7 MOX Benchmark problems (described in subsections \ref{subsec:2dc5g7} and \ref{subsec:3dc5g7}, respectively), RQI did not converge the eigenvector nor find an eigenvalue close to the correct one. 
+
+These more challenging problems showed that, as expected, the Krylov solver often cannot converge the eigenvector with the ill-conditioned systems created by RQI. When the Krylov iterations do not converge, the flux estimate is not good. Without a good approximation to the eigenvector, the RQ is no longer a valid approximation to the eigenvalue and therefore the eigenvalue problem does not converge. 
+
+The small problems showed that RQI can converge in fewer iteration than power iteration and has the potential to be quite beneficial if the multigroup iterations can be converged. If the MG Krylov solver is preconditioned so that the eigenvector can converge, RQI may be able to converge the eigenvalue for cases of interest.
 
 Iterative methods reduce oscillatory error effectively, but not smoother error. The smooth error can prevent iterative methods from converging. This behavior is characterized by rapid error reduction in the first several iterations followed by very little error reduction. Such a trend was observed when RQI failed. Multigrid methods selectively remove smoother error components and are therefore ideal for accelerating this type of problem. Thus, a multigrid preconditioner should work very well with RQI. 
 
 \subsection{MGE Preconditioner}
-The preconditioning parameters are the Richardson iteration weight, $w_{k}$, the number of V-cycles per preconditioner application, and the number of relaxations per level. The syntax used throughout this section will be that $w\#$ is the weight, $r\#$ is the number of relaxations per level, and $v\#$ is the number of V-cycles, e.g.\ $w1r1v1$ is one relaxation per level, one V-cycle, and a weight of 1. Using more preconditioning means using larger values of $w$ and/or $r$ and/or $v$. Other issues investigated are changing the depth of the V-cycle, using a different quadrature set inside the preconditioner than in the rest of the problem, and strong scaling. 
+Much of the previously published work focused on choosing how to select all of the options that control the preconditioner. The preconditioning parameters are the Richardson iteration weight, $w_{k}$, the number of V-cycles per preconditioner application, and the number of relaxations per level. The syntax used throughout this work will be that $w\#$ is the weight, $r\#$ is the number of relaxations per level, and $v\#$ is the number of V-cycles, e.g.\ $w1r1v1$ is one relaxation per level, one V-cycle, and a weight of 1. Using more preconditioning means using larger values of $w$ and/or $r$ and/or $v$. 
 
-The first set of fixed-source tests provided a basis for chosing preconditioning parameters. These two sets of results showed that increasing $r$ and/or $v$ decreased Krylov iteration count. They also indicated that using a small amount of weight can be beneficial, but a large amount is not. As a result, the default parameter recommendations are $r2v2w1$. 
+Some initial tests provided a basis for chosing preconditioning parameters. The results showed that increasing $r$ and/or $v$ decreased Krylov iteration count, as expected. They also indicated that using a small amount of weight can be beneficial, but a large amount is not. As a result, the parameters are set to default to $r2v2w1$. Other issues investigated were using a different quadrature set inside the preconditioner than in the rest of the problem, strong scaling, and changing the depth of the V-cycle. 
 
-\begin{enumerate}
- \item demonstrated that using a reduced angle set inside the preconditioner is very valuable with FeC cube
- \item FeC problem showed very good energy scaling behavior when full grid-depth is chosen 
- \item FeC problem also showed that using a reduced grid depth is just as beneficial as full grid depth (likely makes energy scaling less impressive)
- \item 3D C5G7 benchmark with PI showed MGE greatly reduced iteration count, but not computation time
- \item full PWR also showed fewer iterations, but preconditioned PI took way longer than unpreconditioned PI
-\end{enumerate}
+Tests showed that using a reduced angle set inside the preconditioner is very valuable. For example, using $S_2$ inside MGE for an iron-graphite test solved with $S_8$ reduced the solve time by 73\% compared to using $S_8$ in the preconditioner.
 
+Another important area of investigation was how the preconditioner faired when using multiple energy sets. The MGE preconditioner was built to take advantage of multiple energy sets. Problems solved using MGE scaled about 40 \% more efficiently than without it. The main reason for the preconditioner’s good scaling is that as the number of sets increases, each application of the preconditioner becomes less costly. The total preconditioning cost goes down because the V-cycle becomes shallower. When 27 groups are used with one set, six grids are created. When 27 groups are used with 10 sets, two grids are created for each set. With fewer grids each application of the preconditioner performs fewer total relaxations, and is therefore less time intensive. the number of GMRES iterations did not change with the number of sets in the preconditioned cases. This means convergence improvement from the preconditioner did not come from the depth of the V-cycle, at least not for the problems tested.
+
+The results of the multiple energy set study prompted an investigation of controlling V-cycle depth explicitly. The results from several tests confirm the multiple energy set study findings: using only a few grids is better than using many. The optimal number of grids will be problem dependent, but a default grid depth of two was recommended.
+
+All of these tests inform the best way to use the MGE preconditioner, but do not determine whether and when it is useful. To begin investigating this question, two eigenvalue problems were also solved with preconditioned and unpreconditioned PI. The first problem was the 3D C5G7 MOX Benchmark problem. In this case the use of the preconditioner significantly reduced Krylov iteration count, but increased the overall runtime. A full PWR problem (described in subsection \ref{subsec:PWR}) exhibited similar behavior: fewer iterations in more time. 
+
+These results suggest that the MGE preconditioner was a failed experiment after all. However, the two eigenvalue problems solved were not particularly challenging for PI, meaning they may not have needed preconditioning to begin with. More importantly, the mathematical properties of the MGE preconditioner suggest it would benefit the RQI solver. Thus, the work published so far has not settled the question of whether MGE is a useful preconditioner for at least some problems. 
 
 %%---------------------------------------------------------------------------%%
 \section{Results}
@@ -448,6 +448,7 @@ The tests were repeated with the shifted operator inside of MGE. In the vacuum c
 % ** Is it unethical to leave out this data?\\
 
 \subsubsection{2D C5G7}
+\label{subsec:2dc5g7}
 After the baseline was established, MGE was applied to the 2-D C5G7 benchmark using both PI and RQI with the goals of seeing if preconditioned RQI could converge the flux and $k$, to investigate the effect of preconditioning in both RQI and PI, and to see whether the lessons learned about preconditioning parameters still hold in a real problem. The calculation used 16 cores on the small orthanc cluster at Oak Ridge: 4 $x$-blocks, 4 $y$-blocks, 1 $z$-block and 1 energy set. The total and upscattering tolerances were $1 \times 10^{-3}$, with a $k$ tolerance of $1 \times 10^{-5}$. An optimized version of Denovo was used.  
 
 A weight variation study was done with power iteration first. The results using $r1v1$ are plotted as Krylov Iterations vs.\ Weight, and Time in seconds vs.\ Weight in Figure~\ref{fig:2-Dc5g7PI}. All calculated $k$s were within the uncertainty of the benchmark and so are not reported. All preconditioned cases needed 31 power iterations while the unpreconditioned case took 32.
@@ -505,6 +506,7 @@ From the standpoint of comparing eigenvalue solution methods, it is worth noting
 While the first few small problems were useful for initial investigation, we are really interested in solving much larger, more complex problems. 
 
 \subsubsection{3D C5G7}
+\label{subsec:3dc5g7}
 The preconditioner using both PI and RQI was applied to the 3-D C5G7 benchmark with an optimized version of Denovo. The goals of this study were essentially the same as the 2-D study, except that this problem is larger, and the first to approach a real ``grand challenge'' type of calculation. The medium-sized oic cluster at Oak Ridge was used, and each problem was given 720 cores with 40 $x$-blocks, 18 $y$-blocks, and 5 $z$-blocks. The total and upscattering tolerances were $1 \times 10^{-4}$, with a $k$ tolerance of $1 \times 10^{-5}$ unless otherwise indicated. The wall time limit was 12 hours. Note that on the oic machine, if a calculation exceeds wall time there is no way to get any of the results from the scratch space. 
 
 The power iteration results were reported in \cite{Slaybaugh2013}, so we only add the RQI results here, which are shown in Table~\ref{table:3-D c5g7 rqi}.
@@ -600,6 +602,7 @@ The 3-D benchmark problem shows that for at least some problems, preconditioned 
 %** Could do more of these with better w,r,v choices to have more overlap between RQI and POI; use reduced angle set; not much grid depth to reduce, but could try anyway **
 
 \subsection{PWR 900 new results}
+\label{subsec:PWR}
 Most cases: tolerance = 1e-3, L2 tolerance = 1e-3, k tolerance = 1e-3. 578 x 578 x 700 cells (233,858,800 cells), 112 x 112 x 10 partitions (12,544 blocks). $S_{12}$, P0, 44 groups. 1.73 trillion unknowns. k0 = 1. Depth of V-cycle = 2, \Sn  in MGE = $S_2$
 %
 \begin{table}[!h]
@@ -661,6 +664,16 @@ The new multigroup Krylov solver converges more quickly than GS and enables ener
 The real motivation of this work was to add RQI, which should converge in fewer iterations that power iteration for large and challenging problems. RQI creates shifted systems that would not be tractable without the MG Krylov solver. It also creates ill-conditioned matrices that cannot converge without the multigrid-in-energy preconditioner. Using these methods, RQI converged in fewer iterations and in less time than preconditioned PI for a full-facility PWR on 200,000 cores. 
 
 The methods added in this research accelerated Denovo in multiple ways. This acceleration helps enable the solution of today’s “grand challenge” problems. It is hoped that improved methods will lead to improved reactor designs and systems, and that the frontier of computational challenges will be moved forward.
+
+%---
+Rayleigh quotient iteration is an old method that is an adaptation of shifted inverse iteration. Because the RQ provides an optimal shift, it is expected that using RQI in Denovo will converge in fewer iterations than power iteration for loosely coupled problems, provided that the eigenvector is converged. 
+
+Further, this solver is wrapped around the new MG Krylov solver. It has been shown that the energy decomposition improves solution time and scales well \cite{Slaybaugh2011}. It is therefore reasonable to expect that when RQI converges, decomposing the entire matrix in energy for eigenvalue calculations will work and provide the same kind of scaling improvement.
+
+RQI has not been applied to the transport equation before. This is likely because it takes $O(n^{3})$ operations for full dense matrices, and without parallelization in energy it could be prohibitively expensive \cite{Stewart2001}. In the past, adding a shift to make the scattering matrix energy-block dense was difficult to handle. The system would have been solved with Gauss Seidel, which would have been restrictively slow. The multigroup Krylov algorithm has enabled energy parallelization and made the calculation of the eigenvector tractable. 
+
+Computers that facilitate enough parallelization to decompose in energy and have enough memory to store Krylov subspaces for the full transport equation make combining RQI and MG Krylov possible. The resulting convergence of the eigenvalue should be faster than PI for at least some problems. The energy decomposition will allow eigenvalue calculations to overcome the limitations of scaling in space and angle alone such that the code can be scaled to many more cores. These ideas have never before been used together in this way.  
+
 
 %%---------------------------------------------------------------------------%%
 
