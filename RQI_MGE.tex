@@ -121,7 +121,7 @@
   
   \vspace{0.3in}
   
-  R.N. Slaybaugh, T.M. Evans, G.G. Davidson, and P.P.H. Wilson
+  R.N.\ Slaybaugh, T.M.\ Evans, G.G.\ Davidson, and P.P.H.\ Wilson
   
 \end{center}
 
@@ -141,7 +141,7 @@
 
 \section{Introduction}
 \label{sec:intro}
-The steady-state Boltzmann equation for neutron transport covers six dimensions of phase space. Typical deterministic transport problems today are three-dimensional, have up to thousands $\times$ thousands $\times$ thousands of mesh points, use up to $\sim$150 energy groups, include accurate expansions of scattering terms, and are solved over many angular directions. The next generation of challenging problems are even more highly refined. High-fidelity, coupled, multi-physics calculations are the new ``grand challenge'' problems for reactor analysis, requiring that the finely-resolved neutron flux be calculated quickly and accurately.
+The steady-state Boltzmann equation for neutron transport covers six dimensions of phase space. Typical deterministic transport problems today are three-dimensional, have up to thousands $\times$ thousands $\times$ thousands of mesh points, use up to $\sim$150 energy groups, include accurate expansions of scattering terms, and are solved over many angular directions. The next generation of challenging problems are even more highly refined. High-fidelity, coupled, multiphysics calculations are the new ``grand challenge'' problems for reactor analysis, requiring that the finely-resolved neutron flux be calculated quickly and accurately.
 
 Very large computers, such as Titan \cite{Titan2013}, are now available to perform such high-fidelity calculations. Many existing solution methods are not able to take full advantage of new computer architectures, or they have convergence properties that limit their usefulness for difficult problems. The goal of this research is to accelerate transport calculations with methods that use new computers fully and effectively, facilitating the design of better nuclear systems. 
 
@@ -153,10 +153,12 @@ The multigroup Krylov solver was designed to improve convergence when compared t
 
 A multigrid in energy preconditioner was added to Denovo to reduce iteration count for all problem types, and to address convergence issues associated with RQI. The  preconditioner conducts a multigrid method in the energy dimension. A set of energy grids with increasingly coarse energy group structures are created. This is implemented in a way that easily and efficiently takes advantage of the new energy decomposition. The multigrid algorithm is applied within each energy set such that the energy groups are only restricted and prolonged between groups on that set. Sets do not communicate with one another in the preconditioner, so the scaling in energy is very good. 
 
-Theory indicates that RQI should converge in fewer iterations than traditional eigenvalue solvers like power iteration, particularly for problems that are challenging for those solvers. However, the use of RQI would not be practical without the MG Krylov solver and the MGE precoditioner. The implementation of RQI results in a set of equations that is mathematically equivalent to having up-scattering in every group, so the scattering matrix becomes energy-block dense. Handling energy-block dense systems when there are more than a few energy groups is not tractable with GS as the multigroup solver. It is only the MG Krylov solver that makes RQI reasonable to use when there are many energy groups. The MGE preconditioner is needed to mitigate the slow convergence associated with Krylov methods when trying to solve the ill-conditioned systems created by RQI. 
+Theory indicates that RQI should converge in fewer iterations than traditional eigenvalue solvers like power iteration, particularly for problems that are challenging for those solvers. However, the use of RQI would not be practical without the MG Krylov solver and the MGE preconditioner. The implementation of RQI results in a set of equations that is mathematically equivalent to having upscattering in every group, so the scattering matrix becomes energy-block dense. Handling energy-block dense systems when there are more than a few energy groups is not tractable with GS as the multigroup solver. It is only the MG Krylov solver that makes RQI reasonable to use when there are many energy groups. The MGE preconditioner is needed to mitigate the slow convergence associated with Krylov methods when trying to solve the ill-conditioned systems created by RQI. 
 
-The remainder of this paper presents information about why these methods are complememtary as well as results demonstrating that they are. Section \ref{sec:background} discusses each of the new methods in the context of commonly-used methods. Section \ref{sec:pastwork} gives an overview of relevant past work. New results from using the three new methods together are shown in Section \ref{sec:results}, and concluding remarks are made in Section \ref{sec:conclusions}.
+The remainder of this paper presents information about why these methods are complementary as well as results demonstrating that they are. Section \ref{sec:background} discusses each of the new methods in the context of commonly-used methods. Section \ref{sec:pastwork} gives an overview of relevant past work. New results from using the three new methods together are shown in Section \ref{sec:results}, and concluding remarks are made in Section \ref{sec:conclusions}.
 
+%%---------------------------------------------------------------------------%%
+%%---------------------------------------------------------------------------%%
 %%---------------------------------------------------------------------------%%
 \section{Background}
 \label{sec:background}
@@ -189,6 +191,8 @@ Here $\ve{L}$ is the first-order linear differential transport operator; $\ve{M}
 
 Once the matrices are multiplied together, a series of single ``within-group'' equations that are each only a function of space and angle result. If the groups are coupled together by neutrons scattering from a low energy group to a higher energy group, then iterative ``multigroup'' solves over the coupled portion of the energy range may be required. If the eigenvalue is desired, an additional ``eigenvalue'' solve is needed \cite{Evans2009}. 
 
+%%---------------------------------------------------------------------------%%
+%%---------------------------------------------------------------------------%%
 \subsection{Block Krylov Solver}
 \label{sec:blockkrylov}
 Traditionally, the multigroup solve has been done with Gauss Seidel. GS is iterative in energy. A space-angle solve using a within-group solver, such as source iteration or a Krylov method, is performed for each energy group in series. The groups are solved from $g=0$, the highest energy, to $g=G$, the lowest. For a group $g$ and an energy iteration index $j$ this is \cite{Evans2010}
@@ -223,6 +227,8 @@ To implement the energy parallelization, the problem is divided into energy sets
 
 The added energy decomposition offers the ability to further decompose a problem, even if the performance limit of spatial decomposition has been reached. The total number of cores is equal to the number of computational domains, that is, the product of the number of energy sets and the number of spatial blocks. For 20,000 spatial blocks and 10 energy sets, which is a reasonable decomposition, 200,000 cores will be used. See Ref.\ \cite{Evans2011} for more details. 
 
+%%---------------------------------------------------------------------------%%
+%%---------------------------------------------------------------------------%%
 \subsection{Eigenvalue Solvers}
 \label{sec:eigenvalue}
 A common way to solve $k$-eigenvalue problems is with Power iteration (PI). This method is attractive because it only requires matrix-vector products and two vectors of storage space. 
@@ -356,6 +362,8 @@ where $\omega$ is a constant selected by the user that defaults to 1.
 
 An important principle is that the preconditioner is only attempting to approximately invert $\ve{A}$. It is therefore reasonable to use a less accurate angular discretization in the preconditioner than the rest of the code. For example, the whole problem may be solved at $S_{10}$, but the preconditioner could use $S_{2}$. The user can specify an angular quadrature set to use in the preconditioner that is different from the angular quadrature set used in the rest of the problem; the default is to use the same set in both. At this time, this option has only been implemented for vacuum boundary conditions. 
 
+%%---------------------------------------------------------------------------%%
+%%---------------------------------------------------------------------------%%
 %%---------------------------------------------------------------------------%%
 \section{Past Work}
 \label{sec:pastwork}
@@ -806,7 +814,7 @@ Appendix
     Oak Ridge, TN 37831-6170, USA\\\vspace{1\baselineskip}
     P.P.H. Wilson\\
     Department of Nuclear Engineering and Engineering Physics\\
-    University of Wisconsin - Madison\\
+    University of Wisconsin -- Madison\\
     419 ERB, 1500 Engineering Drive\\
     Madison, WI 52706, USA\\}
   

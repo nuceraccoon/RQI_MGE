@@ -1,3 +1,5 @@
+*.tex.bak
+*.synctex.gz
 nse.bib
 paper.tex
 RQI_MGE.tex.backup
