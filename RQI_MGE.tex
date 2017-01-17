@@ -362,16 +362,16 @@ When using multiple energy sets, cross-set communication is prohibited by having
   \label{eq:multisetGrids}
 \end{align}
 
-Some number of relaxations are performed on each level while traversing down and up the grids in a V-cycle. Performing more relaxations per grid should remove more error, but has a computational cost. The implemented relaxation method is weighted Richardson iteration. When applied to the transport equation, this is
+Some number of relaxations are performed on each level while traversing down and up the grids in a V-cycle. Performing more relaxations per grid should remove more error, but has a computational cost. The implemented relaxation method is weighted Richardson Iteration. When applied to the transport equation, this is
 %
 \begin{equation}
   \phi^{m} = \bigr(\ve{I} + \omega(\ve{TMS} - \ve{I})\bigl)\phi^{m-1} + \omega b^{m-1} \:,
   \label{eq:relax}
  \end{equation}
 %
-where $\omega$ is a constant selected by the user that defaults to 1. 
+where $\omega$ is a constant selected by the user that defaults to 1 and $m$ is iteration index. 
 
-An important principle is that the preconditioner is only attempting to approximately invert $\ve{A}$. It is therefore reasonable to use a less accurate angular discretization in the preconditioner than the rest of the code. For example, the whole problem may be solved at $S_{10}$, but the preconditioner could use $S_{2}$. The user can specify an angular quadrature set to use in the preconditioner that is different from the angular quadrature set used in the rest of the problem; the default is to use the same set in both. At this time, this option has only been implemented for vacuum boundary conditions. 
+An important principle is that the preconditioner is only attempting to approximately invert $\ve{A}$. It is therefore reasonable to use a less accurate angular discretization in the preconditioner than the rest of the code. For example, the whole problem may be solved at $S_{10}$, but the preconditioner could use $S_{2}$. The user can specify an angular quadrature set to use in the preconditioner that is different from the angular quadrature set used in the rest of the problem; the default is to use the same quadrature in both. At this time, this option has only been implemented for vacuum boundary conditions. 
 
 %%---------------------------------------------------------------------------%%
 %%---------------------------------------------------------------------------%%
