@@ -226,7 +226,7 @@ To implement the energy parallelization, the problem is divided into energy sets
 
 The added energy decomposition offers the ability to further decompose a problem, even if the performance limit of spatial decomposition has been reached. The total number of cores is equal to the number of computational domains, that is, the product of the number of energy sets and the number of spatial blocks. For 20,000 spatial blocks and 10 energy sets, which is a reasonable decomposition, 200,000 cores will be used. See Ref.\ \cite{Evans2011} for more details. 
 
-The solver has been shown to successfully scale to hundreds of thousands of cores. For example, a fixed-source test scaled from 69,102 cores to 190,080 cores with 98\% efficiency \cite{Slaybaugh2011}. Upscatter partitioning has been shown to initially perform better than full partitioning, but does not scale well over many energy sets \cite{Davidson2014}. An added benefit of this solver is that Krylov methods generally converge more quickly than GS for problems with upscattering \cite{Trefethen1997}.
+The solver has been shown to successfully scale to hundreds of thousands of cores. For example, a fixed-source test scaled from 69,102 cores to 190,080 cores with 98\% efficiency \cite{Slaybaugh2011}. Upscatter partitioning has been shown to initially perform better than full partitioning, but does not scale well over many energy sets \cite{Davidson2013}. An added benefit of this solver is that Krylov methods generally converge more quickly than GS for problems with upscattering \cite{Trefethen1997}.
 % Note: Davidson 2014 isn't in the bib file...where is this citation?
 
 %%---------------------------------------------------------------------------%%
@@ -309,10 +309,42 @@ Paige et al.\ \cite{Paige2006} demonstrated that GMRES is backwards stable when 
 
 \subsubsection{Arnoldi}
 Denovo has also implemented an Arnoldi Krylov subspace solver available for solving eigenvalue problems \cite{Davidson2013}. 
-
-\textbf{NEED DESCRIPTION OF ARNOLDI HERE}
-
-Like RQI, the Arnoldi solver can be parallelized over energy by using energy sets enabled by the MG Krylov solver.
+It can take either an energy-dependent or energy-independent form. Consider the energy dependent eigenvalue equation 
+\begin{equation}
+\begin{split}
+\mathbf{A}\phi &= k \phi, \\
+\mathbf{A} &= (\mathbf{I} - \mathbf{TMS})^{-1}\mathbf{TMF}
+\end{split}
+\end{equation}
+We then perform a matrix-vector multiply/sweep and fixed source solve.
+\begin{equation}
+z^{(h)} = \mathbf{TMF}\nu^{(h)}.
+\end{equation}
+\begin{equation}
+(\mathbf{I} - \mathbf{TMS})y^{(h)} = z^{(h)}.
+\end{equation}
+The energy independent case takes the form
+\begin{equation}
+\begin{split}
+\mathbf{A}\Gamma &= k\Gamma, \\
+\mathbf{A} &= \mathbf{f}^T(\mathbf{I - TMS})^{-1}\mathbf{TM\chi}.
+\end{split}
+\end{equation}
+Like in the energy-dependent case, a matrix-vector multiply/sweep and a fixed-source solve are performed with an additional matrix-vector multiply after.
+\begin{equation}
+z^{(h)} = \mathbf{TM\chi}\nu^{(h)}
+\end{equation}
+\begin{equation}
+(\mathbf{I} - \mathbf{TMS})x^{(h)} = z^{(h)}
+\end{equation}
+\begin{equation}
+y^{(h)} = \mathbf{f}^Tx^{(h)}
+\end{equation}
+Note that the vectors in the energy-dependent subspace span all of the energy groups, whereas the energy-independent approach requires each vector to span just one, using less memory. However, when the flux moments as well as the eigenvalue are desired, the energy-independent approach requires a final fixed source solve, potentially losing its memory advantage. The fixed-source solve is given by
+\begin{equation}
+(\mathbf{I} - \mathbf{TMS})\phi = \frac{1}{k}\mathbf{TM\chi\Gamma},
+\end{equation}
+Where k is the eigenvalue and $\Gamma$ is the eigenvector. It is not immediately evident which approach will be best suited to a given problem, so both approaches, energy-dependent and energy-independent, are considered. In the two cases convergence behavior is nearly identical given that their nonzero eigenvalues are the same. Like RQI, the Arnoldi solver can be parallelized over energy by using energy sets enabled by the MG Krylov solver.
 
 
 \subsection{Multigrid in Energy Preconditioner}
