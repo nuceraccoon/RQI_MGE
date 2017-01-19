@@ -308,21 +308,26 @@ On initial consideration it would seem shifted inverse methods might not work we
 Paige et al.\ \cite{Paige2006} demonstrated that GMRES is backwards stable when finding $x$ in $\ve{A}x = b$ for a ``sufficiently nonsingular $\ve{A}$'', and define associated criteria. For ill-conditioned systems, then, Krylov methods may not be backwards stable and will tend to converge very slowly. Many researchers have found that Krylov methods must be preconditioned to be able to get good results in practice \cite{Benzi2002}, \cite{Saad1986}, \cite{Trefethen1997} , \cite{Paige2006}. The past work section below demonstrates that RQI does need preconditioning for convergence in problems of interest.
 
 \subsubsection{Arnoldi}
-Denovo has also implemented an Arnoldi Krylov subspace solver available for solving eigenvalue problems \cite{Davidson2013}. 
-It can take either an energy-dependent or energy-independent form. Consider the energy dependent eigenvalue equation 
-\begin{equation}
-\begin{split}
-\mathbf{A}\phi &= k \phi, \\
-\mathbf{A} &= (\mathbf{I} - \mathbf{TMS})^{-1}\mathbf{TMF}
-\end{split}
-\end{equation}
+Denovo also has an Arnoldi Krylov subspace solver available for solving eigenvalue problems, which can take an energy-dependent or energy-independent form \cite{Davidson2013}. Recall the energy dependent form of the eigenvalue equation as seen in Eqn.~\eqref{eq:EnergyDepEval}. 
+%
+%Consider the energy dependent eigenvalue equation 
+%\begin{equation}
+%\begin{split}
+%\mathbf{A}\phi &= k \phi, \\
+%\mathbf{A} &= (\mathbf{I} - \mathbf{TMS})^{-1}\mathbf{TMF}
+%\end{split}
+%\end{equation}
 We then perform a matrix-vector multiply/sweep and fixed source solve.
 \begin{equation}
-z^{(h)} = \mathbf{TMF}\nu^{(h)}.
+z^{(h)} = \mathbf{TMF}\nu^{(h)}
 \end{equation}
 \begin{equation}
-(\mathbf{I} - \mathbf{TMS})y^{(h)} = z^{(h)}.
+(\mathbf{I} - \mathbf{TMS})y^{(h)} = z^{(h)}\:,
 \end{equation}
+where $z$ is a multi-group-sized vector like in RQI (recall that this vector covers only one group in PI).
+ 
+NEED SOME WORDS HERE ABOUT HOW THIS IS SOLVED. 
+
 The energy independent case takes the form
 \begin{equation}
 \begin{split}
@@ -330,7 +335,7 @@ The energy independent case takes the form
 \mathbf{A} &= \mathbf{f}^T(\mathbf{I - TMS})^{-1}\mathbf{TM\chi}.
 \end{split}
 \end{equation}
-Like in the energy-dependent case, a matrix-vector multiply/sweep and a fixed-source solve are performed with an additional matrix-vector multiply after.
+Like in the energy-dependent case, a matrix-vector multiply/sweep and a fixed-source solve are performed, but now there is an additional matrix-vector multiply afterwards.
 \begin{equation}
 z^{(h)} = \mathbf{TM\chi}\nu^{(h)}
 \end{equation}
@@ -340,11 +345,11 @@ z^{(h)} = \mathbf{TM\chi}\nu^{(h)}
 \begin{equation}
 y^{(h)} = \mathbf{f}^Tx^{(h)}
 \end{equation}
-Note that the vectors in the energy-dependent subspace span all of the energy groups, whereas the energy-independent approach requires each vector to span just one, using less memory. However, when the flux moments as well as the eigenvalue are desired, the energy-independent approach requires a final fixed source solve, potentially losing its memory advantage. The fixed-source solve is given by
+Note that the vectors in the energy-dependent subspace span all of the energy groups whereas the energy-independent approach requires each vector to span just one group--using less memory. However, when the flux moments as well as the eigenvalue are desired, the energy-independent approach requires a final fixed source solve, potentially losing its memory advantage. The fixed-source solve is given by
 \begin{equation}
 (\mathbf{I} - \mathbf{TMS})\phi = \frac{1}{k}\mathbf{TM\chi\Gamma},
 \end{equation}
-Where k is the eigenvalue and $\Gamma$ is the eigenvector. It is not immediately evident which approach will be best suited to a given problem, so both approaches, energy-dependent and energy-independent, are considered. In the two cases convergence behavior is nearly identical given that their nonzero eigenvalues are the same. Like RQI, the Arnoldi solver can be parallelized over energy by using energy sets enabled by the MG Krylov solver.
+Where k is the eigenvalue and $\Gamma$ is the eigenvector. It is not immediately evident which approach will be best suited to a given problem, so both approaches, energy-dependent and energy-independent, are considered in our comparisons below. In the two cases, convergence behavior is nearly identical given that their nonzero eigenvalues are the same. Like RQI, the Arnoldi solver can be parallelized over energy by using energy sets enabled by the MG Krylov solver.
 
 
 \subsection{Multigrid in Energy Preconditioner}
