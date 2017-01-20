@@ -1,0 +1,56 @@
+Note: Most recent RQI update was Mar 15 2016. 
+
+c5g7-2003 
+- Ran RQI no preconditioning. Inner iterations didn't converge. (Feb 2016)
+- Ran with Shift, inner iterations didn't converge. (Jan 2016)
+- Started to run v-cycle, relax study with preconditioner, but wasn't converging.
+- Ran with preconditioner on Remus. Exceeded walltime. (Mar 18 2016).
+- Ran with preconditoner on OIC. Small shift. MPI exec abort. (Feb 10 2016).
+ 
+
+c5g7-2005
+- Ran coarse mesh with preconditioner on Remus. Inner iterations didn't converge. (Feb 2016)
+- Ran with arnoldi on Titan. Converged to eigenvalue of 1.167. (Feb 2016)
+- Ran with preconditioner on Titan. Hit walltime. (Feb 2016)
+- Ran with preonditioner on OIC. Aborted. (Feb 17 2016). 
+
+casl-p1a
+- Ran with preconditioner, killed by Nemesis error. This looks like it was a debug run. Lots of couts. (Jan 2016)
+
+casl-p2a
+- Ran with preconditioner. Converged to eigenvalue of 1.15. (Jan 2016)
+- Ran with power iteration with finer mesh. Converged to eigenvalue of 1.169 (Jan 2016)
+- Ran with power iteration with coarser mesh, higher tolerance. Converged to eigenvalue of 1.158. (Jan 2015)
+- Ran with power iteration with coarser mesh, lower tolerance. Converged to eigenvalue of 1.158 (Jan 2016).
+- Ran with preconditioner. 16 mesh. Hit Nemesis normalization error at 3rd eigenvalue. (Jan 7 2016)
+- Ran with preconditioner. 4 mesh, 10 tolerance. Converged in 4 eigenvalue iterations to 1.15898 (Jan 13 2016). 
+- Ran with preconditioner. 4 mesh, 3 tolerance. Converged in 3 eigenvalue iterations to 1.15898 (Jan 6 2016).
+- Ran without preconditioner. Converged in 4 eigenvalue iterations to 1.15875. (Jan 15 2016). 
+- Ran with preconditioner. Converged in 3 eigenvalue iterations to 1.1590. (Jan 15 2016)
+- Ran without preconditioner. Killed before it finished. Looks like a debug run. (Jan 6 2016).
+
+casl-p4a
+- Ran with preconditioner. Converged in 4 eigenvalue iterations to .922724. (Feb 4 2016).
+- Ran on remus with preconditioner. Converged in 4 eigenvalues to .922724. (Feb 16 2016).
+
+u02-water-checkerboard
+- Ran with preconditioner. Converged in 3 eigenvalue iterations to .97000336 (Jan 5 2016).
+- Ran with arnoldi. Reflecting boundary conditions. Unclear if it fully converged. (date unclear - guessing Jan/Feb)
+- Ran with preconditioner. Reflecting boundary conditions. Unclear if fully converged. (date unclear - guessing Jan/Feb).
+- Ran with arnoldi. Vacuum boundary conditions. Unclear if fully converged (date unclear - guessing Jan/Feb.  
+- Ran with preconditioner. Vacuum boundary conditions. Unclear if fully converged. (date unclear - guessing Jan/Feb).
+
+bw1484
+- Ran on Remus with preconditioner. Converged in 3 eigenvalue iterations to 1.040784. (Mar 15 2016)
+- Ran on Remus with preconditioner. Finer mesh. Exceeded walltime. (Mar 29 2016).
+- Set scaling study on Remus. Results are in paper. (Apr 4 2016).
+- Two runs labeled quadrature_db_test on Remus. Both appeared to converge. (Sep 2 2016).
+- Various arnoldi/power iteration runs on Remus. 
+- Set scaling study on Titan. (Nov 2016)
+
+
+bw1484-2d
+- A whole bunch of V-Cycle/Relax count studies varying quadratures. Looks like it mostly converged nicely. Only some were done post Mar 15. 
+
+beavrs
+- Ran on Titan. Node failures all around. (Nov 2016).
