@@ -639,6 +639,7 @@ Both tests exhibited the same patterns for weight, number of relaxations per lev
 %%From the standpoint of comparing eigenvalue solution methods, it is worth noting that RQI required 19 eigenvalue iterations while PI required 31. Thus, when given eigenvectors that have been converged to the same tolerance, RQI needed fewer eigenvalue iterations than PI. For this benchmark, though, preconditioned RQI took more Krylov iterations within each multigroup solve to get the eigenvector to that tolerance, so RQI was not better than PI in terms of total Krylov count.
 %%
 
+%----------------------------------------------------------
 \subsection{3D C5G7}
 \label{subsec:3dc5g7}
 While the first few small problems were useful for initial investigation, we are really interested in solving much larger, more complex problems. The first of these is the 3-D C5G7 benchmark \cite{OECD-NEA2005}, solved with an optimized version of Denovo, the MGE preconditioner, and both PI and RQI. The goals of this study were to see if preconditioned RQI could consistently converge the flux and $k$ and to compare preconditioned RQI and PI. 
@@ -737,9 +738,13 @@ The 3-D benchmark problem shows that preconditioned RQI can converge more quickl
 %
 %** Could do more of these with better w,r,v choices to have more overlap between RQI and POI; use reduced angle set; not much grid depth to reduce, but could try anyway **
 
+
+%----------------------------------------------------------
 \subsection{PWR 900}
 \label{subsec:PWR}
-Most cases: tolerance = 1e-3, L2 tolerance = 1e-3, k tolerance = 1e-3. 578 x 578 x 700 cells (233,858,800 cells), 112 x 112 x 10 partitions (12,544 blocks). $S_{12}$, P0, 44 groups. 1.73 trillion unknowns. k0 = 1. Depth of V-cycle = 2, \Sn  in MGE = $S_2$
+We next studied a much larger problem that is ``grand challenge'' in scale, a full PWR 900 core \cite{evans2009d}. This problem used 2 $\times$ 2 spatial cells/pin for 17 $\times$ 17 pins/assembly and 289 assemblies (132 reflector, 159 fuel of varying enrichment). This gave 578 $\times$ 578 $\times$ 700 mesh elements (233,858,800 cells) that we broke up over 112 $\times$ 112 $\times$ 10 partitions (12,544 blocks). We used step characteristic, which has 1 unknown/cell; $P_0$ scattering expansion; an $S_{12}$ angular quadrature; and 44 energy groups--all of which gave 1.73 trillion unknowns. We further used a V-cycle depth of 2, a reduced quadrature in MGE of $S_2$, and, unless otherwise noted, tolerances of $1 \times 10^{-3}$. Based on PWR calculations done previously by Evans and Davidson \cite{Evans2010}, $k$ is approximately 1.27. This was solved on Titan. 
+
+The results using 11 energy sets are given in Table~\ref{tab:PWR all} and show that RQI was much faster and required far fewer Krylov and eigenvalue iterations than PI for this problem. In fact, The preconditioned PI problems did not finish before the wall time limit was reached (RQI was only run with preconditioning since other tests indicated it would not converge within a reasonable time without it). This is the first case where preconditioned RQI was better on all counts than PI whether PI was preconditioned or not. RQI with MGE was more than 10 times faster than PI. 
 %
 \begin{table}[!h]
 \caption{PWR-900 Comparison of PI and RQI with and without preconditioning on 11 energy sets}
@@ -749,23 +754,32 @@ Most cases: tolerance = 1e-3, L2 tolerance = 1e-3, k tolerance = 1e-3. 578 x 578
       \hline
       Method & Precond. & N Eigen & N Krylov & k & time (m) \\\hline
       %%
-      RQI & none   & info &     &                     & \\
+     % RQI & none   & info &     &                     & \\
       RQI & w1r1v1 & 3   & 45   & 1.252 $\pm$ 1.13e-2 & 120$^*$ \\
       RQI & w1r2v2 & 5   & 70   & 1.268 $\pm$ 9.75e-4 & 54.8 \\
       PI  & none   & 149 & 5602 & 1.276 $\pm$ 4.34e-6 & 612.2 \\
-      PI  & w1r1v1 & info &     &                     & \\
+      %PI  & w1r1v1 & info &     &                     & \\
       PI  & w1r2v2 & 86  & 946  & 1.275 $\pm$ 1.43e-5 & 720$^*$ \\
-      \hline
+      %\hline
       PI  & none   & 24  & 901  & 1.272 $\pm$ 1.01e-4 & 92.1$^\dagger$ \\
-      PI  & w1r1v1 & info &     &                     & \#$^\dagger$\\
-      PI  & w1r2v2 & 28  & 312  & 1.273 $\pm$ 8.24e-5 & 250.9$^\dagger$ \\
+      %PI  & w1r1v1 & info &     &                     & \#$^\dagger$\\
+      %PI  & w1r2v2 & 28  & 312  & 1.273 $\pm$ 8.24e-5 & 250.9$^\dagger$ \\
+      %PI  & w1r3v3 & 11  & 111   & 1.270 $\pm$ 5.09 $\times$ 10$^{-2}$ & 480$^{*,\dag}$ \\
       \hline
     \end{tabular}\\
     $^{*}$did not converge within walltime limit\\
-    $^{\dagger}$tolerance = $1 \times 10^{-2}$, $k$ tolerance = $1 \times 10^{-2}$
+    %$^{\dagger}$tolerance = $1 \times 10^{-2}$, $k$ tolerance = $1 \times 10^{-2}$
+    $^{\dag}$used $S_{12}$ in MGE preconditioner; full V-cycle depth;
+    tolerance = 1 $\times$ 10$^{-4}$, $k$ tolerance = 1 $\times$ 10$^{-3}$; 
+    102 $x$-blocks, 100 $y$-blocks, and 10 $z$-blocks\\
   \end{center}
 \end{table}
 
+To investigate how the full system performs for a real problem, a strong scaling study using RQI with MGE using $w1r2v2$ and 1, 4, 11, and 22 sets was done. 
+The results are given in Table~\ref{tab:PWR rqi strong scaling} where $\text{t}_{\text{perfect}}$ = ($\text{1 set solve time}$ / $\text{\# energy sets}$) and efficiency = ($\text{t}_{\text{perfect}}$ / $\text{t}_{\text{actual}}$). 
+A strong scaling study with MGE has been published before, but in that case the V-cycle depth was not fixed.
+This meant that increasing energy sets decreased V-cycle depth such that the preconditioner did less work with more sets. 
+In this study the amount of work done by the preconditioner does not vary with energy sets.
 \begin{table}[!h]
 \caption{PWR-900 RQI strong scaling w1r2v2 preconditioning}
 \label{tab:PWR rqi strong scaling}
@@ -783,12 +797,12 @@ Most cases: tolerance = 1e-3, L2 tolerance = 1e-3, k tolerance = 1e-3. 578 x 578
   \end{center}
 \end{table}
 
-With a lower tolerance also have: \\
-1) a strong scaling study \\
-2) one reduced angle set comparison
+The scaling compares quite well to previous scaling studies for Denovo. A fixed source (i.e.\ MG Krylov only) problem with a similar mesh and 44 groups scaled from 4,320 domains to 190,080 domains with an efficiency of 0.64 \cite{Slaybaugh2011}. That this problem performed similarly shows that adding RQI and the MGE preconditioner as solvers does not degrade the strong scaling achieved using the MG Krylov solver only. It is promising that the new solver system does not degrade scaling and that a problem for which RQI is decisively faster than PI is one for which this work was designed. 
 
+
+%----------------------------------------------------------
 \subsection{BW-1484}
-MGE was applied to a model of the Babcock and Wilcox 1484 reactor. RQI with preconditioning and without was compared to Arnoldi iteration with both upscatter and regular partitioning. A multi-set scaling study was performed on a local cluster, Figure \ref{fig:remus}, and on Titan, Figure \ref{fig:titan}, to show the comparative scaling of RQI with preconditioning.
+Finally, MGE was applied to a model of the Babcock and Wilcox 1484 reactor \cite{}. RQI with preconditioning and without was compared to Arnoldi iteration with both upscatter and regular partitioning. A multi-set scaling study was performed on a local cluster, Figure \ref{fig:remus}, and on Titan, Figure \ref{fig:titan}, to show the comparative scaling of RQI with preconditioning.
 \begin{figure}
 \label{fig:remus}
 \caption{Energy set scaling study on local cluster, Remus}
@@ -796,7 +810,7 @@ MGE was applied to a model of the Babcock and Wilcox 1484 reactor. RQI with prec
 \centering
 \end{figure}
 
- On the cluster, the study was performed with 128, 256, and 512 cores and 1, 2, and 4 energy sets. It showed favorable scaling on behalf of the RQI methods, whereas Arnoldi with upscatter partitioning shows poor scaling performance after two energy sets. 
+On the cluster, the study was performed with 128, 256, and 512 cores and 1, 2, and 4 energy sets. It showed favorable scaling on behalf of the RQI methods, whereas Arnoldi with upscatter partitioning shows poor scaling performance after two energy sets. 
 
 \begin{figure}
 \label{fig:titan}
@@ -857,83 +871,31 @@ Appendix
 \bibliographystyle{model1-num-names}
 \bibliography{RQI_MGE}
 
-%%---------------------------------------------------------------------------%%
-%% TABLES
-%%---------------------------------------------------------------------------%%
-
-\clearpage
-
-\begin{table}[p]
-  \caption{
-    Comparison of results for the adjoint neutron porosity tool
-    problem. For these problems, the adjoint source is place in the
-    far detector.  All timing results are normalized to the
-    unaccelerated Gauss-Seidel iteration time.
-  }
-  \label{tab:adjoint-porosity-tool}
-  \begin{center}
-    \begin{tabular}{lcll}\hline\hline
-      Method & Acceleration $S_N$ order & GS iterations & Time \\\hline
-      %%
-      GS & - & 53 & 1.0   \\
-      TTG & 8 & 7 & 0.172 \\
-      TTG & 2 & 7 & 0.159 \\
-      \hline\hline
-    \end{tabular}
-  \end{center}
-\end{table}
-
-%%---------------------------------------------------------------------------%%
-
-\clearpage
-
-\begin{table}[p]
-  \caption{
-    Results from the neutron porosity tool problem using MTTG.  All
-    timing results are normalized to the unaccelerated Gauss-Seidel
-    iteration time.
-  }
-  \label{tab:MTTG-porosity-tool}
-  \begin{center}
-    \begin{tabular}{llllll}\hline\hline
-      Method & Acceleration $S_N$  & GS Iterations & Within-group
-      & Acceleration & Time \\
-      & order & & sweeps & sweeps &  \\\hline
-      %%
-      GS   & - & 175 & 16294 & 0    & 1.0   \\
-      TTG  & 8 & 15  & 1398  & 547  & 0.113 \\
-      TTG  & 2 & 13  & 1212  & 459  & 0.086 \\
-      MTTG & 2 & 47  & 611   & 1329 & 0.050 \\
-      \hline\hline
-    \end{tabular}
-  \end{center}
-\end{table}
-
-%%---------------------------------------------------------------------------%%
-%% FIGURES
-%%---------------------------------------------------------------------------%%
-
-\clearpage
-
-\begin{figure}[p]
-  \begin{center}
-    \includegraphics[width=6in,clip]{PWRstrongScaling}
-  \end{center}
-  \caption{Example1}
-  \label{fig:example1}
-\end{figure}
-
-%%---------------------------------------------------------------------------%%
-
-\clearpage
-
-\begin{figure}[p]
-  \begin{center}
-    \includegraphics[width=6in,clip]{PWRPrecondRQI}
-  \end{center}
-  \caption{Example}
-  \label{fig:example2}
-\end{figure}
+%%%---------------------------------------------------------------------------%%
+%%% FIGURES
+%%%---------------------------------------------------------------------------%%
+%
+%\clearpage
+%
+%\begin{figure}[p]
+%  \begin{center}
+%    \includegraphics[width=6in,clip]{PWRstrongScaling}
+%  \end{center}
+%  \caption{Example1}
+%  \label{fig:example1}
+%\end{figure}
+%
+%%%---------------------------------------------------------------------------%%
+%
+%\clearpage
+%
+%\begin{figure}[p]
+%  \begin{center}
+%    \includegraphics[width=6in,clip]{PWRPrecondRQI}
+%  \end{center}
+%  \caption{Example}
+%  \label{fig:example2}
+%\end{figure}
 
 %%---------------------------------------------------------------------------%%
 
