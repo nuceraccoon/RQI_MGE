@@ -447,19 +447,25 @@ These results suggest that the MGE preconditioner was a failed experiment after 
 %%---------------------------------------------------------------------------%%
 \section{Method Update}
 \label{sec:update}
+This work endeavors to answer the question about whether RQI will work for challenging problems with an MGE preconditioner. However, in addition to condition number, there is one more component we can think about: getting RQI started in the right direction. 
 
+(Need a reference to talk about this!!!): In the first one or few RQI iterations, the eigenvector guess, and therefore the computer RQ, may not be be very close to the dominant eigenmode. If, however, they are close to another eigenmode, the system may converge to a non-dominant eigenvalue/vector pair without warning. Or, as we have witnessed, may not converge at all. 
+
+One approach to alleviate this issue is to begin the solution process with one or a few power iterations before beginning Rayleigh Quotient iteration. This will help ensure the dominant eigenvalue is selected, that RQI will converge, and that RQI will converge to the correct eigenpair. 
+
+Some of the results we generated, discussed below, were \textit{without} the PI iterations to start. We found, however, that implementing this ``PI-start'' was frequently needed. The results that used a few PI iterations at the outset will be indicated.
 
 %%---------------------------------------------------------------------------%%
 \section{Results}
 \label{sec:results}
-The collection of observations in the past work section led to the questions (1) Will preconditioning with MGE facilitate the use of RQI? and (2) Will the combination of RQI, MGE, and the block Krylov solver be advantageous for at least some problems? This section covers a series of problems designed to answer these two questions. 
+The collection of observations in the past work section led to the questions (1) Will preconditioning with MGE facilitate the use of RQI?, (2) Will the combination of RQI, MGE, and the block Krylov solver be advantageous for at least some problems? , and (3) will using a ``PI-start'' help support convergence to the correct solution? This section covers a series of problems designed to answer these questions. 
 
 The goal of using this system of solvers is to improve convergence behavior of the multigroup Krylov solves integrated over eigenvalue solves. The best metric for measuring this is the total number of multigroup Krylov iterations used in a calculation because it is the most consistent and fair measure. The number of eigenvalue iterations is also compared for the eigenvalue tests. This is a point of interest rather than a measure of goal attainment. The total number of Krylov iterations is the best proxy for convergence behavior as it encompasses the work that is done within each eigenvalue iteration.  
 
 Timing comparisons should be considered heuristically unless otherwise specified. In cases where the calculations were done on a single core, the machine was not dedicated to these calculations and times could vary if the same calculations were repeated. Some problems use an optimized version of the code and others use a debug version. These should give the same iteration count, but not necessarily the same relative times between problems. Further, little effort has been made to optimize the preconditioner for speed. Once the multigrid in energy preconditioner has been optimized for efficiency, the preconditioned times should decrease. How much improvement can be gained is a matter for future study. 
 
-Unless otherwise noted, all test problems used a step characteristic spatial solver, level-symmetric angular quadrature, and the grid depth was determined using the default approach. %, Equation~\eqref{eq:NumGrids} or Equation~\eqref{eq:multisetGrids}. 
-The Krylov solver was GMRES, which is set to limit the number of multigroup iterations to 1,000 if the problem does not converge earlier. The convergence tolerances are noted for each problem. The tolerance for the multigroup solve is the convergence tolerance used by GMRES in Trilinos \cite{1089021}. The eigenvalue tolerance is used by PI to determine if the eigenvalue has converged. In Denovo, PI also checks the L2-norm and the infinity-norm of the difference in the fission source between iterations. The default L2-norm tolerance is 1.0 and infinity-norm tolerance is 0.01.
+Unless otherwise noted, all test problems used a step characteristic spatial solver, level-symmetric angular quadrature, and the MG grid depth was determined using the default approach. %, Equation~\eqref{eq:NumGrids} or Equation~\eqref{eq:multisetGrids}. 
+The Krylov solver was GMRES, which is set to limit the number of multigroup iterations to 1,000 if the problem does not converge earlier. The convergence tolerances are noted for each problem. The tolerance for the multigroup solve is the convergence tolerance used by GMRES in Trilinos \cite{1089021}. The eigenvalue tolerance is used by the eigenvalue solver to determine if the eigenvalue has converged. In Denovo, PI also checks the L2-norm and the infinity-norm of the difference in the fission source between iterations. The default L2-norm tolerance is 1.0 and infinity-norm tolerance is 0.01.
 
 \subsection{Initial Investigation}
 A variety of small problems were solved to verify code functionality, ensure that total Krylov count is reduced by the addition of MGE, verify MGE parameter choice when used in combination with RQI, and confirm that the preconditioner should \emph{not} use the shifted version of the operator.
