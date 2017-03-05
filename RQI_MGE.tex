@@ -742,7 +742,41 @@ The 3-D benchmark problem shows that preconditioned RQI can converge more quickl
 %----------------------------------------------------------
 \subsection{PWR 900}
 \label{subsec:PWR}
-We next studied a much larger problem that is ``grand challenge'' in scale, a full PWR 900 core \cite{evans2009d}. This problem used 2 $\times$ 2 spatial cells/pin for 17 $\times$ 17 pins/assembly and 289 assemblies (132 reflector, 159 fuel of varying enrichment). This gave 578 $\times$ 578 $\times$ 700 mesh elements (233,858,800 cells) that we broke up over 112 $\times$ 112 $\times$ 10 partitions (12,544 blocks). We used step characteristic, which has 1 unknown/cell; $P_0$ scattering expansion; an $S_{12}$ angular quadrature; and 44 energy groups--all of which gave 1.73 trillion unknowns. We further used a V-cycle depth of 2, a reduced quadrature in MGE of $S_2$, and, unless otherwise noted, tolerances of $1 \times 10^{-3}$. Based on PWR calculations done previously by Evans and Davidson \cite{Evans2010}, $k$ is approximately 1.27. This was solved on Titan. 
+We next studied a much larger problem that is ``grand challenge'' in scale, a full PWR 900 core \cite{evans2009d}. This problem used 2 $\times$ 2 spatial cells/pin for 17 $\times$ 17 pins/assembly and 289 assemblies (132 reflector, 159 fuel of varying enrichment). This gave 578 $\times$ 578 $\times$ 700 mesh elements (233,858,800 cells). We used step characteristic, which has 1 unknown/cell; $P_0$ scattering expansion; an $S_{12}$ angular quadrature; and 44 energy groups--all of which gave 1.73 trillion unknowns. Based on PWR calculations done previously by Evans and Davidson \cite{Evans2010}, $k$ is approximately 1.27. 
+
+We first did a strong scaling study on Jaguar \cite{jaguar2010}. The preconditioner settings were $w1r3v3$; 4 and 11 sets were used giving 11 and 4 groups per set with 6 and 4 energy grids, respectively. We used 102 $x$-blocks, 100 $y$-blocks, and 10 $z$-blocks. The results using both PI and RQI are in Table~\ref{table:full PWR}. 
+%
+\begin{table}[!h]
+\caption{PWR900, Preconditioned Strong Scaling Study}
+\begin{center}
+\begin{tabular}{| l | c | c | c | l | c | c | l |}
+\hline
+Solver & Sets & Cores & $k$ & Krylov & Eigenvalue & Total (m) & Solver (m)\\[0.5ex]
+\hline
+%RQI & 1   & 10,200   & 0.182 & 12    & 2$^{\dag}$ & 720.05    & n/a \\
+%PI    & 1   & 10,200   &  &  &       &  &  \\
+RQI & 4   & 40,800   & 1.269 & 76   &  6               & 802.60   & 801.32 \\
+RQI w/ $S_{2}$ & 4   & 40,800   & 1.269 & 79   &  6               & 192.48   & 191.42 \\
+PI    & 4   & 40,800   & 1.270 & 101 & 10$^{\dag}$ & 1440.12 & n/a \\
+RQI & 11 & 112,200 & 1.269 & 76   & 6                & 331.43    & 330.38 \\
+PI    & 11 & 112,200 & 1.270 & 111 & 11$^{\dag}$ & 480.63    & n/a \\
+%RQI & 22 & 198,528 & 1.269 & 76   & 6                & 143.62    & 142.56 \\
+%PI    & 22 & 198,528 & 1.271 & 161 & 16$^{*}$      & 285.92    & n/a \\
+\hline 
+\end{tabular}\\
+$^{\dag}$exceeded wall time limit %\\ 
+%$^{*}$machine taken down for maintenance during calculation
+\end{center}
+\label{table:full PWR}
+\end{table}  
+
+We also considered what would happen with a reduced quadrature set inside the preconditioner. As can be seen in by looking at the ``RQI w/ $S_{2}$'' case, this had a big time saving impact: reducing the solver time from 13.36 to 3.19 hours, or 76\%, without affecting the solution. All further studies used $S_{2}$ in the preconditioner.
+
+In this study RQI converged and changing the number of sets did not change the number of eigenvalue or eigenvector iterations for these cases. Neither an unpreconditioned calculation, nor one with different preconditioning parameters were tried. There were no cases where PI completed the calculation before the walltime limit. Limits of 8 and 24 hours were chosen based on the RQI finish times of 5.5 and 13.4 hours, respectively. In previous problems the solve time for PI was close to or less than RQI, so the selected limits seemed reasonable. 
+
+A true comparison between PI and RQI is difficult because PI never finished the calculations. However, all results clearly show that RQI was much faster and required far fewer Krylov and eigenvalue iterations than PI for this problem. This test shows that RQI can be the better eigenvalue solver choice for at least some problems. It is promising that the calculation for which RQI is decisively faster than PI is the one for which this work was designed. 
+
+To more conclusively resolve the comparison, we did another study, this time on Titan. We used a V-cycle depth of 2, a reduced quadrature in MGE of $S_2$, and, unless otherwise noted, tolerances of $1 \times 10^{-3}$. This time we broke up over 112 $\times$ 112 $\times$ 10 partitions (12,544 blocks).
 
 The results using 11 energy sets are given in Table~\ref{tab:PWR all} and show that RQI was much faster and required far fewer Krylov and eigenvalue iterations than PI for this problem. In fact, The preconditioned PI problems did not finish before the wall time limit was reached (RQI was only run with preconditioning since other tests indicated it would not converge within a reasonable time without it). This is the first case where preconditioned RQI was better on all counts than PI whether PI was preconditioned or not. RQI with MGE was more than 10 times faster than PI. 
 %
@@ -877,26 +911,6 @@ This research used resources of the Oak Ridge Leadership Computing Facility at t
 %
 %\clearpage
 %
-%\begin{figure}[p]
-%  \begin{center}
-%    \includegraphics[width=6in,clip]{PWRstrongScaling}
-%  \end{center}
-%  \caption{Example1}
-%  \label{fig:example1}
-%\end{figure}
-%
-%%%---------------------------------------------------------------------------%%
-%
-%\clearpage
-%
-%\begin{figure}[p]
-%  \begin{center}
-%    \includegraphics[width=6in,clip]{PWRPrecondRQI}
-%  \end{center}
-%  \caption{Example}
-%  \label{fig:example2}
-%\end{figure}
-
 %%---------------------------------------------------------------------------%%
 
 \clearpage
