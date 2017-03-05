@@ -473,7 +473,7 @@ When considering the use of the MGE preconditioner, there are two operator choic
 The results are shown in Table~\ref{table:RQIUnitTestVacShifted}. Unless otherwise noted the correct $k$ and flux were found. ``Kry'' is the total number of Krylov iterations and ``RQI'' is the total number of eigenvalue iterations; shifted and unshifted operators are noted. Note that throughout this chapter a $w$ and/or $r$ and/or $v$ of 0 in a table or figure indicates the unpreconditioned case (so shifted and unshifted has no meaning in that case).
 
 \begin{table}[!h]
-\caption{RQI Small Test with Vacuum Boundaries; Shifted Operator Study}
+\caption{RQI Small Test with Vacuum Boundaries; MGE Shifted Operator Study}
 \begin{center}
 \begin{tabular}{| c | c | c | c | c | c | c |}
 \hline
@@ -507,7 +507,7 @@ The next test was a small test with \textit{reflecting} boundary conditions. For
 The flux was not tested against a very tight tolerance, either $1 \times 10^{-2}$ or $1 \times 10^{-3}$, unless otherwise noted.  The results are show in Table~\ref{table:RQIUnitTestReflShifted}, where the prefix $un-$ indicates the unshifted case. The maximum number of Krylov iterations was set to 100 for this calculation.
 %
 \begin{table}[!h]
-\caption{RQI Small Test with Reflecting Boundaries; Shifted Operator Study}
+\caption{RQI Small Test with Reflecting Boundaries; MGE Shifted Operator Study}
 \begin{center}
 \begin{tabular}{| c | c | c || c | c | c || c | c | c |}
 \hline
@@ -553,71 +553,61 @@ With the unshifted operator, the correct $k$ and flux were always found when the
 These cases confirmed that the solvers could work together, showed that the correct solution is obtained with the unshifted preconditioner as long as the problem converges, and that Krylov iteration count is reduced when RQI is used with MGE. 
 Both tests exhibited the same patterns for weight, number of relaxations per level, and number of V-cycles as the previously-published MGE results--demonstrating that RQI did not change the parameter behavior of the preconditioner. These tests also confirmed that the problems associated with shifting the operator persist when used inside of Richardson iteration, and that the unshifted version should be used to ensure stability.
 
- \subsubsection{Intermediate problem}
- RQI kinda choked on this without preconditioning, but behaved really really poorly with preconditioning. This was the one with negative fluxes and complete crazy behavior that we never explained. Worked fine with MGE+PI. Worked worse with BiCGSTAB instead of GMRES. 
- 
- \begin{table}[!h]
- \caption{Infinite Medium Eigenvalue Problem, Preconditioning Results with Rayleigh Quotient Iteration}
- \begin{center}
- \begin{tabular}{| c | c | c | c | l | c | c | c | c |}
- \hline
- $w$ & $r$ & $v$ & $k$ & Krylov & RQI & Max Rel Diff & RMS Err & Rel Time$^{+}$ \\[0.5ex]
- \hline
- 0    & 0 & 0 & 0.3970 & 39,025              & 40$^{*}$  & n/a & n/a & 211.03 \\%$5.43 \times 10^{4}$ \\
- 1    & 1 & 1 & 0.3982 & 3,014$^{\dag}$ & 4 & $1.67 \times 10^{-1}$ & $3.32 \times 10^{-2}$ & 103.56 \\%$2.66 \times 10^{4}$ \\
- 1    & 3 & 1 & 0.3983 & 50                     & 3 & 0.0 & 0.0 & 40.19 \\ %$1.03 \times 10^{4}$ \\
- 1    & 4 & 1 & 0.3983 & 44$^{\dag}$      & 3 & 0.0 & 0.0 & 4.51 \\ %$1.16 \times 10^{3}$ \\
- 1    & 2 & 2 & 0.3983 & 44$^{\dag}$      & 3 & 0.0 & 0.0 & 1.11 \\ %$2.86 \times 10^{2}$ \\
- 1    & 4 & 4 & 0.4001 & 16                     & 3 & $1.67 \times 10^{-1}$ & $3.21 \times 10^{-2}$ & 7.73 \\ %$1.99 \times 10^{3}$ \\
- 1    & 5 & 4 & 0.4001 & 14$^{\dag}$     & 3 & $1.67 \times 10^{-1}$ & $3.21 \times 10^{-2}$ & 8.81 \\ %$2.27 \times 10^{2}$ \\
- 1.4 & 5 & 4 & -0.4711 & 12$^{\dag}$    & 2 & $1.67 \times 10^{-1}$ & $3.21 \times 10^{-2}$ & 6.77 \\ %$1.74 \times 10^{3}$ \\
- 1    & 5 & 5 & -0.4575 & 7$^{\dag}$      & 2 & $3.43 \times 10^{-6}$ & $3.67 \times 10^{-5}$ & 6.13 \\ %$1.58 \times 10^{3}$ \\
- \hline
- 1.1 & 4 & 1 & 0.3983 & 43$^{\dag}$      & 3 & 0.0 & 0.0 & 4.51 \\ %$1.16 \times 10^{3}$ \\
- 1.1 & 1 & 4 & 0.3983 & 43$^{\dag}$      & 3 & 0.0 & 0.0 & 5.24 \\ %$1.35 \times 10^{3}$ \\
- 1.1 & 2 & 2 & 0.3983 & 43$^{\dag}$      & 3 & 0.0 & 0.0 & 4.57 \\ %$1.18 \times 10^{3}$ \\
- \hline
- 0.7 & 1 & 1 & 0.3999 & 3,001$^{\dag}$ & 4 & 1.0 & $3.72 \times 10^{-1}$ & 87.34 \\ %$2.25 \times 10^{4}$ \\
- 0.7 & 3 & 1 & 0.4001 & 87$^{\dag}$      & 5 & 0.0 & 0.0 & 7.60 \\ %$1.95 \times 10^{3}$ \\
- 0.7 & 3 & 3 & 0.4001 & 47$^{\dag}$      & 5 & 0.0 & 0.0 & 11.34 \\ %$2.92 \times 10^{3}$ \\
- 0.4 & 3 & 1 & 0.4001 & 1,052$^{\dag}$ & 4 & $1.18 \times 10^{-5}$ & $8.43 \times 10^{-8}$      & 67.57 \\ %$1.74 \times 10^{4}$ \\
- \hline 
- \end{tabular}\\
- $^{+}$compared to unpreconditioned PI, $2.57 \times 10^{2}$ seconds\\
- $^{*}$terminated manually\\
- $^{\dag}$negative flux
- \end{center}
- \label{table:impi RQI}
- \end{table}
- %
- The preconditioned results are shown in Table~\ref{table:impi RQI}. In the table ``Max Rel Diff'' is the maximum over all cells and all groups of the relative difference between the reference flux and the absolute value of the computed flux, $\max[ (\phi_{ref} - \vert\phi_{calc}\vert) / \phi_{ref}]$. ``RMS Err'' is the root mean squared (rms) relative error, $\sqrt{ \sum_{1}^{N}(rel\_err)^{2} / N}$. As a reminder, the total and upscattering tolerances were $1 \times 10^{-4}$, and the $k$ tolerance was $1 \times 10^{-5}$. Recall that if the Krylov iteration count is in the thousands it means the eigenvector did not converge in every iteration. The ``Rel Time'' column is the ratio of the found time to the unpreconditioned PI time of $2.57 \times 10^{-2}$ seconds.
- 
- ** Should we leave this out?\\
- ** Should we try to understand this better?\\
- ** Is it unethical to leave out this data?\\
+%%----------------------------------------------------------
+% \subsubsection{Intermediate problem}
+% RQI kinda choked on this without preconditioning, but behaved really really poorly with preconditioning. This was the one with negative fluxes and complete crazy behavior that we never explained. Worked fine with MGE+PI. Worked worse with BiCGSTAB instead of GMRES. 
+% 
+% \begin{table}[!h]
+% \caption{Infinite Medium Eigenvalue Problem, Preconditioning Results with Rayleigh Quotient Iteration}
+% \begin{center}
+% \begin{tabular}{| c | c | c | c | l | c | c | c | c |}
+% \hline
+% $w$ & $r$ & $v$ & $k$ & Krylov & RQI & Max Rel Diff & RMS Err & Rel Time$^{+}$ \\[0.5ex]
+% \hline
+% 0    & 0 & 0 & 0.3970 & 39,025              & 40$^{*}$  & n/a & n/a & 211.03 \\%$5.43 \times 10^{4}$ \\
+% 1    & 1 & 1 & 0.3982 & 3,014$^{\dag}$ & 4 & $1.67 \times 10^{-1}$ & $3.32 \times 10^{-2}$ & 103.56 \\%$2.66 \times 10^{4}$ \\
+% 1    & 3 & 1 & 0.3983 & 50                     & 3 & 0.0 & 0.0 & 40.19 \\ %$1.03 \times 10^{4}$ \\
+% 1    & 4 & 1 & 0.3983 & 44$^{\dag}$      & 3 & 0.0 & 0.0 & 4.51 \\ %$1.16 \times 10^{3}$ \\
+% 1    & 2 & 2 & 0.3983 & 44$^{\dag}$      & 3 & 0.0 & 0.0 & 1.11 \\ %$2.86 \times 10^{2}$ \\
+% 1    & 4 & 4 & 0.4001 & 16                     & 3 & $1.67 \times 10^{-1}$ & $3.21 \times 10^{-2}$ & 7.73 \\ %$1.99 \times 10^{3}$ \\
+% 1    & 5 & 4 & 0.4001 & 14$^{\dag}$     & 3 & $1.67 \times 10^{-1}$ & $3.21 \times 10^{-2}$ & 8.81 \\ %$2.27 \times 10^{2}$ \\
+% 1.4 & 5 & 4 & -0.4711 & 12$^{\dag}$    & 2 & $1.67 \times 10^{-1}$ & $3.21 \times 10^{-2}$ & 6.77 \\ %$1.74 \times 10^{3}$ \\
+% 1    & 5 & 5 & -0.4575 & 7$^{\dag}$      & 2 & $3.43 \times 10^{-6}$ & $3.67 \times 10^{-5}$ & 6.13 \\ %$1.58 \times 10^{3}$ \\
+% \hline
+% 1.1 & 4 & 1 & 0.3983 & 43$^{\dag}$      & 3 & 0.0 & 0.0 & 4.51 \\ %$1.16 \times 10^{3}$ \\
+% 1.1 & 1 & 4 & 0.3983 & 43$^{\dag}$      & 3 & 0.0 & 0.0 & 5.24 \\ %$1.35 \times 10^{3}$ \\
+% 1.1 & 2 & 2 & 0.3983 & 43$^{\dag}$      & 3 & 0.0 & 0.0 & 4.57 \\ %$1.18 \times 10^{3}$ \\
+% \hline
+% 0.7 & 1 & 1 & 0.3999 & 3,001$^{\dag}$ & 4 & 1.0 & $3.72 \times 10^{-1}$ & 87.34 \\ %$2.25 \times 10^{4}$ \\
+% 0.7 & 3 & 1 & 0.4001 & 87$^{\dag}$      & 5 & 0.0 & 0.0 & 7.60 \\ %$1.95 \times 10^{3}$ \\
+% 0.7 & 3 & 3 & 0.4001 & 47$^{\dag}$      & 5 & 0.0 & 0.0 & 11.34 \\ %$2.92 \times 10^{3}$ \\
+% 0.4 & 3 & 1 & 0.4001 & 1,052$^{\dag}$ & 4 & $1.18 \times 10^{-5}$ & $8.43 \times 10^{-8}$      & 67.57 \\ %$1.74 \times 10^{4}$ \\
+% \hline 
+% \end{tabular}\\
+% $^{+}$compared to unpreconditioned PI, $2.57 \times 10^{2}$ seconds\\
+% $^{*}$terminated manually\\
+% $^{\dag}$negative flux
+% \end{center}
+% \label{table:impi RQI}
+% \end{table}
+% %
+% The preconditioned results are shown in Table~\ref{table:impi RQI}. In the table ``Max Rel Diff'' is the maximum over all cells and all groups of the relative difference between the reference flux and the absolute value of the computed flux, $\max[ (\phi_{ref} - \vert\phi_{calc}\vert) / \phi_{ref}]$. ``RMS Err'' is the root mean squared (rms) relative error, $\sqrt{ \sum_{1}^{N}(rel\_err)^{2} / N}$. As a reminder, the total and upscattering tolerances were $1 \times 10^{-4}$, and the $k$ tolerance was $1 \times 10^{-5}$. Recall that if the Krylov iteration count is in the thousands it means the eigenvector did not converge in every iteration. The ``Rel Time'' column is the ratio of the found time to the unpreconditioned PI time of $2.57 \times 10^{-2}$ seconds.
+% 
+% ** Should we leave this out?\\
+% ** Should we try to understand this better?\\
+% ** Is it unethical to leave out this data?\\
 
-\subsubsection{2D C5G7}
+%----------------------------------------------------------
+\subsection{2D C5G7}
 \label{subsec:2dc5g7}
-After the baseline was established, MGE was applied to the 2-D C5G7 benchmark using both PI and RQI with the goals of seeing if preconditioned RQI could converge the flux and $k$, to investigate the effect of preconditioning in both RQI and PI, and to see whether the lessons learned about preconditioning parameters still hold in a real problem. The calculation used 16 cores on the small Orthanc cluster at Oak Ridge: 4 $x$-blocks, 4 $y$-blocks, 1 $z$-block and 1 energy set. The total and upscattering tolerances were $1 \times 10^{-3}$, with a $k$ tolerance of $1 \times 10^{-5}$. An optimized version of Denovo was used.  
+NOT SURE IF IT'S WORTH KEEPING THIS IN
 
-A weight variation study was done with power iteration first. The results using $r1v1$ are plotted as Krylov Iterations vs.\ Weight, and Time in seconds vs.\ Weight in Figure~\ref{fig:2-Dc5g7PI}. All calculated $k$s were within the uncertainty of the benchmark and so are not reported. All preconditioned cases needed 31 power iterations while the unpreconditioned case took 32.
-%
-\begin{figure}[!ht]
-    \begin{center}
-      \includegraphics [width=0.7\textwidth, height=0.7\textheight] {2Dc5g7PI}
-   \end{center}
-   \caption{2-D C5G7 Benchmark, Preconditioner Weight Variation with Power Iteration}
-   \label{fig:2-Dc5g7PI}
-\end{figure}
-
-This study shows the preconditioner is very effective at reducing the number of Krylov iterations used by PI. The unpreconditioned case, corresponding to a weight of 0 on the plot, took 3,129 MG Krylov iterations. As the weight was increased from 1 to 1.4, the number of Krylov iterations and the time to solution both decreased. With $w1.4$, 1,458 MG Krylov iterations were taken. The time and iteration count both went back up with a weight of 1.5. When the weight was increased beyond 1.5 none of the multigroup iterations converged, and the problem was terminated manually after several power iterations. 
-
-Two other calculations with a higher level of preconditioning were also done. When the parameters were $w1.4r2v2$ the number of Krylov iterations were reduced to 438 and the calculation took $1.77 \times 10^{4}$ seconds, both lower than all the cases using $r1v1$. For $w1r3v3$, 253 Krylov iterations and $2.28 \times 10^{4}$ seconds were required. This had the smallest number of Krylov iterations, but a slightly longer time than all the calculations except $w1.5r1v1$.	
+After the baseline was established, unshifted MGE was applied to the 2-D C5G7 benchmark using RQI as the eigenvalue solver with the goals of seeing if preconditioned RQI could converge the flux and $k$, to investigate the effect of preconditioning in RQI, and to see whether the lessons learned about preconditioning parameters still hold in a real problem. The calculation used 16 cores on the small Orthanc cluster at Oak Ridge: 4 $x$-blocks, 4 $y$-blocks, 1 $z$-block and 1 energy set. The total and upscattering tolerances were $1 \times 10^{-3}$, with a $k$ tolerance of $1 \times 10^{-5}$. An optimized version of Denovo was used.  	
 
 The results from the RQI study are in Table~\ref{table:2-D c5g7 rqi}. In all cases, except the unpreconditioned one, $k$ was within the uncertainty of the benchmark value. The ``$<$ 1,000?'' column indicates whether or not the multigroup iterations converged during the RQI process. If the value is ``no,'' the eigenvector only converged during the first iteration. A number indicates the last eigenvalue iteration for which the Krylov method took less than 1,000 iterations. All subsequent iterations required the full 1,000. A ``yes'' means all of the Krylov iterations converged. The relative time is the ratio of the case of interest to the unpreconditioned PI time of $8.54 \times 10^{3}$ seconds.
-%
+
 \begin{table}[!h]
-\caption{2-D C5G7 Benchmark, Convergence Study with Rayleigh Quotient Iteration}
+\caption{2-D C5G7 Benchmark, Convergence Study with Preconditioned RQI}
 \begin{center}
 \begin{tabular}{| c | c | c | l | c | c | c |}
 \hline
@@ -641,15 +631,13 @@ $^{*}$terminated manually
 \end{center}
 \label{table:2-D c5g7 rqi}
 \end{table}
+This problem was also tried with BiCGSTAB as the Krylov solver for an unpreconditioned case and a $w1r3v3$ case. Every multigroup iteration went to the 1,000 iteration limit and the problem was terminated manually after several RQ iterations.
 
 These results show a few important things. Most significantly, with enough preconditioning the multigroup iterations within RQI can be converged and the correct eigenpair can be found. This was true even when the eigenvector did not converge inside each eigenvalue iteration (though these cases were significantly more time consuming). Further, as the preconditioning increased the eigenvector came closer to converging for all iterations. For the first three $w\#r3v3$ cases, all of the Krylov iterations converged. This test case was the first to demonstrate that the preconditioner can get RQI to converge. Finally, when the Krylov iterations did converge, increasing the weight decreased iteration count and wall time for small weights but too much weight prevented the calculation from converging.
 %Additionally, it seems that preconditioning held RQI on track enough to get the right eigenvalue when the eigenvector did not quite converge. As was hypothesized for the unpreconditioned infinite medium test, it may be that the eigenvector was close enough to correct that a good approximation to the eigenvalue could still be made from it, even though the vector itself did not converge. 
 
-Only the $w1r3v3$ calculation overlaped between RQI and PI. PI took fewer Krylov iterations, 253 compared to 299, and less time, $2.28 \times 10^{4}$ compared to $2.57 \times 10^{4}$ seconds. For this test preconditioned RQI did not perform as well as preconditioned PI, though the times and iteration counts were close to one another. 
-
-From the standpoint of comparing eigenvalue solution methods, it is worth noting that RQI required 19 eigenvalue iterations while PI required 31. Thus, when given eigenvectors that have been converged to the same tolerance, RQI needed fewer eigenvalue iterations than PI. For this benchmark, though, preconditioned RQI took more Krylov iterations within each multigroup solve to get the eigenvector to that tolerance, so RQI was not better than PI in terms of total Krylov count.
+%From the standpoint of comparing eigenvalue solution methods, it is worth noting that RQI required 19 eigenvalue iterations while PI required 31. Thus, when given eigenvectors that have been converged to the same tolerance, RQI needed fewer eigenvalue iterations than PI. For this benchmark, though, preconditioned RQI took more Krylov iterations within each multigroup solve to get the eigenvector to that tolerance, so RQI was not better than PI in terms of total Krylov count.
 %
-The RQI problem was also tried with BiCGSTAB as the Krylov solver for an unpreconditioned case and a $w1r3v3$ case. Every multigroup iteration went to the 1,000 iteration limit and the problem was terminated manually after several RQ iterations.
 
 \subsection{Problems of Interest}
 While the first few small problems were useful for initial investigation, we are really interested in solving much larger, more complex problems. 
