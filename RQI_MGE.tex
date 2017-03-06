@@ -813,25 +813,32 @@ To investigate how the full system performs for a real problem, a strong scaling
 The results are given in Table~\ref{tab:PWR rqi strong scaling} where $\text{t}_{\text{perfect}}$ = ($\text{1 set solve time}$ / $\text{\# energy sets}$) and efficiency = ($\text{t}_{\text{perfect}}$ / $\text{t}_{\text{actual}}$). 
 A strong scaling study with MGE has been published before, but in that case the V-cycle depth was not fixed.
 This meant that increasing energy sets decreased V-cycle depth such that the preconditioner did less work with more sets. 
-In this study the amount of work done by the preconditioner does not vary with energy sets.
+In this study the amount of work done by the preconditioner does not vary with energy sets. 
 \begin{table}[!h]
 \caption{PWR-900 RQI strong scaling w1r2v2 preconditioning}
 \label{tab:PWR rqi strong scaling}
   \begin{center}
     \begin{tabular}{| c | c | c | c | c | c | c |}
      \hline
-      Sets & N Eigen & N Krylov & time (m) & t$_{\text{perfect}}$ & Efficiency \\\hline
+      Sets & Domains & N Eigen & N Krylov & time (m) & t$_{\text{perfect}}$ & Efficiency \\\hline
       %%
-      1   & 5 & 70 & 407.8 & 407.8 & 1.000 \\
-      4   & 5 & 70 & 123.4 & 102.0 & 0.826\\
-      11  & 5 & 70 & 54.8  & 37.1  & 0.676\\
-      22  & 5 & 70 & 39.6  & 18.5  & 0.468\\
+      1   & 12,544    & 5 & 70 & 407.8 & 407.8 & 1.000 \\
+      4   & 50, 176   & 5 & 70 & 123.4 & 102.0 & 0.826\\
+      11  & 137,984 & 5 & 70 & 54.8  & 37.1  & 0.676\\
+      22  & 275,968 & 5 & 70 & 39.6  & 18.5  & 0.468\\
       \hline
     \end{tabular}
   \end{center}
 \end{table}
+%
+\begin{figure}
+\label{fig:pwr-scaling}
+\caption{PWR900 with MGE and RQI Energy Set Scaling Study on Titan}
+\includegraphics[scale=.7]{images/pwr-scaling}
+\centering
+\end{figure}
 
-The scaling compares quite well to previous scaling studies for Denovo. A fixed source (i.e.\ MG Krylov only) problem with a similar mesh and 44 groups scaled from 4,320 domains to 190,080 domains with an efficiency of 0.64 \cite{Slaybaugh2011}. That this problem performed similarly shows that adding RQI and the MGE preconditioner as solvers does not degrade the strong scaling achieved using the MG Krylov solver only. It is promising that the new solver system does not degrade scaling and that a problem for which RQI is decisively faster than PI is one for which this work was designed. 
+The scaling, which can be visualized in Figure~\ref{fig:pwr-scaling} compares quite well to previous scaling studies for Denovo. A fixed source (i.e.\ MG Krylov only) problem with a similar mesh and 44 groups scaled from 4,320 domains to 190,080 domains with an efficiency of 0.64 \cite{Slaybaugh2011}. That this problem performed similarly shows that adding RQI and the MGE preconditioner as solvers does not degrade the strong scaling achieved using the MG Krylov solver only. It is promising that the new solver system does not degrade scaling and that a problem for which RQI is decisively faster than PI is one for which this work was designed. 
 
 
 %----------------------------------------------------------
