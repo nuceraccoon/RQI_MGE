@@ -845,12 +845,18 @@ The scaling, which can be visualized in Figure~\ref{fig:pwr-scaling} compares qu
 \subsection{BW-1484}
 Finally, MGE was applied to a model of the Babcock and Wilcox 1484 reactor (BW1484) \cite{bw1484}. We used this problem to  investigate the update to the method, where we perform a few initial Power Iterations before conducting RQI. We also used this problem do a scaling study in energy to compare preconditioned and unpreconditioned RQI with Arnoldi using both upscatter and regular partitioning. 
 
-NEED DESCRIPTION of BW problem (similar to PWR problem).
-
 \subsubsection{Impact of Method Update}
-The BW1484 problem was one of several that did not perform well 
+Initial investigation with the BW1484 problem highlighted the challenge of getting RQI to converge.  The first configuration of the problem we tried was 2D; used $P_{0}$; 8 energy groups, 4 of which contained upscattering; a 168 $\times$ 168 mesh over 1 $x$-, $y$-, and $z$-block; MGE with $w1r1v1$; a QR-4-4 quadrature; and eigenvalue and general tolerances of $1 \times 10^{-3}$ with an upscattering tolerance of $1 \times 10^{-8}$. 
+
+For this problem, every eigenvalue iteration failed to converge the eigenvector, reaching 100 Krylov iterations without a residual under $1 \times 10^{-8}$. The eigenvalue at the end of 4 iterations was not anywhere near the reference value. 
+
+After the RQI solver was updated to first perform a few PI iterations to get on track, this problem converged without trouble. 
+
+This problem illustrated that the PI shift can make a big difference in terms of ability to converge problems that RQI is struggling with. To investigate the performance of the updated RQI with and compare it to Arnoldi, a much more competitive comparison than to PI, we looked at a larger version of this problem.
 
 \subsubsection{Multiset Scaling}
+
+
 RQI with preconditioning and without was compared to Arnoldi iteration with both upscatter and regular partitioning. A multi-set scaling study was performed on a local cluster, Remus, and on Titan.  Figures \ref{fig:remus} and \ref{fig:titan} show the comparative scaling of RQI with preconditioning on each machine.
 \begin{figure}
 \label{fig:remus}
