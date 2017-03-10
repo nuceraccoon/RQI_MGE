@@ -843,7 +843,15 @@ The scaling, which can be visualized in Figure~\ref{fig:pwr-scaling} compares qu
 
 %----------------------------------------------------------
 \subsection{BW-1484}
-Finally, MGE was applied to a model of the Babcock and Wilcox 1484 reactor \cite{bw1484}. RQI with preconditioning and without was compared to Arnoldi iteration with both upscatter and regular partitioning. A multi-set scaling study was performed on a local cluster, Figure \ref{fig:remus}, and on Titan, Figure \ref{fig:titan}, to show the comparative scaling of RQI with preconditioning.
+Finally, MGE was applied to a model of the Babcock and Wilcox 1484 reactor (BW1484) \cite{bw1484}. We used this problem to  investigate the update to the method, where we perform a few initial Power Iterations before conducting RQI. We also used this problem do a scaling study in energy to compare preconditioned and unpreconditioned RQI with Arnoldi using both upscatter and regular partitioning. 
+
+NEED DESCRIPTION of BW problem (similar to PWR problem).
+
+\subsubsection{Impact of Method Update}
+The BW1484 problem was one of several that did not perform well 
+
+\subsubsection{Multiset Scaling}
+RQI with preconditioning and without was compared to Arnoldi iteration with both upscatter and regular partitioning. A multi-set scaling study was performed on a local cluster, Remus, and on Titan.  Figures \ref{fig:remus} and \ref{fig:titan} show the comparative scaling of RQI with preconditioning on each machine.
 \begin{figure}
 \label{fig:remus}
 \caption{Energy set scaling study on local cluster, Remus}
