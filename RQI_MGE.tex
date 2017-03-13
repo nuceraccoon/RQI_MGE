@@ -855,26 +855,31 @@ After the RQI solver was updated to first perform a few PI iterations to get on 
 This problem illustrated that the PI shift can make a big difference in terms of ability to converge problems that RQI is struggling with. To investigate the performance of the updated RQI with and compare it to Arnoldi, a much more competitive comparison than to PI, we looked at a larger version of this problem.
 
 \subsubsection{Multiset Scaling}
+We needed to study multiset scaling for a problem of this size with updated method, and we wanted to compare performance to Arnoldo. This, the BW1484 problem was solved with RQI with and without preconditioning and compared to Arnoldi iteration with both upscatter and regular partitioning. 
 
-
-RQI with preconditioning and without was compared to Arnoldi iteration with both upscatter and regular partitioning. A multi-set scaling study was performed on a local cluster, Remus, and on Titan.  Figures \ref{fig:remus} and \ref{fig:titan} show the comparative scaling of RQI with preconditioning on each machine.
+We started by performing a smaller study on a local cluster, Remus.  
+WHAT ARE THE REMUS DECOMP / DISCRETIZATION / TOLERANCE / MGE / ETC PARAMETERS? 
+On the cluster, the study was performed with 128, 256, and 512 cores and 1, 2, and 4 energy sets, respectively. Figure \ref{fig:remus} shows the results.
 \begin{figure}
 \label{fig:remus}
-\caption{Energy set scaling study on local cluster, Remus}
+\caption{BW1484 Energy Set Scaling Study on Local Cluster, Remus}
 \includegraphics[scale=.75]{Results/bw-small}
 \centering
 \end{figure}
 
-On the cluster, the study was performed with 128, 256, and 512 cores and 1, 2, and 4 energy sets. It showed favorable scaling on behalf of the RQI methods, whereas Arnoldi with upscatter partitioning shows poor scaling performance after two energy sets. 
+The cluster results showed favorable scaling with both preconditioned and unpreconditioned RQI. Preconditioned RQI was faster than unpreconditioned. Both were faster than Arnoldi with full partitioning (which scaled well, but was the slowest). Arnoldi with upscatter partitioning performed the best at low core count, but shows poor scaling performance after two energy sets and ended in 3rd place with respect to time. 
 
+To see how these trends would hold on larger problems and with more cores, we also performed this study on Titan. Here the 1-set case was run with 3,136 cores (56 $x$-blocks and 56 $y$-blocks). A parallel-efficiency modeling tool developed at Oak Ridge was used to choose the optimal $z$-blocks for each method, which in the case of RQI with MGE preconditioning was determined to be 22. For the other three methods, 11 $z$-blocks were determined to be optimal. We then scaled up to 2, 4, and 8 sets and 6,272, 12,544, and 25,088 cores, respectively. The upscatter and k-tolerances were set to $1 \times 10^{-5}$. WHAT ARE THE DISCRETIZATION PARAMETERS? Based on previous studies \cite{Slaybaugh2015}, a weight of 1 with 3 v-cycles and 2 relaxations was chosen for the MGE preconditioner. 
+and \ref{fig:titan} 
 \begin{figure}
 \label{fig:titan}
-\caption{Energy set scaling study on Titan}
+\caption{BW1484 Energy Set Scaling Study on Titan}
 \includegraphics[scale=.75]{Results/bw-large}
 \centering
 \end{figure}
 
-On Titan, the initial problem was run with 3,136 cores (56 x-blocks, 56 y-blocks, and 1 set). We then scaled up to 2, 4, and 8 sets and 6,272, 12,544, and 25,088 cores, respectively. The upscatter and k-tolerances were set to $1 \times 10^{-5}$. A parallel-efficiency modeling tool developed at Oak Ridge was used to choose the optimal z-blocks for each method, which in the case of RQI with MGE preconditioning was determined to be 22. For the other three methods, 11 z-blocks were determined to be optimal. Based on previous studies \cite{Slaybaugh2015}, a weight of 1 was chosen with 3 v-cycles and 2 relaxations. 
+All of the same behaviors were observed as the smaller case. MORE WORDS HERE.
+
 %---------------------------------------------------------------------------%%
 
 \section{Conclusions}
