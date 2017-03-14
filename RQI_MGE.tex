@@ -449,11 +449,11 @@ These results suggest that the MGE preconditioner was a failed experiment after 
 \label{sec:update}
 This work endeavors to answer the question about whether RQI will work for challenging problems with an MGE preconditioner. However, in addition to condition number, there is one more component we can think about: getting RQI started in the right direction. 
 
-(Need a reference to talk about this!!!): In the first one or few RQI iterations, the eigenvector guess, and therefore the computer RQ, may not be be very close to the dominant eigenmode. If, however, they are close to another eigenmode, the system may converge to a non-dominant eigenvalue/vector pair without warning. Or, as we have witnessed, may not converge at all. 
+In the first one or few RQI iterations, the eigenvector guess, and therefore the computer RQ, may not be be very close to the dominant eigenmode. If, however, they are close to another eigenmode, the system may converge to a non-dominant eigenvalue/vector pair without warning. Or, as we have witnessed in past work, may not converge at all. 
 
-One approach to alleviate this issue is to begin the solution process with one or a few power iterations before beginning Rayleigh Quotient iteration. This will help ensure the dominant eigenvalue is selected, that RQI will converge, and that RQI will converge to the correct eigenpair. 
+One approach to alleviate this issue is to begin the solution process with one or a few power iterations before beginning Rayleigh Quotient iteration. This will increase the likelihood that the first shift RQI uses is close to the goal. The ideas is to help ensure the dominant eigenvalue is selected, that RQI will converge, and that RQI will converge to the correct eigenpair. 
 
-Some of the results we generated, discussed below, were \textit{without} the PI iterations to start. We found, however, that implementing this ``PI-start'' was frequently needed. The results that used a few PI iterations at the outset will be indicated.
+In our work we have implemented this idea by using a zero shift in the first RQI iteration. This is functionally performing PI once before the standard RQI method is used. Some of the results we generated, discussed below, were \textit{without} the PI iterations to start. We found, however, that implementing this ``PI-start'' was frequently needed. The results that used a few PI iterations at the outset will be indicated.
 
 %%---------------------------------------------------------------------------%%
 \section{Results}
@@ -857,7 +857,7 @@ This problem illustrated that the PI shift can make a big difference in terms of
 \subsubsection{Multiset Scaling}
 We needed to study multiset scaling for a problem of this size with updated method, and we wanted to compare performance to Arnoldi. Thus, the BW1484 problem was solved with RQI with and without preconditioning and compared to Arnoldi iteration with both upscatter and regular partitioning. 
 
-We started by performing a smaller study on a local cluster, Remus. This problem used 2 \times 2 spatial cells/pin with 60x60 pins for a total of 120x120x44 mesh elements (633,600 cells). Step characteristic was used giving 1 unknown/cell; $P_0$ scattering expansion; an $S_{48}$ angular quadrature; and 56 energy groups - which gave approximately 425 million unknowns. In the preconditioned cases, an $S_1$ quadrature was used in the multilevel preconditioner with 2 v-cycles and a relax count of 3.
+We started by performing a smaller study on a local cluster, Remus. This problem used 2 $\times$ 2 spatial cells/pin with 60 $\times$ 60 pins for a total of 120 $\times$ 120 $\times$ 44 mesh elements (633,600 cells). Step characteristic was used giving 1 unknown/cell; $P_0$ scattering expansion; an $S_{48}$ angular quadrature; and 56 energy groups - which gave approximately 425 million unknowns. In the preconditioned cases, an $S_1$ quadrature was used in the multilevel preconditioner with 2 v-cycles and a relax count of 3.
 
 On the cluster, the study was performed with 128, 256, and 512 cores and 1, 2, and 4 energy sets, respectively. Figure \ref{fig:remus} shows the results.
 \begin{figure}
@@ -908,7 +908,7 @@ Computers that facilitate enough parallelization to decompose in energy and have
 
 \section{Acknowledgements}
 
-This research used resources of the Oak Ridge Leadership Computing Facility at the Oak Ridge National Laboratory, which is supported by the Office of Science of the U.S. Department of Energy under Contract No. DE-AC05-00OR22725. Additional thanks to the Rickover Fellowship Program in Nuclear Engineering sponsored by Naval Reactors Division of the U.S. Department of Energy. This fellowship sponsored the work from which this work is derived. 
+This research used resources of the Oak Ridge Leadership Computing Facility at the Oak Ridge National Laboratory, which is supported by the Office of Science of the U.S. Department of Energy under Contract Nos.\ DE-AC05-00OR22725 and DE-AC0500OR22725. Additional thanks to the Rickover Fellowship Program in Nuclear Engineering sponsored by Naval Reactors Division of the U.S.\ Department of Energy. This fellowship sponsored the work from which this work is derived. 
 
 %%%---------------------------------------------------------------------------%%
 %
