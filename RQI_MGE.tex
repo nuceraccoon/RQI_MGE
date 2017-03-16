@@ -183,7 +183,7 @@ The multigroup $S_N$ equations can be written in operator form as
   \ve{L}\psi &= \ve{MS}\phi + \frac{1}{k}\ve{M}\chi f^{T}\phi \:. \qquad &\text{(eigenvalue)} \label{eq:eigenvalue}
 \end{alignat}
 %
-Here $\ve{L}$ is the first-order linear differential transport operator; $\ve{M}$ is the moment-to-discrete operator that projects the angular flux moments, $\phi$, onto discrete angles; $\ve{S}$ is the scattering matrix; $q$ is a source term; $f$ contains the fission source, $\nu \Macro_{f}$; $\chi$ is the energy distribution with which neutrons are born out of fission; and $k$ is the asymptotic ratio of the number of neutrons in one generation to the number in the next. The angular flux moments are related to the angular flux, $\phi$ through the discrete-to-moment operator: $\phi = \mathbf{D} \psi \:$. Using this relationship, Equations \eqref{eq:fxdsource} and \eqref{eq:eigenvalue} can be rearranged such that they are a function of only $\phi$. The formulation is aided by defining $\ve{T} = \ve{DL}^{-1}$ and $\ve{F} = \chi f^{T}$ \cite{Evans2011}:
+Here $\ve{L}$ is the first-order linear differential transport operator; $\ve{M}$ is the moment-to-discrete operator that projects the angular flux moments, $\phi$, onto discrete angles; $\ve{S}$ is the scattering matrix; $q$ is a source term; $f$ contains the fission source, $\nu \Macro_{f}$; $\chi$ is the energy distribution with which neutrons are born out of fission; and $k$ is the asymptotic ratio of the number of neutrons in one generation to the number in the next. The angular flux moments are related to the angular flux, $\phi$ through the discrete-to-moment operator: $\phi = \mathbf{D} \psi$. Using this relationship, Equations \eqref{eq:fxdsource} and \eqref{eq:eigenvalue} can be rearranged such that they are a function of only $\phi$. The formulation is aided by defining $\ve{T} = \ve{DL}^{-1}$ and $\ve{F} = \chi f^{T}$ \cite{Evans2011}:
 %
 \begin{alignat}{2}
   (\ve{I} - \ve{TMS})\phi &= q \:, \qquad &\text{(fixed source)} \label{eq:OperatorFxdForm} \\
@@ -196,7 +196,7 @@ Once the matrices are multiplied together, a series of single ``within-group'' e
 %%---------------------------------------------------------------------------%%
 \subsection{Block Krylov Solver}
 \label{sec:blockkrylov}
-Traditionally, the multigroup solve has been done with Gauss Seidel. GS is iterative in energy. A space-angle solve using a within-group solver, such as source iteration or a Krylov method, is performed for each energy group in series. The groups are solved from $g=0$, the highest energy, to $g=G$, the lowest. For a group $g$ and an energy iteration index $j$ this is \cite{Evans2010}
+Traditionally, the multigroup solve has been done with Gauss Seidel (GS), which is iterative in energy. A space-angle solve using a within-group solver, such as source iteration or a Krylov method, is performed for each energy group in series. The groups are solved from $g=0$, the highest energy, to $g=G$, the lowest. For a group $g$ and an energy iteration index $j$ this is \cite{Evans2010}
 %
 \begin{equation}
   \bigl( \ve{I} - \ve{TMS}_{gg} \bigr) \phi^{j+1}_{g} = \ve{TM} \bigl( \sum_{g'=0}^{g-1}\ve{S}_{gg'}\phi^{j+1}_{g'} + \sum_{g'=g+1}^{G} \ve{S}_{gg'}\phi^{j}_{g'}  + q_{g} \bigr)  \:.
@@ -299,7 +299,7 @@ RQI has been implemented in Denovo, as detailed in Ref.\ \cite{Slaybaugh2012}, b
 %
 The new matrix, $\ve{\tilde{S}}$, is energy-block dense since the fission matrix is dense and looks like one big upscattering block. Traditional solution methods for the fixed source part of the equation do not handle dense scattering matrices well. This has hampered the implementation of SII in multi-group, 3-D codes because solving many groups that have upper-triangular scattering entries can be time-prohibitive. 
 
-The RQI method added to Denovo uses the MG Krylov solver, which is designed to handle dense scattering matrices effectively, to overcome the use of a dense $\ve{\tilde{S}}$. In addition, RQI can be decomposed in energy and take advantage of the scaling properties of the multigroup solver. Using RQI in combination with a Krylov method, however, raises some concerns about whether or not it can converge. 
+The RQI method added to Denovo uses the MG Krylov solver, which is designed to handle dense scattering matrices effectively--overcoming the burden of using of a dense $\ve{\tilde{S}}$. In addition, RQI can be decomposed in energy and take advantage of the scaling properties of the multigroup solver. Using RQI in combination with a Krylov method, however, raises some concerns about whether or not it can converge. 
 
 %A method's behavior can be affected by characteristics of the mathematical problem as well as by characterisitics of the algorithm. Conditioning is one way to express the perturbation behavior of the mathematical problem. An ill-conditioned problem is one in which some small perturbation of $x$ leads to a large change in $f(x)$. A large condition number corresponds to an ill-conditioned problem, and vice versa. 
 
@@ -317,13 +317,11 @@ Denovo also has an Arnoldi Krylov subspace solver available for solving eigenval
 %\mathbf{A} &= (\mathbf{I} - \mathbf{TMS})^{-1}\mathbf{TMF}
 %\end{split}
 %\end{equation}
-We then perform a matrix-vector multiply/sweep and fixed source solve.
-\begin{equation}
-z^{(h)} = \mathbf{TMF}\nu^{(h)}
-\end{equation}
-\begin{equation}
-(\mathbf{I} - \mathbf{TMS})y^{(h)} = z^{(h)}\:,
-\end{equation}
+We then perform a matrix-vector multiply/sweep and fixed source solve:
+\begin{align}
+z^{(h)} &= \mathbf{TMF}\nu^{(h)}\:,\\
+(\mathbf{I} &- \mathbf{TMS})y^{(h)} = z^{(h)}\:,
+\end{align}
 where $z$ is a multi-group-sized vector like in RQI (recall that this vector
 covers only one group in PI). Using the multi-group-sized vector allows us to
 take advantage of all of the machinery of the block Krylov solver.
@@ -335,21 +333,19 @@ The energy independent case takes the form
 \mathbf{A} &= \mathbf{f}^T(\mathbf{I - TMS})^{-1}\mathbf{TM\chi}.
 \end{split}
 \end{equation}
-Like in the energy-dependent case, a matrix-vector multiply/sweep and a fixed-source solve are performed, but now there is an additional matrix-vector multiply afterwards.
-\begin{equation}
-z^{(h)} = \mathbf{TM\chi}\nu^{(h)}
-\end{equation}
-\begin{equation}
-(\mathbf{I} - \mathbf{TMS})x^{(h)} = z^{(h)}
-\end{equation}
-\begin{equation}
-y^{(h)} = \mathbf{f}^Tx^{(h)}
-\end{equation}
+Like in the energy-dependent case, a matrix-vector multiply/sweep and a fixed-source solve are performed, but now there is an additional matrix-vector multiply afterwards:
+\begin{align}
+z^{(h)} &= \mathbf{TM\chi}\nu^{(h)}\:,\\
+%
+(\mathbf{I} &- \mathbf{TMS})x^{(h)} = z^{(h)}\:,\\
+%
+y^{(h)} &= \mathbf{f}^Tx^{(h)}\:.
+\end{align}
 Note that the vectors in the energy-dependent subspace span all of the energy groups whereas the energy-independent approach requires each vector to span just one group--using less memory. However, when the flux moments as well as the eigenvalue are desired, the energy-independent approach requires a final fixed source solve, potentially losing its memory advantage. The fixed-source solve is given by
 \begin{equation}
 (\mathbf{I} - \mathbf{TMS})\phi = \frac{1}{k}\mathbf{TM\chi\Gamma},
 \end{equation}
-Where k is the eigenvalue and $\Gamma$ is the eigenvector. It is not immediately evident which approach will be best suited to a given problem, so both approaches, energy-dependent and energy-independent, are considered in our comparisons below. In the two cases, convergence behavior is nearly identical given that their nonzero eigenvalues are the same. Like RQI, the Arnoldi solver can be parallelized over energy by using energy sets enabled by the MG Krylov solver.
+where $k$ is the eigenvalue and $\Gamma$ is the eigenvector. It is not immediately evident which approach will be best suited to a given problem, so both approaches, energy-dependent and energy-independent, are considered in our comparisons below. In the two cases, convergence behavior is nearly identical given that their nonzero eigenvalues are the same. Like RQI, the Arnoldi solver can be parallelized over energy by using energy sets enabled by the MG Krylov solver.
 
 
 \subsection{Multigrid in Energy Preconditioner}
@@ -367,12 +363,12 @@ Next, the coarsest result is prolonged back to the next-finer grid and used to c
  
 Thus, multigrid methods remove the low-frequency error modes that require many Krylov iterations. The preconditioner was designed to take advantage of the energy decomposition used by the MG Krylov method. Each energy set does work only on its own grids and does not need to communicate with other energy sets. This is a communication savings compared to using grids in space or angle. An additional benefit is the simplicity of energy grids. Energy is one-dimensional, which allows for simpler coarsening and refinement than spatial or angular grids.
 
-To implement multigrid in energy as a right preconditioner in Denovo, the problem is broken into two steps shown below. Here $\ve{G}^{-1}$ represents the application of the preconditioner, and $y$ is defined as $\ve{G}\phi$; recall that $\ve{A} = \ve{I} - \ve{TMS}$.  
+To implement multigrid in energy as a right preconditioner in Denovo, the problem is broken into two steps shown below. Here, $\ve{G}^{-1}$ represents the application of the preconditioner and $y$ is defined as $\ve{G}\phi$; recall that $\ve{A} = \ve{I} - \ve{TMS}$.  
 %
 \begin{enumerate}
   \item With a Krylov method solve 
     \begin{equation}
-      \ve{AG}^{-1}y = b \:, \label{eq:PrecondKrylov} 
+      \ve{AG}^{-1}y = b \:; \label{eq:PrecondKrylov} 
     \end{equation}
   \item after finding $y$, calculate 
     \begin{equation}
@@ -406,7 +402,7 @@ Some number of relaxations are performed on each level while traversing down and
   \label{eq:relax}
  \end{equation}
 %
-where $\omega$ is a constant selected by the user that defaults to 1 and $m$ is iteration index. 
+where $\omega$ is a constant selected by the user that defaults to 1 and $m$ is the iteration index. 
 
 An important principle is that the preconditioner is only attempting to approximately invert $\ve{A}$. It is therefore reasonable to use a less accurate angular discretization in the preconditioner than the rest of the code. For example, the whole problem may be solved at $S_{10}$, but the preconditioner could use $S_{2}$. The user can specify an angular quadrature set to use in the preconditioner that is different from the angular quadrature set used in the rest of the problem; the default is to use the same quadrature in both. At this time, this option has only been implemented for vacuum boundary conditions. 
 
@@ -415,7 +411,7 @@ An important principle is that the preconditioner is only attempting to approxim
 %%---------------------------------------------------------------------------%%
 \section{Past Work}
 \label{sec:pastwork}
-This section is a summary of results using RQI with preconditioning \cite{Slaybaugh2012} and the MGE Preconditioner with fixed source problems or PI \cite{Slaybaugh2013}. The purpose of this section is to highlight the capabilities that have been demonstrated and point out the short-comings that can be overcome by using the MG Krylov solver, RQI eigenvalue solver, and MGE preconditioner together. In the following discussion, reducing the Krylov iteration count is the primary measure of success--with reduced time as the second consideration. A discussion of this choice is given at the beginning of the Section \ref{sec:results}, Results.
+This section is a summary of results using RQI without preconditioning \cite{Slaybaugh2012} and the MGE Preconditioner with fixed source problems or PI \cite{Slaybaugh2013}. The purpose of this section is to highlight the capabilities that have been demonstrated and point out the short-comings that can be overcome by using the MG Krylov solver, RQI eigenvalue solver, and MGE preconditioner together. In the following discussion, reducing the Krylov iteration count is the primary measure of success--with reduced time as the second consideration. A discussion of this choice is given at the beginning of the Section \ref{sec:results}, Results.
 
 \subsection{Unpreconditioned RQI}
 The goal of the RQI studies that have been published was to find out it if RQI useful without preconditioning. We solved two small eigenvalue test problems, one with vacuum boundaries and one with reflecting, that had small dominance ratios. We found that RQI got the correct answer and converged in fewer iterations than power iteration. However, an intermediately-sized problem did not work so well. Each multigroup solve, except the first, used the maximum number of Krylov multigroup iterations per eigenvalue iteration. This means the eigenvector did not converge after the first iteration. The value of $k$ oscillated between 0.3966 and 0.3967 (the correct value was 0.4) until the calculation was manually terminated. In two more realistic calculations, the 2D and 3D C5G7 MOX Benchmark problems (\cite{OECD-NEA2003}, \cite{OECD-NEA2005}), RQI did not converge the eigenvector nor find an eigenvalue close to the correct one. 
@@ -424,10 +420,10 @@ These more challenging problems showed that, as expected, the Krylov solver ofte
 
 The small problems showed that RQI can require fewer Krylov iterations than PI, and has the potential to be beneficial if the multigroup iterations are converged. If the MG Krylov solver is preconditioned so that the eigenvector converges, RQI may be able to find the correct eigenvalue more efficiently than PI for cases of interest. This leads to the question: what preconditioner should we choose?
 
-Iterative methods reduce oscillatory error modes effectively, but not smooth error modes. The smooth error can prevent iterative methods from converging. This behavior is characterized by rapid error reduction in the first several iterations followed by very little error reduction. Such a trend was observed is tests where RQI failed. Multigrid methods selectively remove smoother error components and are therefore ideal for accelerating this type of problem. Thus, a multigrid preconditioner should work very well with RQI. 
+Iterative methods reduce oscillatory error modes effectively, but not smooth error modes. The smooth error can prevent iterative methods from converging. This behavior is characterized by rapid error reduction in the first several iterations followed by very little error reduction. Such a trend was observed in tests where RQI failed. Multigrid methods selectively remove smoother error components and are therefore ideal for accelerating this type of problem. Thus, a multigrid preconditioner should work very well with RQI. 
 
 \subsection{MGE Preconditioner}
-Much of the previously published work for the MGE preconditioner focused on choosing all of the options that control the preconditioner. The preconditioning parameters are the Richardson iteration weight, $w_{k}$, the number of V-cycles per preconditioner application, and the number of relaxations per level. The syntax used throughout this work will be that $w\#$ is the weight, $r\#$ is the number of relaxations per level, and $v\#$ is the number of V-cycles, e.g.\ $w1r1v1$ is one relaxation per level, one V-cycle, and a weight of one. Using more preconditioning means using larger values of $w$ and/or $r$ and/or $v$. 
+Much of the previously published work for the MGE preconditioner focused on choosing all of the options that control the preconditioner. The preconditioning parameters are the Richardson iteration weight, $w$, the number of V-cycles per preconditioner application, and the number of relaxations per level. The syntax used throughout this work will be that $w\#$ is the weight, $r\#$ is the number of relaxations per level, and $v\#$ is the number of V-cycles, e.g.\ $w1r1v1$ is one relaxation per level, one V-cycle, and a weight of one. Using more preconditioning means using larger values of $w$ and/or $r$ and/or $v$. 
 
 Some initial tests provided a basis for choosing preconditioning parameters. The results showed that increasing $r$ and/or $v$ decreased Krylov iteration count, as expected. They also indicated that using a small amount of weight can be beneficial, but a large amount is not. As a result, the parameters are set to default to $w1r2v2$. Other issues investigated were using a different quadrature set inside the preconditioner than in the rest of the problem, strong scaling, and changing the depth of the V-cycle. 
 
@@ -435,7 +431,7 @@ Tests showed that using a reduced angle set inside the preconditioner is very va
 
 Another important area of investigation was how the preconditioner faired when using multiple energy sets because MGE was built to take advantage of multiple energy sets. The problems solved scaled about 40\% more efficiently with MGE preconditioning than without it. The main reason for the preconditioner'€™s good scaling is that as the number of sets increases, each application of the preconditioner becomes less costly. 
 
-The total preconditioning cost goes down because the V-cycle becomes shallower. When 27 groups are used with one set, six grids are created. When 27 groups are used with 10 sets, two grids are created for each set. With fewer grids each application of the preconditioner performs fewer total relaxations, and is therefore less time intensive. The number of GMRES iterations did not change with the number of sets in the preconditioned cases. This means convergence improvement from the preconditioner did not come from the depth of the V-cycle, at least not for the problems tested.
+With multisets, the total preconditioning cost goes down because the V-cycle becomes shallower. When 27 groups are used with one set, six grids are created. When 27 groups are used with 10 sets, two grids are created for each set. With fewer grids each application of the preconditioner performs fewer total relaxations, and is therefore less time intensive. The number of GMRES iterations did not change with the number of sets in the preconditioned cases. This means convergence improvement from the preconditioner did not come from the depth of the V-cycle, at least not for the problems tested.
 
 The results of the multiple energy set study prompted an investigation of controlling V-cycle depth explicitly. The results from several tests confirm the multiple energy set study findings: using only a few grids is better than using many. The optimal number of grids will be problem dependent, but a default grid depth of two was recommended.
 
@@ -786,7 +782,7 @@ The results using 11 energy sets are given in Table~\ref{tab:PWR all} and show t
   \begin{center}
     \begin{tabular}{| c | c | c | c | c | c | c |}
       \hline
-      Method & Precond. & N Eigen & N Krylov & k & time (m) \\\hline
+      Method & Precond. & N Eigen & N Krylov & $k$ & time (m) \\\hline
       %%
      % RQI & none   & info &     &                     & \\
       RQI & w1r1v1 & 3   & 45   & 1.252 $\pm$ 1.13e-2 & 120$^*$ \\
