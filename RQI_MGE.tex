@@ -345,7 +345,7 @@ Note that the vectors in the energy-dependent subspace span all of the energy gr
 \begin{equation}
 (\mathbf{I} - \mathbf{TMS})\phi = \frac{1}{k}\mathbf{TM\chi\Gamma},
 \end{equation}
-where $k$ is the eigenvalue and $\Gamma$ is the eigenvector. It is not immediately evident which approach will be best suited to a given problem, so both approaches, energy-dependent and energy-independent, are considered in our comparisons below. In the two cases, convergence behavior is nearly identical given that their nonzero eigenvalues are the same. Like RQI, the Arnoldi solver can be parallelized over energy by using energy sets enabled by the MG Krylov solver.
+where $k$ is the eigenvalue and $\Gamma$ is the eigenvector. We used the energy-dependent implementation in all of our calcualtions. Like RQI, the Arnoldi solver can be parallelized over energy by using energy sets enabled by the MG Krylov solver.
 
 
 \subsection{Multigrid in Energy Preconditioner}
