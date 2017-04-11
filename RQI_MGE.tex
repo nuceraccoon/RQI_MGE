@@ -150,7 +150,7 @@ Three complimentary methods have been implemented in the code Denovo \cite{Evans
 
 The driving concept of this research is to use RQI for solving the $k$-eigenvalue problem in 3-D neutron transport. This objective was not tractable with the tools originally available in Denovo. The multigroup Krylov solver and multigrid-in-energy preconditioner were developed to facilitate RQI, though both of these tools are also useful on their own. 
 
-The multigroup Krylov solver was designed to improve convergence when compared to Gauss Seidel (GS) and to dramatically increase the number cores Denovo can use. Instead of sequentially solving each group with some inner iteration method and then using GS for outer iterations to converge the upscattering, the MG Krylov solver treats a block of groups (either all groups or just upscattering groups) at once such that the inner-outer iteration structure is removed. This results in faster convergence for most problem types. In addition, the block Krylov solver allows energy groups to be solved simultaneously because the multigroup-sized matrix vector multiply can be divided up in energy and parallelized. This extends the number of cores that can be used efficiently by Denovo from tens of thousands to hundreds of thousands. 
+The multigroup Krylov solver was designed to improve convergence when compared to Gauss Seidel (GS) and to dramatically increase the number cores Denovo can use. Instead of sequentially solving each group with some inner iteration method and then using GS for outer iterations to converge the upscattering, the MG Krylov solver treats a block of groups (either all groups or just upscattering groups) at once such that the inner-outer iteration structure is removed. This results in faster convergence for most problem types. In addition, the block Krylov solver allows energy groups to be solved simultaneously because the multigroup-sized matrix vector multiply can be divided up in energy and parallelized. This extends the number of cores that can be used efficiently by Denovo from tens of thousands to hundreds of thousands \cite{Davidson2013}.
 
 A multigrid in energy preconditioner was added to Denovo to reduce iteration count for all problem types, and to address convergence issues associated with RQI. The  preconditioner conducts a multigrid method in the energy dimension. A set of energy grids with increasingly coarse energy group structures are created. This is implemented in a way that easily and efficiently takes advantage of the new energy decomposition. The multigrid algorithm is applied within each energy set such that the energy groups are only restricted and prolonged between groups on that set. Sets do not communicate with one another in the preconditioner, so the scaling in energy is very good. 
 
@@ -183,14 +183,14 @@ The multigroup $S_N$ equations can be written in operator form as
   \ve{L}\psi &= \ve{MS}\phi + \frac{1}{k}\ve{M}\chi f^{T}\phi \:. \qquad &\text{(eigenvalue)} \label{eq:eigenvalue}
 \end{alignat}
 %
-Here $\ve{L}$ is the first-order linear differential transport operator; $\ve{M}$ is the moment-to-discrete operator that projects the angular flux moments, $\phi$, onto discrete angles; $\ve{S}$ is the scattering matrix; $q$ is a source term; $f$ contains the fission source, $\nu \Macro_{f}$; $\chi$ is the energy distribution with which neutrons are born out of fission; and $k$ is the asymptotic ratio of the number of neutrons in one generation to the number in the next. The angular flux moments are related to the angular flux, $\phi$ through the discrete-to-moment operator: $\phi = \mathbf{D} \psi$. Using this relationship, Equations \eqref{eq:fxdsource} and \eqref{eq:eigenvalue} can be rearranged such that they are a function of only $\phi$. The formulation is aided by defining $\ve{T} = \ve{DL}^{-1}$ and $\ve{F} = \chi f^{T}$ \cite{Evans2011}:
+Here $\ve{L}$ is the first-order linear differential transport operator; $\ve{M}$ is the moment-to-discrete operator that projects the angular flux moments, $\phi$, onto discrete angles; $\ve{S}$ is the scattering matrix; $q$ is a source term; $f$ is the fission operator, $\nu \Macro_{f}$; $\chi$ is the energy distribution with which neutrons are born out of fission; and $k$ is the asymptotic ratio of the number of neutrons in one generation to the number in the next. The angular flux moments are related to the angular flux, $\phi$ through the discrete-to-moment operator: $\phi = \mathbf{D} \psi$. Using this relationship, Equations \eqref{eq:fxdsource} and \eqref{eq:eigenvalue} can be rearranged such that they are a function of only $\phi$. The formulation is aided by defining $\ve{T} = \ve{DL}^{-1}$ and $\ve{F} = \chi f^{T}$ \cite{Evans2011}:
 %
 \begin{alignat}{2}
   (\ve{I} - \ve{TMS})\phi &= q \:, \qquad &\text{(fixed source)} \label{eq:OperatorFxdForm} \\
   (\ve{I} - \ve{TMS})\phi &= \frac{1}{k} \ve{TMF} \phi \:. &\text{(eigenvalue)} \label{eq:OperatorEvalForm}
 \end{alignat}
 
-Once the matrices are multiplied together, a series of single ``within-group'' equations that are each only a function of space and angle result. If the groups are coupled together by neutrons scattering from a low energy group to a higher energy group, then iterative ``multigroup'' solves over the coupled portion of the energy range may be required. If the eigenvalue is desired, an additional ``eigenvalue'' solve is needed where $k$ is the dominant eigenvalue and $\phi$ is the corresponding eigenvector \cite{Evans2009}. 
+Once the matrices are multiplied together, a series of single ``within-group'' equations that are each only a function of space and angle result. If the groups are coupled together by neutrons scattering from a low energy group to a higher energy group (upscattering), then iterative ``multigroup'' solves over the coupled portion of the energy range may be required. If the eigenvalue is desired, an additional ``eigenvalue'' solve is needed where $k$ is the dominant eigenvalue and $\phi$ is the corresponding eigenvector \cite{Evans2009}.
 
 %%---------------------------------------------------------------------------%%
 %%---------------------------------------------------------------------------%%
@@ -205,7 +205,7 @@ Traditionally, the multigroup solve has been done with Gauss Seidel (GS), which 
 
 The first term on the right includes downscattering contributions from higher energies, and the second term represents upscattering contributions from lower energy groups that have not yet been converged for this energy iteration. Groups that only contain downscattering are simply solved once since the second term on the right is zero. Groups with upscattering, however, must be iterated until they converge. Convergence of GS is governed by the spectral radius of the system, so the method can be very slow when upscattering has a large influence on the solution \cite{Adams2002}. GS is fundamentally serial in energy because of how the group-to-group coupling is treated. 
 
-The multigroup (MG) Krylov solver removes the traditional ``within-group'' / ``multigroup'' iteration structure by combining the space-angle and energy iterations to make one space-angle-energy iteration level. This allows the energy groups to be decomposed such that they can be solved in parallel. The space-angle-energy iterations are much like the within-group space-angle iterations, except that the iteration is over a block of groups instead of just one group. There are two energy decomposition strategies: all groups and upscatter groups only. When only the upscatter groups are decomposed into sets, the downscatter groups are replicated and solved using GS while the upscatter groups are solved with a Krylov solver. For full partitioning, all groups are decomposed into sets and only the Krylov solver is used. 
+The multigroup (MG) Krylov solver removes the traditional ``within-group'' / ``multigroup'' iteration structure by combining the space-angle and energy iterations to make one space-angle-energy iteration level. This allows the energy groups to be decomposed such that they can be solved in parallel. The space-angle-energy iterations are much like the within-group space-angle iterations, except that the iteration is over a block of groups instead of just one group.  In Denovo, energy may be decomposed over all of the groups or only over the upscatter (thermal) groups. When only the upscatter groups are decomposed, the downscatter groups are replicated and solved using GS while the upscatter groups are solved with a Krylov solver. When all of the groups are decomposed, only the Krylov solver is used.
 
 The multigroup Krylov method applied to the upscattering block is shown here, where $\ve{S}_{\text{up\_block}}$ contains the upscattering groups and $\ve{S}_{\text{up\_source}}$ has the downscattering-only groups:
 %
@@ -224,9 +224,9 @@ Trilinos \cite{1089021} provides Denovo's Krylov solver, with a choice of either
 
 To implement the energy parallelization, the problem is divided into energy sets, with groups distributed evenly among sets. After each set performs its part of the matrix-vector multiply, a global reduce-plus-scatter is the only required inter-set communication. Since each set uses the entire spatial mesh with the same spatial decomposition, the established performance of spatial scaling does not change. The space-angle decomposition in Denovo comes from the KBA wavefront algorithm \cite{Baker1998}. %Evans et al.\ \cite{Evans2009d} showed scaling in space is limited to about 20,000 cores with a 500 million cell spatial mesh. 
 
-The added energy decomposition offers the ability to further decompose a problem, even if the performance limit of spatial decomposition has been reached. The total number of cores is equal to the number of computational domains, that is, the product of the number of energy sets and the number of spatial blocks. For 20,000 spatial blocks and 10 energy sets, which is a reasonable decomposition, 200,000 cores will be used. See Ref.\ \cite{Evans2011} for more details. 
+The added energy decomposition offers the ability to further decompose a problem, even if the performance limit of spatial decomposition has been reached. The total number of cores is equal to the number of computational domains, that is, the product of the number of energy sets and the number of spatial blocks. For example, a problem decomposed into 20,000 spatial blocks and 10 energy sets would use 200,000 cores. See Ref.\ \cite{Evans2011} for more details.
 
-The solver has been shown to successfully scale to hundreds of thousands of cores. For example, a fixed-source test scaled from 69,102 cores to 190,080 cores with 98\% efficiency \cite{Slaybaugh2011}. Upscatter partitioning has been shown to initially perform better than full partitioning, but does not scale well over many energy sets \cite{Davidson2013}. An added benefit of this solver is that Krylov methods generally converge more quickly than GS for problems with upscattering \cite{Trefethen1997}.
+The solver has been shown to successfully scale to hundreds of thousands of cores. For example, a fixed-source test scaled from 69,102 cores to 190,080 cores with 98\% efficiency \cite{Slaybaugh2011}. Upscatter partitioning has been shown to initially perform better than full partitioning, but does not scale well over many energy sets.  An added benefit of this solver is that Krylov methods generally converge more quickly than GS for problems with upscattering \cite{Davidson2013}.
 % Note: Davidson 2014 isn't in the bib file...where is this citation?
 
 %%---------------------------------------------------------------------------%%
@@ -242,21 +242,21 @@ A common way to solve $k$-eigenvalue problems is with Power Iteration (PI). This
   \ve{A}\phi &= k\phi \:, \label{eq:EnergyDepEval} \\
   \qquad \text{where}  \qquad \ve{A} &= (\ve{I} - \ve{TMS})^{-1} \ve{TMF} \:, \nonumber \\
   \phi^{i+1} = \frac{1}{k^i}\ve{A}\phi^{i} &\:; \qquad 
-  k^{i+1} = k^i \frac{f^T \phi^{i+1}}{f^T \phi^i} \:.
+  k^{i+1} = k^i \frac{\Vert f^T \phi^{i+1} \Vert}{\Vert f^T \phi^i\Vert} \:.
   \label{eq:PowerIteration}
 \end{align} 
 %
-PI uses the form of the problem seen in Eq. \eqref{eq:EnergyDepEval} and then iterates as shown in Eq.\ \eqref{eq:PowerIteration}, where $i$ is the iteration index. This converts the generalized form of the eigenvalue problem seen in Eq.\ \eqref{eq:OperatorEvalForm} to the ordinary form. In the generalized form, the eigenvector-value pair is $(\phi, \frac{1}{k})$, and in the ordinary form it is $(\phi, k)$. 
-In legacy applications, the eigenvector is often the fission source rather than the flux moments \cite{Evans2011}, \cite{Lewis1993}.
-Inside of PI, the application of $\ve{A}$ to $\phi$ requires the solution of a multigroup problem that looks like a fixed source problem,
+PI uses the form of the problem seen in Eq. \eqref{eq:EnergyDepEval} and then iterates as shown in Eq.\ \eqref{eq:PowerIteration}, where $i$ is the iteration index. This converts the generalized form of the eigenvalue problem seen in Eq.\ \eqref{eq:OperatorEvalForm} to the standard form. In the generalized form, the eigenvector-value pair is $(\phi, \frac{1}{k})$, and in the standard form it is $(\phi, k)$.
+In legacy applications, the eigenvector is often the fission source rather than the flux moments \cite{Lewis1993,Evans2011}.
+Inside of PI, the application of $\ve{A}$ to $\phi$ requires the solution of a multigroup linear system that looks like a fixed source problem,
 \begin{equation}
-  (\ve{I} - \ve{TMS})y^{i} = \ve{TMF}\phi^{i} \:. \label{eq:EvalDepFxdSource}
+  (\ve{I} - \ve{TMS})\phi^{i+1} = \frac{1}{k^i}\ve{TMF}\phi^{i} \:. \label{eq:EvalDepFxdSource}
 \end{equation}
 
-PI's convergence can be very slow for problems of interest. For an $n \times n$ matrix $\ve{A}$, an eigenvalue-vector pair satisfies $\ve{A}x_{i} = \lambda_{i}x_{i}$ for $i = 1,...,n$. Let $\sigma(\ve{A}) \equiv \{\lambda \in \mathbb{C} : $\\$ rank(\ve{A} - \lambda \ve{I}) \le n\}$ be the spectrum of $\ve{A}$ and the eigenvalues be ordered as $|\lambda_{1}| > |\lambda_{2}| \ge \dots $\\$\ge |\lambda_{n}| \ge 0$. The error from PI is reduced in each iteration by a factor of $\ve{A}$'s dominance ratio, $\frac{\lambda_{2}}{\lambda_{1}}$. PI will converge slowly for loosely coupled systems because $\lambda_{2}$ is close to $\lambda_{1}$ \cite{Trefethen1997}. 
+PI's convergence can be very slow for problems of interest.  The error from PI is reduced in each iteration by a factor of $\ve{A}$'s dominance ratio, $\frac{\lambda_{2}}{\lambda_{1}}$. For large, loosely coupled systmes, $\lambda_2 \approx \lambda_1$ and PI will therefore converge slowly.
 
 \subsubsection{Rayleigh Quotient Iteration}
-Shifted inverse iteration (SII) typically converges more quickly than PI. SII capitalizes on the fact that for some shift $\mu$, $(\ve{A} - \mu \ve{I})$ will have the same eigenvectors as $\ve{A}$. If $\mu \notin \sigma(\ve{A})$, then $(\ve{A} - \mu \ve{I})$ is invertible and $\sigma([\ve{A} - \mu \ve{I}]^{-1}) = \{1/(\lambda - \mu):\lambda \in \sigma(\ve{A})\}$. Eigenvalues of $\ve{A}$ that are near the shift will be transformed to extremal eigenvalues that are well separated from the others. The shifted and inverted matrix is used in a power iteration-type scheme. Given a good shift, $\mu \approx \lambda_1$, SII usually converges more quickly than PI, especially for loosely coupled systems \cite{Trefethen1997}, \cite{Allen2002}.
+Shifted inverse iteration (SII) typically converges more quickly than PI. SII capitalizes on the fact that for some shift $\mu$, $(\ve{A} - \mu \ve{I})$ will have the same eigenvectors as $\ve{A}$ and eigenvalues of $\ve{A}$ that are near the shift will be transformed to extremal eigenvalues of $(\ve{A} - \mu \ve{I})$ that are well separated from the others. The shifted and inverted matrix is used in a power iteration-type scheme. Given a good shift, $\mu \approx \lambda_1$, SII usually converges more quickly than PI, especially for loosely coupled systems \cite{Allen2002}.
 
 % Wielandt's method is a flavor of SII that has been used widely in the neutron transport community, though it was originally developed in 1944 in an unrelated context \cite{Zinzani2008}, \cite{Itagaki1996}, \cite{Itagaki2002}. In the transport equation formulation, Wielandt's method changes the eigenvalue problem to $(\ve{I} - \ve{TM}(\ve{S} +\gamma_e \ve{F}))\phi = \delta \gamma \ve{TMF} \phi$, where $\gamma_e$ is the current estimate for the dominant eigenvalue, $\gamma_1 = \frac{1}{k}$, and $\delta \gamma = \gamma_1 - \gamma_e$. The power method is applied to this, giving \cite{Nakamura1977}
 % %
@@ -264,30 +264,23 @@ Shifted inverse iteration (SII) typically converges more quickly than PI. SII ca
 % \phi^{i+1} = \delta \gamma^{i}(\ve{I} - \ve{TM}(\ve{S} + \gamma_e \ve{F}))^{-1}\ve{TMF}\phi^{i} \:. \label{eq:Wielandt}
 % \end{equation}
 
-Rayleigh Quotient Iteration is a shifted inverse iteration method %similar to Wielandt's method, but it 
-that uses an optimal shift: the Rayleigh quotient (RQ). For a generalized eigenvalue problem $\beta \ve{A}x = \alpha \ve{B}x$, the RQ is
+Rayleigh Quotient Iteration is a shifted inverse iteration method
+that uses a dynamically updated shift: the Rayleigh quotient (RQ). For a generalized eigenvalue problem $\ve{A}x = \lambda \ve{B}x$, the RQ is given by
 %
 \begin{equation}
-  \rho = \frac{y^{T} \ve{A} x}{y^{T} \ve{B} x} \:.
+  \rho = \frac{x^{T} \ve{A} x}{x^{T} \ve{B} x} \:.
   \label{eq:RQ}
 \end{equation}
 %
-If $x$ and $y$ are right and left eigenvectors corresponding to $\alpha$ and $\beta$, respectively, then $\alpha = y^{T} \ve{A} x$ and $\beta =  y^{T} \ve{B} x$. In this case, $\rho = \gamma$, where $\gamma = \frac{\alpha}{\beta}$ \cite{Stewart2001}. The RQ provides the minimum residual for the eigenvalue problem in the least squares sense, where equivalence holds only when $\tau = \rho$ and $x \ne 0$:
+If $x$ is an eigenvector corresponding to $\lambda$, then $\rho \equiv \lambda$.
+The idea of RQI is to use the RQ as the shift in SII using the current eigenvector estimate:
 %
 \begin{equation}
-  ||(\ve{A} - \tau\ve{B})x||^{2} \ge ||\ve{A}x||^{2} - ||\rho\ve{B}x||^{2} \:.
-\end{equation}
-%
-The Rayleigh quotient is thus an optimal guess for an eigenvalue given a vector close to the corresponding eigenvector \cite{Parlett1974}. 
-
-The idea of RQI is to use the RQ as the shift in SII and update it with the new eigenvector estimate at every iteration $i$:
-%
-\begin{equation}
-  \mu_i = \gamma_{i-1} - \rho_i \:.
+  \mu_i = \frac{x_i^{T} \ve{A} x_i}{x_i^{T} \ve{B} x_i} \:.
   \label{eq:Shift}
 \end{equation} 
 %
-RQI has better convergence properties than SII since the RQ is an optimal guess for the eigenvalue of interest. For more details on the Rayleigh quotient and RQI in general, refer to Ref.\ \cite{Parlett1974}.
+For symmetric systems, the use of the RQ as the shift is optimal and leads to cubic convergence to an eigenvalue/eigenvector pair under appropriate assumptions \cite{Parlett1974}.  The theory for the nonsymmetric case is less rigorous, but nevertheless displays locally quadratic convergence under suitable assumptions \cite{SaadEig}.
 
 RQI has been implemented in Denovo, as detailed in Ref.\ \cite{Slaybaugh2012}, by subtracting $\rho \ve{TMF}$ from both sides of Eq.\ \eqref{eq:OperatorEvalForm}. This gives the following shifted system, where $\gamma \equiv \frac{1}{k}$:
 %
@@ -297,15 +290,15 @@ RQI has been implemented in Denovo, as detailed in Ref.\ \cite{Slaybaugh2012}, b
   \text{ where } \ve{\tilde{S}} &\equiv \ve{S} + \rho\ve{F}  \nonumber \:.
 \end{align}
 %
-The new matrix, $\ve{\tilde{S}}$, is energy-block dense since the fission matrix is dense and looks like one big upscattering block. Traditional solution methods for the fixed source part of the equation do not handle dense scattering matrices well. This has hampered the implementation of SII in multi-group, 3-D codes because solving many groups that have upper-triangular scattering entries can be time-prohibitive. 
+The scalar $(\gamma - \rho)$ on the right hand side may introduce numerical scaling issues when $\gamma \approx \rho$ and can be omitted without altering the convergence behavior of the method.  While $\ve{S}$ is predominantly lower triangular, the addition of $\ve{F}$ makes $\ve{\tilde{S}}$ essentially dense in energy.
+Traditional solution methods for the fixed source part of the equation do not handle dense scattering matrices well. In fact, GS may fail to converge when $\ve{F}$ is included.  This has hampered the implementation of SII in multi-group, 3-D codes.
 
-The RQI method added to Denovo uses the MG Krylov solver, which is designed to handle dense scattering matrices effectively--overcoming the burden of using of a dense $\ve{\tilde{S}}$. In addition, RQI can be decomposed in energy and take advantage of the scaling properties of the multigroup solver. Using RQI in combination with a Krylov method, however, raises some concerns about whether or not it can converge. 
+The RQI method added to Denovo uses the MG Krylov solver, which is designed to handle dense scattering matrices, effectively overcoming the burden of using of a dense $\ve{\tilde{S}}$. In addition, RQI can be decomposed in energy and take advantage of the scaling properties of the multigroup solver.
 
 %A method's behavior can be affected by characteristics of the mathematical problem as well as by characterisitics of the algorithm. Conditioning is one way to express the perturbation behavior of the mathematical problem. An ill-conditioned problem is one in which some small perturbation of $x$ leads to a large change in $f(x)$. A large condition number corresponds to an ill-conditioned problem, and vice versa. 
 
 On initial consideration it would seem shifted inverse methods might not work well when the shift is very good because the matrix becomes so ill-conditioned. Peters and Wilkinson \cite{Peters1979}, however, proved that ill-conditioning is not a fundamental problem for inverse iteration methods. Trefethen and Bau \cite{Trefethen1997} assert that this is the case as long as the fixed source portion is solved with a backwards stable algorithm. 
-
-Paige et al.\ \cite{Paige2006} demonstrated that GMRES is backwards stable when finding $x$ in $\ve{A}x = b$ for a ``sufficiently nonsingular $\ve{A}$'', and define associated criteria. For ill-conditioned systems, then, Krylov methods may not be backwards stable and will tend to converge very slowly. Many researchers have found that Krylov methods must be preconditioned to be able to get good results in practice \cite{Benzi2002}, \cite{Saad1986}, \cite{Trefethen1997} , \cite{Paige2006}. The past work section below demonstrates that RQI does need preconditioning for convergence in problems of interest.
+Paige et al.\ \cite{Paige2006} demonstrated that GMRES is backwards stable when finding $x$ in $\ve{A}x = b$ for a ``sufficiently nonsingular $\ve{A}$'', and define associated criteria. Many researchers have found that Krylov methods must be preconditioned to be able to get good results in practice \cite{Benzi2002}, \cite{Saad1986}, \cite{Trefethen1997} , \cite{Paige2006}. The lack of an effective preconditioner was a limiting factor in the approach described in \cite{Slaybaugh2012}.
 
 \subsubsection{Arnoldi}
 Denovo also has an Arnoldi Krylov subspace solver available for solving eigenvalue problems, which can take an energy-dependent or energy-independent form \cite{Davidson2013}. Recall the energy dependent form of the eigenvalue equation as seen in Eqn.~\eqref{eq:EnergyDepEval}. 
@@ -317,11 +310,15 @@ Denovo also has an Arnoldi Krylov subspace solver available for solving eigenval
 %\mathbf{A} &= (\mathbf{I} - \mathbf{TMS})^{-1}\mathbf{TMF}
 %\end{split}
 %\end{equation}
-We then perform a matrix-vector multiply/sweep and fixed source solve:
-\begin{align}
-z^{(h)} &= \mathbf{TMF}\nu^{(h)}\:,\\
-(\mathbf{I} &- \mathbf{TMS})y^{(h)} = z^{(h)}\:,
-\end{align}
+At each iteration, we apply the operator in \eqref{eq:EnergyDepEval} by first
+computing a right hand side
+\begin{equation}
+z^{(h)} = \mathbf{TMF}\nu^{(h)}\:,
+\end{equation}
+and then solving the linear system
+\begin{equation}
+(\mathbf{I}- \mathbf{TMS})y^{(h)} = z^{(h)}\:,
+\end{equation}
 where $z$ is a multi-group-sized vector like in RQI (recall that this vector
 covers only one group in PI). Using the multi-group-sized vector allows us to
 take advantage of all of the machinery of the block Krylov solver.
@@ -345,7 +342,7 @@ Note that the vectors in the energy-dependent subspace span all of the energy gr
 \begin{equation}
 (\mathbf{I} - \mathbf{TMS})\phi = \frac{1}{k}\mathbf{TM\chi\Gamma},
 \end{equation}
-where $k$ is the eigenvalue and $\Gamma$ is the eigenvector. We used the energy-dependent implementation in all of our calcualtions. Like RQI, the Arnoldi solver can be parallelized over energy by using energy sets enabled by the MG Krylov solver.
+where $k$ is the eigenvalue and $\Gamma$ is the eigenvector. Note that the nonzero eigenvalues of the energy-dependent and energy-independent formulations are identical; therefore, the convergence behavior of the two methods is identical.  We use the energy-dependent implementation in all of our calculations. As with RQI, the Arnoldi solver can be parallelized over energy by using energy sets enabled by the MG Krylov solver.
 
 
 \subsection{Multigrid in Energy Preconditioner}
@@ -773,7 +770,7 @@ This research used resources of the Oak Ridge Leadership Computing Facility at t
     University of California, Berkeley\\
     4173 Etcheverry Hall\\
     Berkeley, CA 94720, USA\\\vspace{1\baselineskip}
-    Tara Pandya, Stephen Hamilton, and T.M. Evans\\
+    Tara Pandya, Steven Hamilton, and T.M. Evans\\
     Radiation Transport and Criticality Group\\ 
     Oak Ridge National Laboratory\\ 
     P.O. Box 2008\\
