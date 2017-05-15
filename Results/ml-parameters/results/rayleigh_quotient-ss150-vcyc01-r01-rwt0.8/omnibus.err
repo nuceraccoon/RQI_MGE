@@ -1,0 +1,971 @@
+=============================================
+       Omnibus: the Exnihilo front-end       
+       (c) ORNL, UT-Battelle, 2007-2016      
+---------------------------------------------
+Exnihilo 6.2 (r30641: #ffaf3f62 on 2017MAY03)
+Scale 6.3 (r22875: #1c783b6b on 2017APR25)
+built on 2017MAY03
+with machine 'mod-condo-login02.ornl.gov' running Linux version 3.10.0-327.4.4.el7.x86_64 (x86_64)
+=============================================
+
+::: Building model
+*** No composition data is present in the Mesh model at '/lustre/hydra/cades-nsed-scale/tut/c5g7_precon/c5g7_small_mesh.h5'
+>>> Creating default boundary mesh from (0 0 0) to (64.26 64.26 64.26) for Mesh geometry
+::: Building physics 'mg'
+::: Building Denovo solver internals
+::: Loading matids from mesh model
+::: Mixing Denovo cross sections
+::: Initializing Denovo solver
+>>> Constructing Denovo state vector with 56 groups, 530604 cells, 4 moments, 1 unknowns per cell
+>>> Forcing full upscatter partitioning for RQI
+::: Running Denovo transport calculation
+>>> Beginning Rayleigh Quotient Iteration
+Belos Block GMRES converged after 60 iterations.
+>>> Forward groups 0-55 finished in   60 Belos Block GMRES iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+>>> Eigenvalue Iteration    1 has an estimated eigenvalue of 1.0361049395e+00
+>>>         with a relative error in k-eff of  3.610494e-02
+>>>        and an absolute error in k-eff of  3.610494e-02
+Belos Block GMRES converged after 122 iterations.
+>>> Forward groups 0-55 finished in  122 Belos Block GMRES iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+>>> Eigenvalue Iteration    2 has an estimated eigenvalue of 1.0950618849e+00
+>>>         with a relative error in k-eff of  5.690248e-02
+>>>        and an absolute error in k-eff of  5.895695e-02
+Belos Block GMRES converged after 132 iterations.
+>>> Forward groups 0-55 finished in  132 Belos Block GMRES iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+>>> Eigenvalue Iteration    3 has an estimated eigenvalue of 1.0970467846e+00
+>>>         with a relative error in k-eff of  1.812591e-03
+>>>        and an absolute error in k-eff of  1.984900e-03
+*** Belos Block GMRES did not converge after 250 iterations.
+>>> Forward groups 0-55 finished in  250 Belos Block GMRES iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 4 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+Belos Block GMRES converged after 3 iterations.
+>>> Eigenvalue Iteration    4 has an estimated eigenvalue of 1.0970471717e+00
+>>>         with a relative error in k-eff of  3.528865e-07
+>>>        and an absolute error in k-eff of  3.871330e-07
+[mod-condo-c02:48409] *** Process received signal ***
+[mod-condo-c02:48409] Signal: Bus error (7)
+[mod-condo-c02:48409] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48409] Failing at address: 0x224f0e1
+[mod-condo-c02:48425] *** Process received signal ***
+[mod-condo-c02:48425] Signal: Bus error (7)
+[mod-condo-c02:48425] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48425] Failing at address: 0x224f0e1
+[mod-condo-c02:48428] *** Process received signal ***
+[mod-condo-c02:48428] Signal: Bus error (7)
+[mod-condo-c02:48428] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48428] Failing at address: 0x224f0e1
+[mod-condo-c02:48433] *** Process received signal ***
+[mod-condo-c02:48433] Signal: Bus error (7)
+[mod-condo-c02:48433] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48433] Failing at address: 0x224f0e1
+[mod-condo-c02:48435] *** Process received signal ***
+[mod-condo-c02:48435] Signal: Bus error (7)
+[mod-condo-c02:48435] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48435] Failing at address: 0x224f0e1
+[mod-condo-c02:48437] *** Process received signal ***
+[mod-condo-c02:48437] Signal: Bus error (7)
+[mod-condo-c02:48437] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48437] Failing at address: 0x224f0e1
+[mod-condo-c02:48438] *** Process received signal ***
+[mod-condo-c02:48438] Signal: Bus error (7)
+[mod-condo-c02:48438] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48438] Failing at address: 0x224f0e1
+[mod-condo-c02:48439] *** Process received signal ***
+[mod-condo-c02:48439] Signal: Bus error (7)
+[mod-condo-c02:48439] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48439] Failing at address: 0x224f0e1
+[mod-condo-c02:48440] *** Process received signal ***
+[mod-condo-c02:48440] Signal: Bus error (7)
+[mod-condo-c02:48440] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48440] Failing at address: 0x224f0e1
+[mod-condo-c02:48412] *** Process received signal ***
+[mod-condo-c02:48412] Signal: Bus error (7)
+[mod-condo-c02:48412] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48412] Failing at address: 0x224f0e1
+[mod-condo-c02:48416] *** Process received signal ***
+[mod-condo-c02:48416] Signal: Bus error (7)
+[mod-condo-c02:48416] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48416] Failing at address: 0x224f0e1
+[mod-condo-c02:48417] *** Process received signal ***
+[mod-condo-c02:48417] Signal: Bus error (7)
+[mod-condo-c02:48417] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48417] Failing at address: 0x224f0e1
+[mod-condo-c02:48418] *** Process received signal ***
+[mod-condo-c02:48418] Signal: Bus error (7)
+[mod-condo-c02:48418] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48418] Failing at address: 0x224f0e1
+[mod-condo-c02:48419] *** Process received signal ***
+[mod-condo-c02:48419] Signal: Bus error (7)
+[mod-condo-c02:48419] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48419] Failing at address: 0x224f0e1
+[mod-condo-c02:48420] *** Process received signal ***
+[mod-condo-c02:48420] Signal: Bus error (7)
+[mod-condo-c02:48420] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48420] Failing at address: 0x224f0e1
+[mod-condo-c02:48421] *** Process received signal ***
+[mod-condo-c02:48421] Signal: Bus error (7)
+[mod-condo-c02:48421] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48421] Failing at address: 0x224f0e1
+[mod-condo-c02:48422] *** Process received signal ***
+[mod-condo-c02:48422] Signal: Bus error (7)
+[mod-condo-c02:48422] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48422] Failing at address: 0x224f0e1
+[mod-condo-c02:48423] *** Process received signal ***
+[mod-condo-c02:48423] Signal: Bus error (7)
+[mod-condo-c02:48423] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48423] Failing at address: 0x224f0e1
+[mod-condo-c02:48424] *** Process received signal ***
+[mod-condo-c02:48424] Signal: Bus error (7)
+[mod-condo-c02:48424] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48424] Failing at address: 0x224f0e1
+[mod-condo-c02:48426] *** Process received signal ***
+[mod-condo-c02:48426] Signal: Bus error (7)
+[mod-condo-c02:48426] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48426] Failing at address: 0x224f0e1
+[mod-condo-c02:48427] *** Process received signal ***
+[mod-condo-c02:48427] Signal: Bus error (7)
+[mod-condo-c02:48427] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48427] Failing at address: 0x224f0e1
+[mod-condo-c02:48429] *** Process received signal ***
+[mod-condo-c02:48429] Signal: Bus error (7)
+[mod-condo-c02:48429] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48429] Failing at address: 0x224f0e1
+[mod-condo-c02:48430] *** Process received signal ***
+[mod-condo-c02:48430] Signal: Bus error (7)
+[mod-condo-c02:48430] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48430] Failing at address: 0x224f0e1
+[mod-condo-c02:48431] *** Process received signal ***
+[mod-condo-c02:48431] Signal: Bus error (7)
+[mod-condo-c02:48431] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48431] Failing at address: 0x224f0e1
+[mod-condo-c02:48432] *** Process received signal ***
+[mod-condo-c02:48432] Signal: Bus error (7)
+[mod-condo-c02:48432] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48432] Failing at address: 0x224f0e1
+[mod-condo-c02:48434] *** Process received signal ***
+[mod-condo-c02:48434] Signal: Bus error (7)
+[mod-condo-c02:48434] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48434] Failing at address: 0x224f0e1
+[mod-condo-c02:48436] *** Process received signal ***
+[mod-condo-c02:48436] Signal: Bus error (7)
+[mod-condo-c02:48436] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48436] Failing at address: 0x224f0e1
+[mod-condo-c02:48410] *** Process received signal ***
+[mod-condo-c02:48410] Signal: Bus error (7)
+[mod-condo-c02:48410] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48410] Failing at address: 0x224f0e1
+[mod-condo-c02:48411] *** Process received signal ***
+[mod-condo-c02:48411] Signal: Bus error (7)
+[mod-condo-c02:48411] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48411] Failing at address: 0x224f0e1
+[mod-condo-c02:48413] *** Process received signal ***
+[mod-condo-c02:48413] Signal: Bus error (7)
+[mod-condo-c02:48413] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48413] Failing at address: 0x224f0e1
+[mod-condo-c02:48414] *** Process received signal ***
+[mod-condo-c02:48414] Signal: Bus error (7)
+[mod-condo-c02:48414] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48414] Failing at address: 0x224f0e1
+[mod-condo-c02:48415] *** Process received signal ***
+[mod-condo-c02:48415] Signal: Bus error (7)
+[mod-condo-c02:48415] Signal code: Non-existant physical address (2)
+[mod-condo-c02:48415] Failing at address: 0x224f0e1
+[mod-condo-c02:48411] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2aae07a74100]
+[mod-condo-c02:48411] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2aae07dcaae0]
+[mod-condo-c02:48411] [ 2] [mod-condo-c02:48412] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2b56f36fc100]
+[mod-condo-c02:48412] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2b56f3a52ae0]
+[mod-condo-c02:48412] [ 2] [mod-condo-c02:48416] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2abae4354100]
+[mod-condo-c02:48416] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2abae46aaae0]
+[mod-condo-c02:48416] [ 2] [mod-condo-c02:48417] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2b188409e100]
+[mod-condo-c02:48417] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2b18843f4ae0]
+[mod-condo-c02:48417] [ 2] [mod-condo-c02:48418] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2b3d358f2100]
+[mod-condo-c02:48418] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2b3d35c48ae0]
+[mod-condo-c02:48418] [ 2] [mod-condo-c02:48419] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2b711bfc9100]
+[mod-condo-c02:48419] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2b711c31fae0]
+[mod-condo-c02:48419] [ 2] [mod-condo-c02:48421] [mod-condo-c02:48422] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2ae60e107100]
+[mod-condo-c02:48422] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2ae60e45dae0]
+[mod-condo-c02:48422] [ 2] [mod-condo-c02:48424] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2b4eb6ea0100]
+[mod-condo-c02:48424] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2b4eb71f6ae0]
+[mod-condo-c02:48424] [ 2] [mod-condo-c02:48426] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2b4a5ba7f100]
+[mod-condo-c02:48426] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2b4a5bdd5ae0]
+[mod-condo-c02:48426] [ 2] [mod-condo-c02:48425] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2b72334f8100]
+[mod-condo-c02:48425] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2b723384eae0]
+[mod-condo-c02:48425] [ 2] [mod-condo-c02:48427] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2b2fd9e71100]
+[mod-condo-c02:48427] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2b2fda1c7ae0]
+[mod-condo-c02:48427] [ 2] [mod-condo-c02:48429] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2b175b79c100]
+[mod-condo-c02:48429] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2b175baf2ae0]
+[mod-condo-c02:48429] [ 2] [mod-condo-c02:48430] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2b1b154ef100]
+[mod-condo-c02:48430] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2b1b15845ae0]
+[mod-condo-c02:48430] [ 2] [mod-condo-c02:48431] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2b2f4070a100]
+[mod-condo-c02:48431] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2b2f40a60ae0]
+[mod-condo-c02:48431] [ 2] [mod-condo-c02:48428] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2b487bb5a100]
+[mod-condo-c02:48428] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2b487beb0ae0]
+[mod-condo-c02:48428] [ 2] [mod-condo-c02:48432] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2aeba19e5100]
+[mod-condo-c02:48432] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2aeba1d3bae0]
+[mod-condo-c02:48432] [ 2] [mod-condo-c02:48434] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2b129c8a9100]
+[mod-condo-c02:48434] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2b129cbffae0]
+[mod-condo-c02:48434] [ 2] [mod-condo-c02:48435] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2b4b1f202100]
+[mod-condo-c02:48435] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2b4b1f558ae0]
+[mod-condo-c02:48435] [ 2] [mod-condo-c02:48438] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2af0c72a7100]
+[mod-condo-c02:48438] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2af0c75fdae0]
+[mod-condo-c02:48438] [ 2] [mod-condo-c02:48439] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2b93c7524100]
+[mod-condo-c02:48439] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2b93c787aae0]
+[mod-condo-c02:48439] [ 2] [mod-condo-c02:48415] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2b846e9b0100]
+[mod-condo-c02:48415] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2b846ed06ae0]
+[mod-condo-c02:48415] [ 2] [mod-condo-c02:48436] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2ad96a782100]
+[mod-condo-c02:48436] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2ad96aad8ae0]
+[mod-condo-c02:48436] [ 2] [mod-condo-c02:48410] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2ae8bd05f100]
+[mod-condo-c02:48410] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2ae8bd3b5ae0]
+[mod-condo-c02:48410] [ 2] [mod-condo-c02:48440] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2b6c01395100]
+[mod-condo-c02:48440] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2b6c016ebae0]
+[mod-condo-c02:48440] [ 2] [mod-condo-c02:48413] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2ba8879ce100]
+[mod-condo-c02:48413] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2ba887d24ae0]
+[mod-condo-c02:48413] [ 2] [mod-condo-c02:48414] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2ad36d3a7100]
+[mod-condo-c02:48414] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2ad36d6fdae0]
+[mod-condo-c02:48414] [ 2] [mod-condo-c02:48420] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2af9aa061100]
+[mod-condo-c02:48420] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2af9aa3b7ae0]
+[mod-condo-c02:48420] [ 2] [mod-condo-c02:48423] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2ae7ae916100]
+[mod-condo-c02:48423] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2ae7aec6cae0]
+[mod-condo-c02:48423] [ 2] [mod-condo-c02:48409] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2b3180410100]
+[mod-condo-c02:48409] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2b3180766ae0]
+[mod-condo-c02:48409] [ 2] [mod-condo-c02:48433] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2b178ae7a100]
+[mod-condo-c02:48433] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2b178b1d0ae0]
+[mod-condo-c02:48433] [ 2] [mod-condo-c02:48437] [ 0] /lib64/libpthread.so.0(+0xf100)[0x2ad2f0d95100]
+[mod-condo-c02:48437] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2ad2f10ebae0]
+[mod-condo-c02:48437] [ 2] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48415] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48436] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48410] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48439] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48440] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48413] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48411] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48412] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48416] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48417] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48418] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48414] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48419] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48420] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48423] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48422] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48424] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48426] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48425] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48427] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48429] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48430] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48431] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48428] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48409] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48432] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48434] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48433] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48435] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48438] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48437] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48434] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48434] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48433] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48433] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48435] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48435] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48437] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48437] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48438] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48438] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48415] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48415] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48436] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48436] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48410] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48410] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48439] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48439] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48440] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48440] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48413] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48413] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48411] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48411] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48412] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48412] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48416] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48416] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48417] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48417] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48418] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48418] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48414] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48414] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48419] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48419] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48420] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48420] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48423] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48423] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48422] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48422] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48424] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48424] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48426] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48426] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48425] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48425] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48427] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48427] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48429] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48429] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48430] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48430] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48431] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48431] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48428] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48428] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48409] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48409] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48432] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48432] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48432] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48432] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48432] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2aeba1c13b15]
+[mod-condo-c02:48432] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48417] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48417] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48417] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2b18842ccb15]
+[mod-condo-c02:48417] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48419] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48419] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48419] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2b711c1f7b15]
+[mod-condo-c02:48419] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48420] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48420] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48420] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2af9aa28fb15]
+[mod-condo-c02:48420] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48423] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48423] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48423] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2ae7aeb44b15]
+[mod-condo-c02:48423] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48422] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48422] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48422] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2ae60e335b15]
+[mod-condo-c02:48422] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48424] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48424] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48424] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2b4eb70ceb15]
+[mod-condo-c02:48424] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48426] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48426] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48426] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2b4a5bcadb15]
+[mod-condo-c02:48426] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48425] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48425] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48425] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2b7233726b15]
+[mod-condo-c02:48425] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48427] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48427] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48427] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2b2fda09fb15]
+[mod-condo-c02:48427] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48429] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48429] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48429] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2b175b9cab15]
+[mod-condo-c02:48429] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48430] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48430] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48430] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2b1b1571db15]
+[mod-condo-c02:48430] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48431] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48431] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48431] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2b2f40938b15]
+[mod-condo-c02:48431] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48428] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48428] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48428] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2b487bd88b15]
+[mod-condo-c02:48428] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48409] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48409] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48409] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2b318063eb15]
+[mod-condo-c02:48409] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48435] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48435] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48435] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2b4b1f430b15]
+[mod-condo-c02:48435] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48434] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48434] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48434] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2b129cad7b15]
+[mod-condo-c02:48434] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48433] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48433] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48433] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2b178b0a8b15]
+[mod-condo-c02:48433] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48437] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48437] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48437] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2ad2f0fc3b15]
+[mod-condo-c02:48437] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48437] *** End of error message ***
+/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48438] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48438] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48438] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2af0c74d5b15]
+[mod-condo-c02:48438] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48438] *** End of error message ***
+/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48415] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48415] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48415] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2b846ebdeb15]
+[mod-condo-c02:48415] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48415] *** End of error message ***
+/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48436] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48436] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48436] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2ad96a9b0b15]
+[mod-condo-c02:48436] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48436] *** End of error message ***
+/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48410] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48410] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48410] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2ae8bd28db15]
+[mod-condo-c02:48410] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48410] *** End of error message ***
+/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48439] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48439] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48439] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2b93c7752b15]
+[mod-condo-c02:48439] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48439] *** End of error message ***
+/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48440] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48440] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48440] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2b6c015c3b15]
+[mod-condo-c02:48440] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48440] *** End of error message ***
+/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48413] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48413] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48413] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2ba887bfcb15]
+[mod-condo-c02:48413] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48413] *** End of error message ***
+/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48411] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48411] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48411] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2aae07ca2b15]
+[mod-condo-c02:48411] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48411] *** End of error message ***
+/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48412] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48412] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48412] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2b56f392ab15]
+[mod-condo-c02:48412] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48412] *** End of error message ***
+/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48416] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48416] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48416] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2abae4582b15]
+[mod-condo-c02:48416] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48416] *** End of error message ***
+/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48418] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48418] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48418] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2b3d35b20b15]
+[mod-condo-c02:48418] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48418] *** End of error message ***
+/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48414] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48414] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48414] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2ad36d5d5b15]
+[mod-condo-c02:48414] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48414] *** End of error message ***
+/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48425] *** End of error message ***
+/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48427] *** End of error message ***
+/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48429] *** End of error message ***
+/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48430] *** End of error message ***
+/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48431] *** End of error message ***
+/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48428] *** End of error message ***
+/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48409] *** End of error message ***
+/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48435] *** End of error message ***
+/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48434] *** End of error message ***
+/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48433] *** End of error message ***
+/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48432] *** End of error message ***
+/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48417] *** End of error message ***
+/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48419] *** End of error message ***
+/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48420] *** End of error message ***
+/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48423] *** End of error message ***
+/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48422] *** End of error message ***
+/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48424] *** End of error message ***
+/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48426] *** End of error message ***
+[ 0] /lib64/libpthread.so.0(+0xf100)[0x2b463be26100]
+[mod-condo-c02:48421] [ 1] /lib64/libc.so.6(+0x149ae0)[0x2b463c17cae0]
+[mod-condo-c02:48421] [ 2] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xbf148a]
+[mod-condo-c02:48421] [ 3] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN6denovo19Transport_Denovo_SNIN3kba12SC_EquationsEE6outputESt10shared_ptrINS_11Macro_MixerEE+0x8c)[0xbfd87c]
+[mod-condo-c02:48421] [ 4] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZNK7omnibus19Denovo_Manager_Base6outputENS_6OutputE+0xae0)[0xbc5710]
+[mod-condo-c02:48421] [ 5] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus15Sequence_Denovo3runEv+0x250)[0xba6ac0]
+[mod-condo-c02:48421] [ 6] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(_ZN7omnibus6Driver3runEv+0xc1c)[0xb9d47c]
+[mod-condo-c02:48421] [ 7] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus(main+0x31c)[0xb525dc]
+[mod-condo-c02:48421] [ 8] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2b463c054b15]
+[mod-condo-c02:48421] [ 9] /software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus[0xb88901]
+[mod-condo-c02:48421] *** End of error message ***
+>>> PBS run complete
