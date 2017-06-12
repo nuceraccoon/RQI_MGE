@@ -1,0 +1,40 @@
+#!/bin/sh
+# Auto-generated Omnibus PBS file
+# Problem: Mesh-based C5G7 for RQI testing
+# PID: 2017-05-03-7369011b-7028-40d9-8f9d-c4b61a36a580
+#PBS -N rayleigh_quotient_150_3_1_1.0
+#PBS -o rayleigh_quotient_150_3_1_1.0.pbs.out
+#PBS -j oe
+#PBS -q batch
+#PBS -l walltime=18:00:00
+#PBS -l qos=overnight
+#PBS -M pandyatm@ornl.gov
+#PBS -m ea
+#PBS -A NSED
+#PBS -l nodes=10:ppn=32
+
+export SCALE=/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo
+export DATA=/software/user_tools/current/cades-nsed-scale/data
+export DATAPATH=/software/user_tools/current/cades-nsed-mcnp6/MCNP_DATA
+module purge
+module load PE-gnu/1.3 openmpi/1.10.3_romio hdf5-parallel/1.8.17_romio
+
+
+cd "/lustre/hydra/cades-nsed-scale/tut/c5g7_precon/results/rayleigh_quotient-ss150-vcyc03-r01-rwt1.0"
+echo "Beginning PBS execution at $(date)"
+echo ">>> PBS number of nodes: ${PBS_NUM_NODES}"
+echo ">>> PBS cores per node: ${PBS_NUM_PPN}"
+echo -n "PBS node list: "
+cat ${PBS_NODEFILE} | uniq | tr '\n' ' '
+echo ""
+
+"/software/dev_tools/swtree/cs400_centos7.2_pe2016-08/openmpi/1.10.3/centos7.2_gnu5.3.0_romio/bin/mpiexec" --bind-to core --map-by socket:pe=1:span -np 289 "/software/user_tools/current/cades-nsed-exnihilo/gcc5/Exnihilo/bin/omnibus" "c5g7_small.inp.xml" \
+        1>omnibus.out \
+        2>omnibus.err
+exitcode=$?
+if [ $exitcode -ne 0 ]; then
+  echo "!*!*! Omnibus execution failed with error $exitcode"
+fi
+
+echo ">>> PBS run complete" >> omnibus.err
+echo ">>> Finished PBS execution at $(date)"

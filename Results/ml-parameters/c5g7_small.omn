@@ -1,0 +1,59 @@
+[PROBLEM]
+name "Mesh-based C5G7 for RQI testing"
+mode kcode
+
+[MODEL=mesh]
+input "c5g7_small_mesh.h5"
+
+[PHYSICS=mg]
+pn_order 1
+num_groups 56
+neutron_bounds 2.00e+07 6.434E+06 4.304E+06 3.000E+06 1.850E+06 1.500E+06 1.200E+06 8.611E+05 7.500E+05 6.000E+05 4.700E+05 3.300E+05 2.700E+05 2.000E+05 5.000E+04 2.500E+04 1.700E+04 3.740E+03 2.290E+03 1.915E+02 1.877E+02 1.175E+02 1.160E+02 1.050E+02 1.012E+02 6.750E+01 6.500E+01 3.713E+01 3.600E+01 2.175E+01 2.120E+01 2.050E+01 7.000E+00 6.875E+00 6.500E+00 6.250E+00 5.000E+00 1.130E+00 1.080E+00 1.010E+00 6.250E-01 4.500E-01 3.750E-01 3.500E-01 3.250E-01 2.500E-01 2.000E-01 1.500E-01 1.000E-01 8.000E-02 6.000E-02 5.000E-02 4.000E-02 2.530E-02 1.000E-02 4.000E-03 1.000E-05
+xml_path "c5g7_56g_homog.xml"
+
+[DENOVO]
+method sc
+
+[DENOVO][QUADRATURE]
+num_azi 8
+num_polar 6
+
+[DENOVO][DECOMPOSITION]
+x_blocks 17
+y_blocks 17
+z_blocks 1
+
+[DENOVO][BOUNDARY=reflect]
+reflect 1 0 1 0 1 0
+
+[DENOVO][SOLVER=eigenvalue]
+tolerance 1e-6
+upscatter_groups all
+solver rayleigh_quotient
+verbosity high
+maxitr 10
+
+[.][UPSCATTER]
+verbosity high
+tolerance 1e-7
+subspace_size 100
+maxitr 250
+
+[.][PRECONDITIONER=multilevel]
+num_v_cycles 1
+relax_count 2
+relax_weight 1.0
+
+[.][QUADRATURE]
+num_azi 1
+num_polar 1
+
+!###############################################################################
+! cades
+[RUN=pbs]
+nodes 10
+ppn   32
+walltime "18:00:00"
+detach True
+np 289
+hold True
