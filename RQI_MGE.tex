@@ -34,6 +34,11 @@
 \graphicspath{{images/}}
 \usepackage{paralist}
 
+% Comment Packages
+% Select what to do with todonotes: 
+% \usepackage[disable]{todonotes} % notes not showed
+\usepackage[draft]{todonotes}   % notes showed
+
 %%---------------------------------------------------------------------------%%
 
 %\setlength{\textfloatsep}{8pt plus 1pt minus 1pt}
@@ -439,7 +444,7 @@ These results suggest that the MGE preconditioner was a failed experiment after 
 %%---------------------------------------------------------------------------%%
 \section{Results}
 \label{sec:results}
-The collection of observations in the past work section led to the questions (1) Will preconditioning with MGE facilitate the use of RQI?,  and (2) Will the combination of RQI, MGE, and the block Krylov solver be advantageous for at least some problems of interest? This section covers a series of problems designed to answer these questions.
+The collection of observations in the past work section led to the questions (1) Will preconditioning with MGE facilitate the use of RQI?, and (2) Will the combination of RQI, MGE, and the block Krylov solver be advantageous for at least some problems of interest? This section covers a series of problems designed to answer these questions.
 
 We will start by using a relatively small problem to perform a parameter study to investigate the best choice for $r\#v\#w\#$ when using MGE with RQI.
 We then solve two much larger problems on a few different machines to answer the posed questions.
@@ -447,13 +452,14 @@ We then solve two much larger problems on a few different machines to answer the
 Unless otherwise noted, all test problems used a step characteristic spatial solver (1 unknown/cell and guaranteed positivity), level-symmetric angular quadrature, the initial guess shift for RQI is 1.0, and the MG grid depth was determined using the default approach. 
 The Krylov solver was GMRES, which is set to limit the number of multigroup iterations to 1,000 if the problem does not converge earlier. The convergence tolerances are noted for each problem. The tolerance for the multigroup solve is the convergence tolerance used by GMRES in Trilinos \cite{1089021}. The eigenvalue tolerance is used by the eigenvalue solver to determine if the eigenvalue has converged. In Denovo, PI also checks the L2-norm and the infinity-norm of the difference in the fission source between iterations. The default L2-norm tolerance is 1.0 and infinity-norm tolerance is 0.01.
 
+
 %----------------------------------------------------------
 \subsection{MGE Parameter Choice}
 \label{subsec:mge-params}
 
 Since the previous work investigating the best MGE parameter choice, many of the internal workings of Denovo have been updated. 
 Further, most problems studied were fairly small and may not represent the correct behavior in more challenging problems. 
-To ensure the best parameter choice for this new study, we ran the 3-D C5G7 benchmark \cite{OECD-NEA2005} on the Cades machine with DETAILS at ORNL. 
+To ensure the best parameter choice for this new study, we ran the 3-D C5G7 benchmark \cite{OECD-NEA2005} on the Cades machine with \todo[inline]{DETAILS} at ORNL. 
 
 To identify the best way to use the preconditioner, we looked at different combinations of reasonable values of all of the major parameters the user could choose. 
 We used 0.8, 1.0, and 1.2 for the weight used in weighted Richardson. 
@@ -598,27 +604,27 @@ The general trends from these results indicate that $w1.2r1v1$ or $w1.2r2v1$ wit
 %----------------------------------------------------------
 \subsection{PWR 900}
 \label{subsec:PWR}
-We next studied a much larger problem that is ``grand challenge'' in scale, a full pressurized water reactor (PWR) 900 core \cite{evans2009d}. This problem used 2 $\times$ 2 spatial cells/pin for 17 $\times$ 17 pins/assembly and 289 assemblies (132 reflector, 159 fuel of varying enrichment). This gave 578 $\times$ 578 $\times$ 700 mesh elements (233,858,800 cells). We used a $P_0$ scattering expansion, an $S_{12}$ angular quadrature, and 44 energy groups--all of which gave 1.73 trillion unknowns. Based on PWR calculations done previously by Evans and Davidson \cite{Evans2010}, $k$ is approximately 1.27. 
+We next studied a large problem that is ``grand challenge'' in scale, a full pressurized water reactor (PWR) 900 core \cite{evans2009d}. This problem used 2 $\times$ 2 spatial cells/pin for 17 $\times$ 17 pins/assembly and 289 assemblies (132 reflector, 159 fuel of varying enrichment). This gave 578 $\times$ 578 $\times$ 700 mesh elements (233,858,800 cells). We used a $P_0$ scattering expansion, an $S_{12}$ angular quadrature, and 44 energy groups--all of which gave 1.73 trillion unknowns. Based on PWR calculations done previously by Evans and Davidson \cite{Evans2010}, $k$ is approximately 1.27. 
 
 \subsubsection{RQI vs.\ PI}
-We first did a study on Jaguar \cite{jaguar2010} to better characterize the performance of preconditioned RQI and compare it to preconditioned PI. The preconditioner settings were $w1r3v3$; 4 and 11 sets were used giving 11 and 4 groups per set with 6 and 4 energy grids, respectively. We used 102 $x$-blocks, 100 $y$-blocks, and 10 $z$-blocks. The results are in Table~\ref{table:full PWR}. 
+We first did a study on Jaguar \cite{jaguar2010} to better characterize the performance of preconditioned RQI and compare it to preconditioned PI. The preconditioner settings were $w1r3v3$\footnote{Note that scoping calculations showed this problem needed more preconditioning to converge, hence we did not use the just-suggested defaults.}; 4 and 11 sets were used giving 11 and 4 groups per set with 6 and 4 energy grids, respectively. We used 102 $x$-blocks, 100 $y$-blocks, and 10 $z$-blocks. The results are in Table~\ref{table:full PWR}. 
 %
 \begin{table}[!h]
 \caption{PWR 900, Preconditioned Strong Scaling Study with RQI and PI}
 \begin{center}
 \begin{tabular}{| l | c | c | c | l | c | c | l |}
 \hline
-Solver & Sets & Cores & $k$ & Krylov & Eigenvalue & Total (m) & Solver (m)\\[0.5ex]
+Solver & Sets & Cores & $k$ & Krylov & Eigenvalue & Time (m) \\[0.5ex]
 \hline
-%RQI & 1   & 10,200   & 0.182 & 12    & 2$^{\dag}$ & 720.05    & n/a \\
+%RQI & 1   & 10,200   & 0.182 & 12    & 2$^{\dag}$     & n/a \\
 %PI    & 1   & 10,200   &  &  &       &  &  \\
-RQI & 4   & 40,800   & 1.269 & 76   &  6               & 802.60   & 801.32 \\
-%RQI w/ $S_{2}$ & 4   & 40,800   & 1.269 & 79   &  6               & 192.48   & 191.42 \\
-PI    & 4   & 40,800   & 1.270 & 101 & 10$^{\dag}$ & 1440.12 & n/a \\
-RQI & 11 & 112,200 & 1.269 & 76   & 6                & 331.43    & 330.38 \\
-PI    & 11 & 112,200 & 1.270 & 111 & 11$^{\dag}$ & 480.63    & n/a \\
-%RQI & 22 & 198,528 & 1.269 & 76   & 6                & 143.62    & 142.56 \\
-%PI    & 22 & 198,528 & 1.271 & 161 & 16$^{*}$      & 285.92    & n/a \\
+RQI & 4   & 40,800   & 1.269 & 76   &  6               & 802.60  \\
+%RQI w/ $S_{2}$ & 4   & 40,800   & 1.269 & 79   &  6               & 192.48    \\
+PI    & 4   & 40,800   & 1.270 & 101 & 10$^{\dag}$ & 1440.12  \\
+RQI & 11 & 112,200 & 1.269 & 76   & 6                & 331.43    \\
+PI    & 11 & 112,200 & 1.270 & 111 & 11$^{\dag}$ & 480.63     \\
+%RQI & 22 & 198,528 & 1.269 & 76   & 6                & 143.62     \\
+%PI    & 22 & 198,528 & 1.271 & 161 & 16$^{*}$      & 285.92   \\
 \hline 
 \end{tabular}\\
 $^{\dag}$exceeded wall time limit %\\ 
@@ -634,7 +640,7 @@ We also considered what would happen with a reduced quadrature set, in this case
 
 To more conclusively resolve the RQI-to-PI comparison, we did another study, this time on Titan. We used a V-cycle depth of 2, a reduced quadrature in the MGE preconditioner of $S_2$, and tolerances of $1 \times 10^{-3}$. This time we broke up over 112 $\times$ 112 $\times$ 10 partitions (12,544 blocks).
 
-The results using 11 energy sets are given in Table~\ref{tab:PWR all} and illustrate several things. One results is that the MGE preconditioner does not help PI; when we add it the calculations slows down enough that it did not finish within the wall time limit here either (it does finish without it). Another result is that RQI is too slow without enough preconditioning. With $w1r1v1$ the calculation did not complete in time and with $w1r2v2$ it did. The final, and arguably most important, result is that preconditioned RQI can be much faster than PI in general. 
+The results using 11 energy sets are given in Table~\ref{tab:PWR all} and illustrate several things. One results is that the MGE preconditioner does not help PI; when we add it, the calculation slows down enough that it did not finish within the wall time limit here either (it does finish without it). Another result is that RQI is too slow without enough preconditioning. With $w1r1v1$ the calculation did not complete in time and with $w1r2v2$ it did. The final, and arguably most important, result is that preconditioned RQI can be much faster than PI in general. 
 Preconditioned RQI was better whether PI was preconditioned or not. RQI with MGE was more than 10 times faster than PI. 
 %
 \begin{table}[!h]
@@ -697,7 +703,7 @@ In this study, the amount of work done by the preconditioner does not vary with 
 \centering
 \end{figure}
 
-The scaling, which can be visualized in Figure~\ref{fig:pwr-scaling}, compares quite well to previous scaling studies for Denovo. A fixed source (i.e.\ MG Krylov only) problem with a similar mesh and 44 groups scaled from 4,320 domains to 190,080 domains with an efficiency of 0.64 \cite{Slaybaugh2011}. That this problem performed similarly shows that adding RQI and the MGE preconditioner as solvers does not degrade the strong scaling achieved using the MG Krylov solver only. It is promising that the new solver system does not degrade scaling and that a problem for which RQI is decisively faster than PI is one for which this work was designed. 
+The scaling, which is plotted in Figure~\ref{fig:pwr-scaling}, compares quite well to previous scaling studies for Denovo. A fixed source (i.e.\ MG Krylov only) problem with a similar mesh and 44 groups scaled from 4,320 domains to 190,080 domains with an efficiency of 0.64 \cite{Slaybaugh2011}. That this problem performed similarly shows that adding RQI and the MGE preconditioner as solvers does not degrade the strong scaling achieved using the MG Krylov solver only. It is promising that the new solver system does not degrade scaling and that a problem for which RQI is decisively faster than PI is one for which this work was designed. 
 
 
 %----------------------------------------------------------
