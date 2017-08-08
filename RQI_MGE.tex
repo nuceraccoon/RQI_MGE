@@ -451,14 +451,15 @@ The Krylov solver was GMRES, which is set to limit the number of multigroup iter
 \subsection{MGE Parameter Choice}
 \label{subsec:mge-params}
 
-Since the previous publications investigating the best MGE parameter choice, many of the internal workings of Denovo have been updated. 
+Since the previous work investigating the best MGE parameter choice, many of the internal workings of Denovo have been updated. 
 Further, most problems studied were fairly small and may not represent the correct behavior in more challenging problems. 
-To ensure the best parameter choice for this work, we ran the 3-D C5G7 benchmark \cite{OECD-NEA2005} on the Cades machine with DETAILS at ORNL. 
+To ensure the best parameter choice for this new study, we ran the 3-D C5G7 benchmark \cite{OECD-NEA2005} on the Cades machine with DETAILS at ORNL. 
 
-We varied the weight used in weighted Richardson as 0.8, 1.0, and 1.2. 
-We varied both relax count and number of V-cycles as 1, 2, and 3. 
+To identify the best way to use the preconditioner, we looked at different combinations of reasonable values of all of the major parameters the user could choose. 
+We used 0.8, 1.0, and 1.2 for the weight used in weighted Richardson. 
+We used 1, 2, and 3 for both relax count and number of V-cycles. 
 Finally, we tried three different subspaces sizes: 50, 100, and 150. 
-This study used QR 8-6 quadrature in the main solver and QR 1-1 inside the preconditioner, $P_1$ scattering expansion, and 56 energy groups. 
+For all tests this study used QR 8-6 quadrature in the main solver and QR 1-1 inside the preconditioner, $P_1$ scattering expansion, and 56 energy groups. 
 The RQI solver used an eigenvalue flux tolerance of $1\times 10^{-3}$ and $k$ tolerance of $1\times 10^{-5}$. 
 
 \begin{figure}
@@ -468,28 +469,30 @@ The RQI solver used an eigenvalue flux tolerance of $1\times 10^{-3}$ and $k$ to
 \centering
 \end{figure}
 
-\autoref{fig:mge-dataframe} shows the results of the many combinations of parameters in a compact way. 
-Each square contains the time (in $1\times 10^{4}$ seconds) that the combination of parameters took to run. 
-The lower the number and the darker the shading, the less time and therefore better result. 
+\autoref{fig:mge-dataframe} shows the results of these many combinations of parameters in a compact way. 
+Each square contains the runtime (in $1\times 10^{4}$ seconds) for the combination of parameters associated with that square (explained below). 
+The lower the number and the darker the shading, the lower the runtime. 
 To read the graphic:
 \begin{compactitem}
-\item Each major column, set of 3 blocks going across separated from the next set, is the number of V-cycles. 
+\item Each major column corresponds to the number of V-cycles, where a major column is a set of 3 blocks going across separated from the next set of 3. 
 The first column is v=1 and the last is v=3. 
-This is designated along the top.
+This is indicated across the top.
 %
-\item Each major row, set of 3 blocks going down separated from the next set, is the number of relaxations per level. 
+\item Each major row corresponds to the number of relaxations per level, where a major row is a set of 3 blocks going down separated from the next set of 3. 
 The first row is r=1 and the last is r=3. 
-This is designated along the right.
+This is indicated along the right.
 %
-\item Each minor row, individual blocks going down, is the weight. 
+\item Each minor row corresponds to the weight, where a minor rows is each individual block going down. 
 The top minor row inside of each major row is w=0.8 and the bottom is w=1.2. 
-This is designated along the left.
+This is indicated along the left.
 %
-\item Each minor column, individual blocks going across, is the subspace size. 
+\item Each minor column corresponds to the subspace size, where a minor column is each individual block going across. 
 The left minor column inside of each major column is subspace = 50 and the right is 150.
-This is designated along the bottom.
+This is indicated across the bottom.
 \end{compactitem}
+For example, to find $w1.2r1v1$ with subspace 150, we go to the first major column (left most, for $v=1$), first major row (top most, for $r=1$), last minor column (right most inside of $v=1$ to get subspace 150), and last minor row (bottom most inside of $r=1$ to get $w=1.2$). This yields a value of $1.64 \times 10^4$ s. 
 
+The general trends from these results indicate that $w1.2r1v1$ or $w1.2r2v1$ with a subspace size of 150 are the best choices. Weight and number of V-cycles had the clearest trends, and subspace size had the least clear trend. 
 
 %%----------------------------------------------------------
 %\subsection{3D C5G7}
