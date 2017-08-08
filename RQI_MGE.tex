@@ -32,6 +32,7 @@
 
 \usepackage{graphicx}
 \graphicspath{{images/}}
+\usepackage{paralist}
 
 %%---------------------------------------------------------------------------%%
 
@@ -450,26 +451,43 @@ The Krylov solver was GMRES, which is set to limit the number of multigroup iter
 \subsection{MGE Parameter Choice}
 \label{subsec:mge-params}
 
-Since the previous publications investigating the best MGE parameter choice, many of the internal workings of Denovo have been updated. Further, most problems studied were fairly small and may not represent the correct behavior in more challenging problems. To ensure the best parameter choice for this work, we ran the 3-D C5G7 benchmark \cite{OECD-NEA2005} on the Cades machine with \alert{DETAILS} at ORNL. 
+Since the previous publications investigating the best MGE parameter choice, many of the internal workings of Denovo have been updated. 
+Further, most problems studied were fairly small and may not represent the correct behavior in more challenging problems. 
+To ensure the best parameter choice for this work, we ran the 3-D C5G7 benchmark \cite{OECD-NEA2005} on the Cades machine with DETAILS at ORNL. 
 
-We varied the weight used in weighted Richardson as 0.8, 1.0, and 1.2. We varied both relax count and number of V-cycles as 1, 2, and 3. Finally, we tried three different subspaces sizes: 50, 100, and 150. This study used QR 8-6 quadrature in the main solver and QR 1-1 inside the preconditioner, $P_1$ scattering expansion, and 56 energy groups. The RQI solver used an eigenvalue flux tolerance of \SI{1e-3} and $k$ tolerance of \SI{1e-5}. 
+We varied the weight used in weighted Richardson as 0.8, 1.0, and 1.2. 
+We varied both relax count and number of V-cycles as 1, 2, and 3. 
+Finally, we tried three different subspaces sizes: 50, 100, and 150. 
+This study used QR 8-6 quadrature in the main solver and QR 1-1 inside the preconditioner, $P_1$ scattering expansion, and 56 energy groups. 
+The RQI solver used an eigenvalue flux tolerance of $1\times 10^{-3}$ and $k$ tolerance of $1\times 10^{-5}$. 
 
 \begin{figure}
-\label{fig:mge-dataframe}
 \caption{MGE Parameter Study with 3D-C5G7}
 \includegraphics[scale=.75]{Results/ml-parameters/analysis/parameter_study.png}
+\label{fig:mge-dataframe}
 \centering
 \end{figure}
 
-\autoref{fig:mge-dataframe} shows the results of the many combinations of parameters in a compact way. Each square contains the number of sections (in \SI{1e4}) that the combination of parameters took to run. The lower the number and the darker the shading, the less time and therefore better result. To read the graphic:
+\autoref{fig:mge-dataframe} shows the results of the many combinations of parameters in a compact way. 
+Each square contains the time (in $1\times 10^{4}$ seconds) that the combination of parameters took to run. 
+The lower the number and the darker the shading, the less time and therefore better result. 
+To read the graphic:
 \begin{compactitem}
-\item Each major column, set of 3 blocks going across separated from the next set, is the number of V-cycles. The first column is v=1 and the last is v=3. This is designated along the top.
+\item Each major column, set of 3 blocks going across separated from the next set, is the number of V-cycles. 
+The first column is v=1 and the last is v=3. 
+This is designated along the top.
 %
-\item Each major row, set of 3 blocks going down separated from the next set, is the number of relaxations per level. The first row is r=1 and the last is r=3. This is designated along the right.
+\item Each major row, set of 3 blocks going down separated from the next set, is the number of relaxations per level. 
+The first row is r=1 and the last is r=3. 
+This is designated along the right.
 %
-\item Each minor row, individual blocks going down, is the weight. The top minor row inside of each major row is w=0.8 and the bottom is w=12. This is designated along the left.
+\item Each minor row, individual blocks going down, is the weight. 
+The top minor row inside of each major row is w=0.8 and the bottom is w=1.2. 
+This is designated along the left.
 %
-\item Each minor column, individual blocks going across, is the subspace size. The left minor column inside of each major column is subspace = 10 and the right is 150. This is designated along the bottom.
+\item Each minor column, individual blocks going across, is the subspace size. 
+The left minor column inside of each major column is subspace = 50 and the right is 150.
+This is designated along the bottom.
 \end{compactitem}
 
 
