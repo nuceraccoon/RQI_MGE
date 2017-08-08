@@ -422,11 +422,10 @@ Iterative methods reduce oscillatory error modes effectively, but not smooth err
 \subsection{MGE Preconditioner}
 Much of the previously published work for the MGE preconditioner focused on choosing all of the options that control the preconditioner. The preconditioning parameters are the Richardson iteration weight, $w$, the number of V-cycles per preconditioner application, and the number of relaxations per level. The syntax used throughout this work will be that $w\#$ is the weight, $r\#$ is the number of relaxations per level, and $v\#$ is the number of V-cycles, e.g.\ $w1r1v1$ is one relaxation per level, one V-cycle, and a weight of one. Using more preconditioning means using larger values of $w$ and/or $r$ and/or $v$. 
 
-Some initial tests provided a basis for choosing preconditioning parameters. The results showed that increasing $r$ and/or $v$ decreased Krylov iteration count, as expected. They also indicated that using a small amount of weight can be beneficial, but a large amount is not. As a result, the parameters are set to default to $w1r2v2$. Other issues investigated were using a different quadrature set inside the preconditioner than in the rest of the problem, strong scaling, and changing the depth of the V-cycle. 
-
+Other issues investigated were using a different quadrature set inside the preconditioner than in the rest of the problem, strong scaling, and changing the depth of the V-cycle. 
 Tests showed that using a reduced angle set inside the preconditioner is very valuable. For example, using $S_2$ inside MGE for an iron-graphite test solved with $S_8$ reduced the solve time by 73\% compared to using $S_8$ in the preconditioner.
 
-Another important area of investigation was how the preconditioner faired when using multiple energy sets because MGE was built to take advantage of multiple energy sets. The problems solved scaled about 40\% more efficiently with MGE preconditioning than without it. The main reason for the preconditioner'€™s good scaling is that as the number of sets increases, each application of the preconditioner becomes less costly. 
+Another important area of investigation was how the preconditioner fared when using multiple energy sets because MGE was built to take advantage of multiple energy sets. The problems solved scaled about 40\% more efficiently with MGE preconditioning than without it. The main reason for the preconditioner's good scaling is that as the number of sets increases, each application of the preconditioner becomes less costly. 
 
 With multisets, the total preconditioning cost goes down because the V-cycle becomes shallower. When 27 groups are used with one set, six grids are created. When 27 groups are used with 10 sets, two grids are created for each set. With fewer grids each application of the preconditioner performs fewer total relaxations, and is therefore less time intensive. The number of GMRES iterations did not change with the number of sets in the preconditioned cases. This means convergence improvement from the preconditioner did not come from the depth of the V-cycle, at least not for the problems tested.
 
@@ -441,112 +440,138 @@ These results suggest that the MGE preconditioner was a failed experiment after 
 \label{sec:results}
 The collection of observations in the past work section led to the questions (1) Will preconditioning with MGE facilitate the use of RQI?,  and (2) Will the combination of RQI, MGE, and the block Krylov solver be advantageous for at least some problems of interest? This section covers a series of problems designed to answer these questions.
 
-%The goal of using this system of solvers is to improve convergence behavior of the multigroup Krylov solves integrated over eigenvalue solves. A good metric for measuring this is the total number of multigroup Krylov iterations used in a calculation because it is a consistent and fair measure across machines and competing compute loads on any given machine. The number of eigenvalue iterations is also compared for the eigenvalue tests. This is a point of interest rather than a measure of goal attainment. The total number of Krylov iterations is the best proxy for convergence behavior as it encompasses the total amount of work done.
+We will start by using a relatively small problem to perform a parameter study to investigate the best choice for $r\#v\#w\#$ when using MGE with RQI.
+We then solve two much larger problems on a few different machines to answer the posed questions.
 
-%Timing comparisons should be considered heuristically for the  unless otherwise specified. In cases where the calculations were done on a single core, the machine was not dedicated to these calculations and times could vary if the same calculations were repeated. Some problems use an optimized version of the code and others use a debug version. These should give the same iteration count, but not necessarily the same relative times between problems. Further, little effort has been made to optimize the preconditioner for speed. Once the multigrid in energy preconditioner has been optimized for efficiency, the preconditioned times should decrease. How much improvement can be gained is a matter for future study.
-
-Unless otherwise noted, all test problems used a step characteristic spatial solver (1 unknown/cell and guaranteed positivity), level-symmetric angular quadrature, the intitial guess shift for RQI is 1.0, and the MG grid depth was determined using the default approach. %, Equation~\eqref{eq:NumGrids} or Equation~\eqref{eq:multisetGrids}.
+Unless otherwise noted, all test problems used a step characteristic spatial solver (1 unknown/cell and guaranteed positivity), level-symmetric angular quadrature, the initial guess shift for RQI is 1.0, and the MG grid depth was determined using the default approach. 
 The Krylov solver was GMRES, which is set to limit the number of multigroup iterations to 1,000 if the problem does not converge earlier. The convergence tolerances are noted for each problem. The tolerance for the multigroup solve is the convergence tolerance used by GMRES in Trilinos \cite{1089021}. The eigenvalue tolerance is used by the eigenvalue solver to determine if the eigenvalue has converged. In Denovo, PI also checks the L2-norm and the infinity-norm of the difference in the fission source between iterations. The default L2-norm tolerance is 1.0 and infinity-norm tolerance is 0.01.
 
 %----------------------------------------------------------
-\subsection{3D C5G7}
-\label{subsec:3dc5g7}
-The first test problem is the 3-D C5G7 benchmark \cite{OECD-NEA2005}, solved with an optimized version of Denovo, the MGE preconditioner, and both PI and RQI. The goals of this study were to see if preconditioned RQI could consistently converge the flux and $k$, and to compare preconditioned RQI and PI. 
+\subsection{MGE Parameter Choice}
+\label{subsec:mge-params}
 
-The medium-sized OIC cluster at Oak Ridge was used, and each problem was given 720 cores with 40 $x$-blocks, 18 $y$-blocks, and 5 $z$-blocks. The total and upscattering tolerances were $1 \times 10^{-4}$, with a $k$ tolerance of $1 \times 10^{-5}$ unless otherwise indicated. The wall time limit was 12 hours. Note that on the OIC machine, if a calculation exceeds wall time there is no way to get any of the results from the scratch space. 
+Since the previous publications investigating the best MGE parameter choice, many of the internal workings of Denovo have been updated. Further, most problems studied were fairly small and may not represent the correct behavior in more challenging problems. To ensure the best parameter choice for this work, we ran the 3-D C5G7 benchmark \cite{OECD-NEA2005} on the Cades machine with \alert{DETAILS} at ORNL. 
 
-The power iteration results were reported in \cite{Slaybaugh2013}, so we only add the RQI results here, which are shown in Table~\ref{table:3-D c5g7 rqi}. The relative time is compared to unpreconditioned PI, $4.46 \times 10^{3}$ seconds. All preconditioned PI and RQI tests computed a $k$ that was within the Denovo $k$ tolerance of the unpreconditioned PI result, so they are not reported here. 
-% %
-% \begin{table}[!h]
-% \caption{3-D C5G7 Benchmark, Preconditioning Parameter Scoping with Power Iteration}
-% \begin{center}
-% \begin{tabular}{| c | c | c | c | l | c |}
-% \hline
-% Weight & Relaxations & V-cycles & Krylov & PI & Rel Time$^{\dag}$ \\[0.5ex]
-% \hline
-% 0    & 0 & 0 & 1,224 & 32 & 1.00 \\ %$4.46 \times 10^{3}$ \\
-% 1    & 1 & 1 & 708    & 32 & 5.90 \\ %$2.12 \times 10^{4}$ \\
-% 1.2 & 1 & 2 & 448    & 32 & 5.33 \\ %$2.38 \times 10^{4}$ \\
-% 1.2 & 2 & 1 & 448    & 32 & 5.37 \\ %$2.39 \times 10^{4}$ \\
-% 1.3 & 2 & 2 & 288    & 32 & 6.37 \\ %$2.84 \times 10^{4}$ \\
-% 1    & 3 & 3 & 126    & 14$^{*}$  & 9.05 \\ %$4.04 \times 10^{4}$ \\
-% 1.5 & 3 & 3 & 192    & 32 & 8.36 \\ %$3.73 \times 10^{4}$ \\
-% 1    & 4 & 4 & n/a     & n/a          & exceeded wall time \\
-% 1    & 4 & 4 & n/a     & n/a$^{*}$ & exceeded wall time \\
-% 1.5 & 5 & 5 & n/a     & n/a          & exceeded wall time \\
-% \hline 
-% \end{tabular}\\
-% $^{\dag}$compared to unpreconditioned PI, $4.46 \times 10^{3}$ seconds\\
-% $^{*}$tol and upscatter tol = $1 \times 10^{-5}$, $k$ tol = $1 \times 10^{-3}$
-% \end{center}
-% \label{table:3-D c5g7}
-% \end{table}
-% 
-% The 3-D benchmark study shows the preconditioner with PI can reduce the number of required Krylov iterations substantially for challenging problems. The number of eigenvalue iterations for a given tolerance set were never changed by preconditioning. 
-% 
-% The effect of preconditioning parameters was consistent with what was observed in other test problems. However, using large values for $r$ and $v$ made the calculation take too long to get results. On the OIC machine, if a calculation exceeds wall time there is no way to get any of the results from the scratch space. Therefore, no conclusions can be drawn from this problem about the effect of substantial preconditioning when using power iteration for a real, 3-D problem. 
-%
-%The RQI results are in Table~\ref{table:3-D c5g7 rqi}. 
-%The relative time is compared to unpreconditioned PI, $4.46 \times 10^{3}$ seconds. 
+We varied the weight used in weighted Richardson as 0.8, 1.0, and 1.2. We varied both relax count and number of V-cycles as 1, 2, and 3. Finally, we tried three different subspaces sizes: 50, 100, and 150. This study used QR 8-6 quadrature in the main solver and QR 1-1 inside the preconditioner, $P_1$ scattering expansion, and 56 energy groups. The RQI solver used an eigenvalue flux tolerance of \SI{1e-3} and $k$ tolerance of \SI{1e-5}. 
 
-Many cases did not finish in time to report results. What is likely happening when the problems with lower preconditioner values run out of time is that the eigenvector is not converging. As was seen before, the calculations take a long time when every eigenvalue iteration uses 1,000 Krylov iterations. Unfortunately, there is no way to confirm this or find out if the eigenvalue is close to correct since the output cannot be obtained. 
-%
-\begin{table}[!h]
-\caption{3-D C5G7 Benchmark, Preconditioning Parameter Scoping with RQI}
-\begin{center}
-\begin{tabular}{| c | c | c | c | l | c |}
-\hline
-Weight & Relaxations & V-cycles & Krylov & RQI & Rel Time$^{+}$ \\[0.5ex]
-\hline
-0    & 0 & 0 & n/a     & n/a          & exceeded wall time \\
-1    & 1 & 1 & n/a     & n/a          & exceeded wall time \\
-1.5 & 1 & 1 & n/a     & n/a          & exceeded wall time \\
-1.2 & 2 & 1 & n/a     & n/a          & exceeded wall time \\
-1.3 & 2 & 2 & 302    & 19           & 5.20 \\ %$2.32 \times 10^{4}$ \\
-1    & 3 & 3 & 103    & 9$^{*}$    & 6.67 \\ %$3.02 \times 10^{4}$ \\
-1    & 3 & 3 & 164    & 15$^{\dag}$ & 7.59 \\ %$3.38 \times 10^{4}$ \\
-1.5 & 3 & 3 & 187    & 19           & 7.26 \\ %$3.24 \times 10^{4}$ \\
-1    & 4 & 4 & n/a     & n/a          & exceeded wall time \\
-1    & 4 & 4 & 74     & 9$^{*}$    & 5.13 \\ %$2.29 \times 10^{4}$ \\
-1.5 & 5 & 5 & n/a     & n/a          & exceeded wall time \\
-\hline 
-\end{tabular}\\
-$^{+}$compared to unpreconditioned PI, $4.46 \times 10^{3}$ seconds\\
-$^{*}$tol and upscatter tol = $1 \times 10^{-5}$, $k$ tol = $1 \times 10^{-3}$\\
-$^{\dag}$tol and upscatter tol = $1 \times 10^{-4}$, $k$ tol = $5 \times 10^{-5}$
-\end{center}
-\label{table:3-D c5g7 rqi}
-\end{table}  
+\begin{figure}
+\label{fig:mge-dataframe}
+\caption{MGE Parameter Study with 3D-C5G7}
+\includegraphics[scale=.75]{Results/ml-parameters/analysis/parameter_study.png}
+\centering
+\end{figure}
 
-With an intermediate amount of preconditioning, RQI converged and performed better than the analogous PI cases. There are three cases where both problems finish and the same tolerances were used: $w1.3r2v2$, $w1r3v3$, $w1.5r3v3$. These results are shown together in Table~\ref{table:PI RQI} for ease of comparison. This table displays time instead of relative time since the comparison is between two cases rather than across all cases. In all three, the RQI calculations took less time and fewer eigenvalue iterations than PI. In the second two, they also took fewer Krylov iterations. RQI even finished in time to get results from the $w1r4v4$ calculation when PI did not. 
+\autoref{fig:mge-dataframe} shows the results of the many combinations of parameters in a compact way. Each square contains the number of sections (in \SI{1e4}) that the combination of parameters took to run. The lower the number and the darker the shading, the less time and therefore better result. To read the graphic:
+\begin{compactitem}
+\item Each major column, set of 3 blocks going across separated from the next set, is the number of V-cycles. The first column is v=1 and the last is v=3. This is designated along the top.
 %
-\begin{table}[!h]
-\caption{3-D C5G7 Benchmark, Rayleigh Quotient Iteration and Power Iteration Comparison}
-\begin{center}
-\begin{tabular}{| c | c | c | c | c | c | c |}
-\hline
-Sovler & Weight & Relaxations & V-cycles & Krylov & Eigenvalue & Time (s) \\[0.5ex]
-\hline
-RQI & 1.3 & 2 & 2 & 302    & 19           & $2.32 \times 10^{4}$ \\
-PI    & 1.3 & 2 & 2 & 288    & 32           & $2.84 \times 10^{4}$ \\
-\hline
-RQI & 1    & 3 & 3 & 103    & 9$^{*}$   & $3.02 \times 10^{4}$ \\
-PI    & 1    & 3 & 3 & 126    & 14$^{*}$ & $4.04 \times 10^{4}$ \\
-\hline
-RQI & 1.5 & 3 & 3 & 187    & 19           & $3.24 \times 10^{4}$ \\
-PI    & 1.5 & 3 & 3 & 192    & 32           & $3.73 \times 10^{4}$ \\
-\hline 
-\end{tabular}\\
-$^{*}$tol and upscatter tol = $1 \times 10^{-5}$, $k$ tol = $1 \times 10^{-3}$
-\end{center}
-\label{table:PI RQI}
-\end{table}  
+\item Each major row, set of 3 blocks going down separated from the next set, is the number of relaxations per level. The first row is r=1 and the last is r=3. This is designated along the right.
+%
+\item Each minor row, individual blocks going down, is the weight. The top minor row inside of each major row is w=0.8 and the bottom is w=12. This is designated along the left.
+%
+\item Each minor column, individual blocks going across, is the subspace size. The left minor column inside of each major column is subspace = 10 and the right is 150. This is designated along the bottom.
+\end{compactitem}
 
-The 3-D benchmark problem shows that preconditioned RQI can converge more quickly in all senses than preconditioned PI. It is pertinent that this is true in a challenging problem. It seems, however, that RQI can only be useful if it is preconditioned enough to get the eigenvector to converge. 
+
+%%----------------------------------------------------------
+%\subsection{3D C5G7}
+%\label{subsec:3dc5g7}
+%The first test problem is the 3-D C5G7 benchmark \cite{OECD-NEA2005}, solved with an optimized version of Denovo, the MGE preconditioner, and both PI and RQI. The goals of this study were to see if preconditioned RQI could consistently converge the flux and $k$, and to compare preconditioned RQI and PI. 
 %
-%These results continue to confirm that a small amount of weight works well for real problems. Increasing $r$ and $v$ decrease iteration count, but at what can be a high time penalty. An intermediate amount of preconditioning will likely provide the best balance of reduced iteration count for the time invested once the preconditioner is optimized. 
+%The medium-sized OIC cluster at Oak Ridge was used, and each problem was given 720 cores with 40 $x$-blocks, 18 $y$-blocks, and 5 $z$-blocks. The total and upscattering tolerances were $1 \times 10^{-4}$, with a $k$ tolerance of $1 \times 10^{-5}$ unless otherwise indicated. The wall time limit was 12 hours. Note that on the OIC machine, if a calculation exceeds wall time there is no way to get any of the results from the scratch space. 
 %
-%** Could do more of these with better w,r,v choices to have more overlap between RQI and POI; use reduced angle set; not much grid depth to reduce, but could try anyway **
+%The power iteration results were reported in \cite{Slaybaugh2013}, so we only add the RQI results here, which are shown in Table~\ref{table:3-D c5g7 rqi}. The relative time is compared to unpreconditioned PI, $4.46 \times 10^{3}$ seconds. All preconditioned PI and RQI tests computed a $k$ that was within the Denovo $k$ tolerance of the unpreconditioned PI result, so they are not reported here. 
+%% %
+%% \begin{table}[!h]
+%% \caption{3-D C5G7 Benchmark, Preconditioning Parameter Scoping with Power Iteration}
+%% \begin{center}
+%% \begin{tabular}{| c | c | c | c | l | c |}
+%% \hline
+%% Weight & Relaxations & V-cycles & Krylov & PI & Rel Time$^{\dag}$ \\[0.5ex]
+%% \hline
+%% 0    & 0 & 0 & 1,224 & 32 & 1.00 \\ %$4.46 \times 10^{3}$ \\
+%% 1    & 1 & 1 & 708    & 32 & 5.90 \\ %$2.12 \times 10^{4}$ \\
+%% 1.2 & 1 & 2 & 448    & 32 & 5.33 \\ %$2.38 \times 10^{4}$ \\
+%% 1.2 & 2 & 1 & 448    & 32 & 5.37 \\ %$2.39 \times 10^{4}$ \\
+%% 1.3 & 2 & 2 & 288    & 32 & 6.37 \\ %$2.84 \times 10^{4}$ \\
+%% 1    & 3 & 3 & 126    & 14$^{*}$  & 9.05 \\ %$4.04 \times 10^{4}$ \\
+%% 1.5 & 3 & 3 & 192    & 32 & 8.36 \\ %$3.73 \times 10^{4}$ \\
+%% 1    & 4 & 4 & n/a     & n/a          & exceeded wall time \\
+%% 1    & 4 & 4 & n/a     & n/a$^{*}$ & exceeded wall time \\
+%% 1.5 & 5 & 5 & n/a     & n/a          & exceeded wall time \\
+%% \hline 
+%% \end{tabular}\\
+%% $^{\dag}$compared to unpreconditioned PI, $4.46 \times 10^{3}$ seconds\\
+%% $^{*}$tol and upscatter tol = $1 \times 10^{-5}$, $k$ tol = $1 \times 10^{-3}$
+%% \end{center}
+%% \label{table:3-D c5g7}
+%% \end{table}
+%% 
+%% The 3-D benchmark study shows the preconditioner with PI can reduce the number of required Krylov iterations substantially for challenging problems. The number of eigenvalue iterations for a given tolerance set were never changed by preconditioning. 
+%% 
+%% The effect of preconditioning parameters was consistent with what was observed in other test problems. However, using large values for $r$ and $v$ made the calculation take too long to get results. On the OIC machine, if a calculation exceeds wall time there is no way to get any of the results from the scratch space. Therefore, no conclusions can be drawn from this problem about the effect of substantial preconditioning when using power iteration for a real, 3-D problem. 
+%%
+%%The RQI results are in Table~\ref{table:3-D c5g7 rqi}. 
+%%The relative time is compared to unpreconditioned PI, $4.46 \times 10^{3}$ seconds. 
+%
+%Many cases did not finish in time to report results. What is likely happening when the problems with lower preconditioner values run out of time is that the eigenvector is not converging. As was seen before, the calculations take a long time when every eigenvalue iteration uses 1,000 Krylov iterations. Unfortunately, there is no way to confirm this or find out if the eigenvalue is close to correct since the output cannot be obtained. 
+%%
+%\begin{table}[!h]
+%\caption{3-D C5G7 Benchmark, Preconditioning Parameter Scoping with RQI}
+%\begin{center}
+%\begin{tabular}{| c | c | c | c | l | c |}
+%\hline
+%Weight & Relaxations & V-cycles & Krylov & RQI & Rel Time$^{+}$ \\[0.5ex]
+%\hline
+%0    & 0 & 0 & n/a     & n/a          & exceeded wall time \\
+%1    & 1 & 1 & n/a     & n/a          & exceeded wall time \\
+%1.5 & 1 & 1 & n/a     & n/a          & exceeded wall time \\
+%1.2 & 2 & 1 & n/a     & n/a          & exceeded wall time \\
+%1.3 & 2 & 2 & 302    & 19           & 5.20 \\ %$2.32 \times 10^{4}$ \\
+%1    & 3 & 3 & 103    & 9$^{*}$    & 6.67 \\ %$3.02 \times 10^{4}$ \\
+%1    & 3 & 3 & 164    & 15$^{\dag}$ & 7.59 \\ %$3.38 \times 10^{4}$ \\
+%1.5 & 3 & 3 & 187    & 19           & 7.26 \\ %$3.24 \times 10^{4}$ \\
+%1    & 4 & 4 & n/a     & n/a          & exceeded wall time \\
+%1    & 4 & 4 & 74     & 9$^{*}$    & 5.13 \\ %$2.29 \times 10^{4}$ \\
+%1.5 & 5 & 5 & n/a     & n/a          & exceeded wall time \\
+%\hline 
+%\end{tabular}\\
+%$^{+}$compared to unpreconditioned PI, $4.46 \times 10^{3}$ seconds\\
+%$^{*}$tol and upscatter tol = $1 \times 10^{-5}$, $k$ tol = $1 \times 10^{-3}$\\
+%$^{\dag}$tol and upscatter tol = $1 \times 10^{-4}$, $k$ tol = $5 \times 10^{-5}$
+%\end{center}
+%\label{table:3-D c5g7 rqi}
+%\end{table}  
+%
+%With an intermediate amount of preconditioning, RQI converged and performed better than the analogous PI cases. There are three cases where both problems finish and the same tolerances were used: $w1.3r2v2$, $w1r3v3$, $w1.5r3v3$. These results are shown together in Table~\ref{table:PI RQI} for ease of comparison. This table displays time instead of relative time since the comparison is between two cases rather than across all cases. In all three, the RQI calculations took less time and fewer eigenvalue iterations than PI. In the second two, they also took fewer Krylov iterations. RQI even finished in time to get results from the $w1r4v4$ calculation when PI did not. 
+%%
+%\begin{table}[!h]
+%\caption{3-D C5G7 Benchmark, Rayleigh Quotient Iteration and Power Iteration Comparison}
+%\begin{center}
+%\begin{tabular}{| c | c | c | c | c | c | c |}
+%\hline
+%Sovler & Weight & Relaxations & V-cycles & Krylov & Eigenvalue & Time (s) \\[0.5ex]
+%\hline
+%RQI & 1.3 & 2 & 2 & 302    & 19           & $2.32 \times 10^{4}$ \\
+%PI    & 1.3 & 2 & 2 & 288    & 32           & $2.84 \times 10^{4}$ \\
+%\hline
+%RQI & 1    & 3 & 3 & 103    & 9$^{*}$   & $3.02 \times 10^{4}$ \\
+%PI    & 1    & 3 & 3 & 126    & 14$^{*}$ & $4.04 \times 10^{4}$ \\
+%\hline
+%RQI & 1.5 & 3 & 3 & 187    & 19           & $3.24 \times 10^{4}$ \\
+%PI    & 1.5 & 3 & 3 & 192    & 32           & $3.73 \times 10^{4}$ \\
+%\hline 
+%\end{tabular}\\
+%$^{*}$tol and upscatter tol = $1 \times 10^{-5}$, $k$ tol = $1 \times 10^{-3}$
+%\end{center}
+%\label{table:PI RQI}
+%\end{table}  
+%
+%The 3-D benchmark problem shows that preconditioned RQI can converge more quickly in all senses than preconditioned PI. It is pertinent that this is true in a challenging problem. It seems, however, that RQI can only be useful if it is preconditioned enough to get the eigenvector to converge. 
+%%
+%%These results continue to confirm that a small amount of weight works well for real problems. Increasing $r$ and $v$ decrease iteration count, but at what can be a high time penalty. An intermediate amount of preconditioning will likely provide the best balance of reduced iteration count for the time invested once the preconditioner is optimized. 
+%%
+%%** Could do more of these with better w,r,v choices to have more overlap between RQI and POI; use reduced angle set; not much grid depth to reduce, but could try anyway **
 
 
 %----------------------------------------------------------
@@ -664,23 +689,23 @@ We started by performing a medium-sized scaling study on a local cluster, Remus.
 
 Note that in these studies we used an initial shift of 0 in RQI. This causes the method's first iteration to be functionally equivalent to performing one Power Iteration. The idea is that starting with a shift of 0 can help RQI get on the right track to converging the eigenvalue more easily than if we set an initial shift of 1.0. 
 
-\begin{figure}
-\label{fig:remus}
-\caption{BW1484 Energy Set Scaling Study on Local Cluster, Remus}
-\includegraphics[scale=.75]{Results/bw-small}
-\centering
-\end{figure}
+%\begin{figure}
+%\label{fig:remus}
+%\caption{BW1484 Energy Set Scaling Study on Local Cluster, Remus}
+%\includegraphics[scale=.75]{Results/bw-small}
+%\centering
+%\end{figure}
 %
 Figure \ref{fig:remus} shows the results on Remus. We can see favorable scaling with both preconditioned and unpreconditioned RQI. Preconditioned RQI was faster than unpreconditioned. Both RQI results were faster than Arnoldi with full partitioning (which scaled just as well, but was the slowest). Arnoldi with upscatter partitioning performed the best at low core count, but shows poor scaling performance after two energy sets and ended in third place with respect to time at higher core counts. 
 
 To see how these trends would hold on larger problems and with more cores, we also performed this study on Titan. Here the 1-set case was run with 3,136 cores (56 $x$-blocks and 56 $y$-blocks). A parallel-efficiency modeling tool developed at Oak Ridge was used to choose the optimal number of $z$-blocks for each method, which in the case of RQI with MGE preconditioning was determined to be 22. For the other three methods, using 11 $z$-blocks was determined to be optimal. We then scaled up to 2, 4, and 8 sets using 6,272, 12,544, and 25,088 cores, respectively. The upscatter and k-tolerances were $1 \times 10^{-5}$. We used 8 mesh cells/pin for a total of 336 $\times$ 336 $\times$ 154 mesh elements (17,385,984 cells). Based on previous studies \cite{Slaybaugh2015}, a weight of 1 with 3 V-cycles and 2 relaxations was chosen for the MGE preconditioner. 
 
-\begin{figure}
-\label{fig:titan}
-\caption{BW1484 Energy Set Scaling Study on Titan}
-\includegraphics[scale=.75]{Results/bw-large}
-\centering
-\end{figure}
+%\begin{figure}
+%\label{fig:titan}
+%\caption{BW1484 Energy Set Scaling Study on Titan}
+%\includegraphics[scale=.75]{Results/bw-large}
+%\centering
+%\end{figure}
 %
 The results can be seen in Figure~\ref{fig:titan}. The same trends were seen on Titan as on Remus. Arnoldi with full partitioning scaled well, but was the slowest. RQI with and without preconditioning scaled similarly, with the preconditioned version being faster. Arnoldi with upscatter partitioning started out as the fastest, but scales the least well. Thus, at 4 and 8 energy sets it ended up much slower. 
 
