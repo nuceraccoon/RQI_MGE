@@ -459,13 +459,13 @@ The Krylov solver was GMRES, which is set to limit the number of multigroup iter
 
 Since the previous work investigating the best MGE parameter choice, many of the internal workings of Denovo have been updated. 
 Further, most problems studied were fairly small and may not represent the correct behavior in more challenging problems. 
-To ensure the best parameter choice for this new study, we ran the 3-D C5G7 benchmark \cite{OECD-NEA2005} on the Cades machine with \todo[inline]{DETAILS} at ORNL. 
+To ensure the best parameter choice for this new study, we ran the 3-D C5G7 benchmark \cite{OECD-NEA2005} on a small cluster. 
 
 To identify the best way to use the preconditioner, we looked at different combinations of reasonable values of all of the major parameters the user could choose. 
 We used 0.8, 1.0, and 1.2 for the weight used in weighted Richardson. 
 We used 1, 2, and 3 for both relax count and number of V-cycles. 
 Finally, we tried three different subspaces sizes: 50, 100, and 150. 
-For all tests this study used QR 8-6 quadrature in the main solver and QR 1-1 inside the preconditioner, $P_1$ scattering expansion, and 56 energy groups. 
+For all tests this study used quadruple range (QR) angular quadrature \cite{Jarrell2009} with 8 azimuthal and 6 polar angles per octant (QR 8-6) in the main solver and QR 1-1 inside the preconditioner, $P_1$ scattering expansion, and 56 energy groups. 
 The RQI solver used an eigenvalue flux tolerance of $1\times 10^{-3}$ and $k$ tolerance of $1\times 10^{-5}$. 
 
 \begin{figure}
@@ -612,23 +612,20 @@ Finally, we investigated performance of the new solvers with a model of the Babc
 
 %To fully compare the performance of RQI to Arnoldi, we did a multiset scaling study with this larger problem. Thus, the BW1484 problem was solved with RQI with and without preconditioning and compared to Arnoldi iteration with both upscatter and regular partitioning. 
 
-\todo[inline]{can you let me know if these geometry specs are correct? I did my best to double check everything in the xml file.}
-We started by performing a medium-sized scaling study on the Cades cluster. This problem used 2 $\times$ 2 spatial cells/pin with 60 $\times$ 60 pins for a total of 120 $\times$ 120 $\times$ 44 mesh elements (633,600 cells) split up across 8 $x$-blocks,16 $y$-blocks, and 1 $z$-block. 
+We started by performing a medium-sized scaling study on a small cluster. This problem used 2 $\times$ 2 spatial cells/pin with 60 $\times$ 60 pins for a total of 120 $\times$ 120 $\times$ 44 mesh elements (633,600 cells) split up across 8 $x$-blocks,16 $y$-blocks, and 1 $z$-block. 
 We used a $P_0$ scattering expansion; a QR 8-6 angular quadrature; and 56 energy groups--which gave approximately 425 million unknowns. 
 We used a $k$ tolerance and flux tolerance of $1 \times 10^{-5}$.
 In the preconditioned cases, a QR 1-1 quadrature was used in the multilevel preconditioner with $w1.2r2v1$. 
 The study was performed with 128, 256, 512, and 1024 cores and 1, 2, 4, and 8 energy sets, respectively. 
 
-Note that in these studies we used an initial shift of 0.0 in RQI. This causes the method's first iteration to be functionally equivalent to performing one Power Iteration. The idea is that starting with a shift of 0.0 can help RQI get on the right track to converging the eigenvalue more easily than if we set an initial shift of 1.0. 
-
 \begin{figure}
-\caption{BW1484 Energy Small Energy Scaling Study on Cades}
+\caption{BW1484 Energy Small Energy Scaling Study}
 \includegraphics[scale=1]{Results/bw1484-cades/bw1484-small-cades-timing.pdf}
-\label{fig:cades}
+\label{fig:small}
 \centering
 \end{figure}
 %
-Figure \ref{fig:cades} shows the results from this scaling study. We can see favorable scaling with both preconditioned and unpreconditioned RQI. Preconditioned RQI was faster than unpreconditioned. Both RQI results were faster than Arnoldi with full partitioning (which scaled just as well, but was the slowest). Arnoldi with upscatter partitioning performed the best at low core count, but shows poor scaling performance and, after two energy sets, ended in third place with respect to time. 
+Figure \ref{fig:small} shows the results from this scaling study. We can see favorable scaling with both preconditioned and unpreconditioned RQI. Preconditioned RQI was faster than unpreconditioned. Both RQI results were faster than Arnoldi with full partitioning (which scaled just as well, but was the slowest). Arnoldi with upscatter partitioning performed the best at low core count, but shows poor scaling performance and, after two energy sets, ended in third place with respect to time. 
 
 Finally, we used Titan to look at scaling performance with a larger version of this problem with more cores. Here the 1-set case was run with 3,136 cores (56 $x$-blocks and 56 $y$-blocks). A parallel-efficiency modeling tool developed at Oak Ridge was used to choose the optimal number of $z$-blocks for each method, which in the case of RQI with MGE preconditioning was determined to be 22. For the other three methods, using 11 $z$-blocks was determined to be optimal. We then scaled up to 2, 4, and 8 sets using 6,272, 12,544, and 25,088 cores, respectively. The upscatter and k-tolerances were $1 \times 10^{-5}$. We used 8 mesh cells/pin for a total of 336 $\times$ 336 $\times$ 154 mesh elements (17,385,984 cells). We again used $P_0$ and QR 8-6, with $w1.2r2v1$ and QR 1-1 inside the preconditioner.
 
@@ -639,7 +636,7 @@ Finally, we used Titan to look at scaling performance with a larger version of t
 \centering
 \end{figure}
 %
-The results can be seen in Figure~\ref{fig:titan}. The same trends were seen on Titan as on Cades. Arnoldi with full partitioning scaled well, but was the slowest. RQI with and without preconditioning scaled similarly, with the preconditioned version being faster. Arnoldi with upscatter partitioning started out as the fastest, but scales the least well. Thus, at 4 and 8 energy sets it ended up much slower. 
+The results can be seen in Figure~\ref{fig:titan}. The same trends were seen on Titan as in the small study. Arnoldi with full partitioning scaled well, but was the slowest. RQI with and without preconditioning scaled similarly, with the preconditioned version being faster. Arnoldi with upscatter partitioning started out as the fastest, but scales the least well. Thus, at 4 and 8 energy sets it ended up much slower. 
 
 We can see that RQI gives the same scaling in energy relative to Arnoldi with full partitioning. We expected this behavior as they handle energy sets the same way. Therefore, RQI is the clear winner in terms of runtime when energy groups are handled the same way. 
 
