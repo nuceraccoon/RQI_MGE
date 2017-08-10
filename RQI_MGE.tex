@@ -160,7 +160,7 @@ The multigroup Krylov solver was designed to improve convergence when compared t
 
 A multigrid in energy preconditioner was added to Denovo to reduce iteration count for all problem types, and to address convergence issues associated with RQI. The  preconditioner conducts a multigrid method in the energy dimension. A set of energy grids with increasingly coarse energy group structures are created. This is implemented in a way that easily and efficiently takes advantage of the new energy decomposition. The multigrid algorithm is applied within each energy set such that the energy groups are only restricted and prolonged between groups on that set. Sets do not communicate with one another in the preconditioner, so the scaling in energy is very good. 
 
-Theory indicates that RQI should converge in fewer iterations than traditional eigenvalue solvers like power iteration, particularly for problems that are challenging for those solvers. However, the use of RQI would not be practical without the MG Krylov solver and the MGE preconditioner. The implementation of RQI results in a set of equations that is mathematically equivalent to having upscattering in every group, so the scattering matrix becomes energy-block dense. Handling energy-block dense systems when there are more than a few energy groups is not tractable with GS as the multigroup solver. It is only the MG Krylov solver that makes RQI reasonable to use when there are many energy groups. In addition, the MGE preconditioner is needed to mitigate the slow convergence associated with Krylov methods when trying to solve the ill-conditioned systems created by RQI. 
+Theory indicates that RQI should converge in fewer iterations than traditional eigenvalue solvers like Power Iteration (PI), particularly for problems that are challenging for those solvers. However, the use of RQI would not be practical without the MG Krylov solver and the MGE preconditioner. The implementation of RQI results in a set of equations that is mathematically equivalent to having upscattering in every group, so the scattering matrix becomes energy-block dense. Handling energy-block dense systems when there are more than a few energy groups is not tractable with GS as the multigroup solver. It is only the MG Krylov solver that makes RQI reasonable to use when there are many energy groups. In addition, the MGE preconditioner is needed to mitigate the slow convergence associated with Krylov methods when trying to solve the ill-conditioned systems created by RQI. 
 
 The remainder of this paper presents information about why these methods are complementary as well as results demonstrating that they are. Section \ref{sec:background} discusses each of the new methods in the context of commonly-used methods. Section \ref{sec:pastwork} gives an overview of relevant past work. New results from using the three new methods together are shown in Section \ref{sec:results}, and concluding remarks are made in Section \ref{sec:conclusions}.
 
@@ -202,7 +202,7 @@ Once the matrices are multiplied together, a series of single ``within-group'' e
 %%---------------------------------------------------------------------------%%
 \subsection{Block Krylov Solver}
 \label{sec:blockkrylov}
-Traditionally, the multigroup solve has been done with Gauss Seidel (GS), which is iterative in energy. A space-angle solve using a within-group solver, such as source iteration or a Krylov method, is performed for each energy group in series. The groups are solved from $g=0$, the highest energy, to $g=G$, the lowest. For a group $g$ and an energy iteration index $j$ this is \cite{Evans2010}
+Traditionally, the multigroup solve has been done with GS, which is iterative in energy. A space-angle solve using a within-group solver, such as source iteration or a Krylov method, is performed for each energy group in series. The groups are solved from $g=0$, the highest energy, to $g=G$, the lowest. For a group $g$ and an energy iteration index $j$ this is \cite{Evans2010}
 %
 \begin{equation}
   \bigl( \ve{I} - \ve{TMS}_{gg} \bigr) \phi^{j+1}_{g} = \ve{TM} \bigl( \sum_{g'=0}^{g-1}\ve{S}_{gg'}\phi^{j+1}_{g'} + \sum_{g'=g+1}^{G} \ve{S}_{gg'}\phi^{j}_{g'}  + q_{g} \bigr)  \:.
@@ -239,10 +239,10 @@ The solver has been shown to successfully scale to hundreds of thousands of core
 %%---------------------------------------------------------------------------%%
 \subsection{Eigenvalue Solvers}
 \label{sec:eigenvalue}
-Denovo has three eigenvalue solver choices, Power Iteration, Rayleigh Quotient Iteration, and Arnoldi. 
+Denovo has three eigenvalue solver choices, PI, RQI, and Arnoldi. 
 
 \subsubsection{Power Iteration}
-A common way to solve $k$-eigenvalue problems is with Power Iteration (PI). This method is attractive because it only requires matrix-vector products and two vectors of storage space. 
+A common way to solve $k$-eigenvalue problems is with PI. This method is attractive because it only requires matrix-vector products and two vectors of storage space. 
 %
 \begin{align}
   \ve{A}\phi &= k\phi \:, \label{eq:EnergyDepEval} \\
@@ -262,7 +262,7 @@ Inside of PI, the application of $\ve{A}$ to $\phi$ requires the solution of a m
 PI's convergence can be very slow for problems of interest.  The error from PI is reduced in each iteration by a factor of $\ve{A}$'s dominance ratio, $\frac{\lambda_{2}}{\lambda_{1}}$. For large, loosely coupled systmes, $\lambda_2 \approx \lambda_1$ and PI will therefore converge slowly.
 
 \subsubsection{Rayleigh Quotient Iteration}
-Shifted inverse iteration (SII) typically converges more quickly than PI. SII capitalizes on the fact that for some shift $\mu$, $(\ve{A} - \mu \ve{I})$ will have the same eigenvectors as $\ve{A}$ and eigenvalues of $\ve{A}$ that are near the shift will be transformed to extremal eigenvalues of $(\ve{A} - \mu \ve{I})$ that are well separated from the others. The shifted and inverted matrix is used in a power iteration-type scheme. Given a good shift, $\mu \approx \lambda_1$, SII usually converges more quickly than PI, especially for loosely coupled systems \cite{Allen2002}.
+Shifted inverse iteration (SII) typically converges more quickly than PI. SII capitalizes on the fact that for some shift $\mu$, $(\ve{A} - \mu \ve{I})$ will have the same eigenvectors as $\ve{A}$ and eigenvalues of $\ve{A}$ that are near the shift will be transformed to extremal eigenvalues of $(\ve{A} - \mu \ve{I})$ that are well separated from the others. The shifted and inverted matrix is used in a PI-type scheme. Given a good shift, $\mu \approx \lambda_1$, SII usually converges more quickly than PI, especially for loosely coupled systems \cite{Allen2002}.
 
 % Wielandt's method is a flavor of SII that has been used widely in the neutron transport community, though it was originally developed in 1944 in an unrelated context \cite{Zinzani2008}, \cite{Itagaki1996}, \cite{Itagaki2002}. In the transport equation formulation, Wielandt's method changes the eigenvalue problem to $(\ve{I} - \ve{TM}(\ve{S} +\gamma_e \ve{F}))\phi = \delta \gamma \ve{TMF} \phi$, where $\gamma_e$ is the current estimate for the dominant eigenvalue, $\gamma_1 = \frac{1}{k}$, and $\delta \gamma = \gamma_1 - \gamma_e$. The power method is applied to this, giving \cite{Nakamura1977}
 % %
@@ -270,7 +270,7 @@ Shifted inverse iteration (SII) typically converges more quickly than PI. SII ca
 % \phi^{i+1} = \delta \gamma^{i}(\ve{I} - \ve{TM}(\ve{S} + \gamma_e \ve{F}))^{-1}\ve{TMF}\phi^{i} \:. \label{eq:Wielandt}
 % \end{equation}
 
-Rayleigh Quotient Iteration is a shifted inverse iteration method
+RQI is a shifted inverse iteration method
 that uses a dynamically updated shift: the Rayleigh quotient (RQ). For a generalized eigenvalue problem $\ve{A}x = \lambda \ve{B}x$, the RQ is given by
 %
 \begin{equation}
@@ -417,7 +417,7 @@ An important principle is that the preconditioner is only attempting to approxim
 This section is a summary of results using RQI without preconditioning \cite{Slaybaugh2012} and the MGE Preconditioner with fixed source problems or PI \cite{Slaybaugh2013}. The purpose of this section is to highlight the capabilities that have been demonstrated and point out the short-comings that can be overcome by using the MG Krylov solver, RQI eigenvalue solver, and MGE preconditioner together. In the following discussion, reducing the Krylov iteration count is the primary measure of success--with reduced time as the second consideration. A discussion of this choice is given at the beginning of the Section \ref{sec:results}, Results.
 
 \subsection{Unpreconditioned RQI}
-The goal of the RQI studies that have been published was to find out it if RQI useful without preconditioning. We solved two small eigenvalue test problems, one with vacuum boundaries and one with reflecting, that had small dominance ratios. We found that RQI got the correct answer and converged in fewer iterations than power iteration. However, an intermediately-sized problem did not work so well. Each multigroup solve, except the first, used the maximum number of Krylov multigroup iterations per eigenvalue iteration. This means the eigenvector did not converge after the first iteration. The value of $k$ oscillated between 0.3966 and 0.3967 (the correct value was 0.4) until the calculation was manually terminated. In two more realistic calculations, the 2D and 3D C5G7 MOX Benchmark problems (\cite{OECD-NEA2003}, \cite{OECD-NEA2005}), RQI did not converge the eigenvector nor find an eigenvalue close to the correct one. 
+The goal of the RQI studies that have been published was to find out it if RQI useful without preconditioning. We solved two small eigenvalue test problems, one with vacuum boundaries and one with reflecting, that had small dominance ratios. We found that RQI got the correct answer and converged in fewer iterations than PI. However, an intermediately-sized problem did not work so well. Each multigroup solve, except the first, used the maximum number of Krylov multigroup iterations per eigenvalue iteration. This means the eigenvector did not converge after the first iteration. The value of $k$ oscillated between 0.3966 and 0.3967 (the correct value was 0.4) until the calculation was manually terminated. In two more realistic calculations, the 2D and 3D C5G7 MOX Benchmark problems (\cite{OECD-NEA2003}, \cite{OECD-NEA2005}), RQI did not converge the eigenvector nor find an eigenvalue close to the correct one. 
 
 These more challenging problems showed that, as expected, the Krylov solver often cannot converge the eigenvector with the ill-conditioned systems created by RQI. When the Krylov iterations do not converge, the flux estimate is not good. Without an adequate approximation to the eigenvector, the RQ is no longer a valid approximation to the eigenvalue, and therefore the eigenvalue problem does not converge. 
 
@@ -444,12 +444,12 @@ These results suggest that the MGE preconditioner was a failed experiment after 
 %%---------------------------------------------------------------------------%%
 \section{Results}
 \label{sec:results}
-The collection of observations in the past work section led to the questions (1) Will preconditioning with MGE facilitate the use of RQI?, and (2) Will the combination of RQI, MGE, and the block Krylov solver be advantageous for at least some problems of interest? This section covers a series of problems designed to answer these questions.
+The collection of observations in the past work section led to the questions: will preconditioning with MGE facilitate the use of RQI, and will the combination of RQI, MGE, and the block Krylov solver be advantageous for at least some problems of interest? This section covers a series of problems designed to answer these questions.
 
 We will start by using a relatively small problem to perform a parameter study to investigate the best choice for $r\#v\#w\#$ when using MGE with RQI.
 We then solve two much larger problems on a few different machines to answer the posed questions.
 
-Unless otherwise noted, all test problems used a step characteristic spatial solver (1 unknown/cell and guaranteed positivity), level-symmetric angular quadrature, the initial guess shift for RQI is 1.0, and the MG grid depth was determined using the default approach. 
+Unless otherwise noted, all test problems used a step characteristic (SC) spatial solver (1 unknown/cell and positive in the presence of physical scattering\footnote{Step-characteristics are only guaranteed to be positive in the presence of positive scattering sources. Negativities can still occur when the source is negative due to truncation resulting from $P_n$ anisotropic scattering. Negativities can also result from incomplete convergence in GMRES.}), level-symmetric angular quadrature, the initial guess shift for RQI is 1.0, and the MG grid depth was determined using the default approach. 
 The Krylov solver was GMRES, which is set to limit the number of multigroup iterations to 1,000 if the problem does not converge earlier. The convergence tolerances are noted for each problem. The tolerance for the multigroup solve is the convergence tolerance used by GMRES in Trilinos \cite{1089021}. The eigenvalue tolerance is used by the eigenvalue solver to determine if the eigenvalue has converged. In Denovo, PI also checks the L2-norm and the infinity-norm of the difference in the fission source between iterations. The default L2-norm tolerance is 1.0 and infinity-norm tolerance is 0.01.
 
 
@@ -652,22 +652,22 @@ These results lead us to conclude that for real, challenging problems, Arnoldi w
 \label{sec:conclusions}
 The goal of this research was to accelerate transport calculations with methods that can take full advantage of modern leadership-class computers, facilitating the design of better nuclear systems. Three complimentary methods were implemented that accomplish this goal to varying degrees. 
 
-At the outset of this work, Denovo could be decomposed in five of the six dimensions of phase space over which the steady-state transport equation is solved in a way that restricted it to about 20,000 cores for a problem with 500 million cells. The original suite of solvers included Gauss Seidel as the multigroup solver and Power Iteration wrapped around GS as the eigenvalue solver. These solvers have some significant limitations in many cases of interest. 
+At the outset of this work, Denovo could be decomposed in five of the six dimensions of phase space over which the steady-state transport equation is solved in a way that restricted it to about 20,000 cores for a problem with 500 million cells. The original suite of solvers included GS as the multigroup solver and PI with inner GS iteration as the eigenvalue solver. These solvers have some significant limitations in many cases of interest. 
 
-The new multigroup Krylov solver converges more quickly than GS and enables energy decomposition such that Denovo can scale to hundreds of thousands of cores. The new multigrid-in-energy preconditioner reduces iteration count for many problem types and takes advantage of the new energy decomposition such that it can scale very efficiently. These two tools are useful on their own, but together they allow the Rayleigh Quotient Iteration eigenvalue solver to work.
+The new multigroup Krylov solver converges more quickly than GS and enables energy decomposition such that Denovo can scale to hundreds of thousands of cores. The new multigrid-in-energy preconditioner reduces iteration count for many problem types and takes advantage of the new energy decomposition such that it can scale very efficiently. These two tools are useful on their own, but together they allow the RQI eigenvalue solver to work.
 
-The real motivation of this work was to add RQI, which should converge in fewer iterations and less time than PI, and possibly Arnoldi, for large and challenging problems. RQI creates shifted systems that would not be tractable without the MG Krylov solver. It also creates ill-conditioned matrices that cannot converge without the multigrid-in-energy preconditioner. RQI also often needs help starting in the right direction, and performing one initial Power Iteration was shown to improve performance. Using these methods, RQI converged in fewer iterations and in less time than both PI and Arnoldi for large problems on large core counts. 
+The real motivation of this work was to add RQI, which should converge in fewer iterations and less time than PI, and possibly Arnoldi, for large and challenging problems. RQI creates shifted systems that would not be tractable without the MG Krylov solver. It also creates ill-conditioned matrices that cannot converge without the multigrid-in-energy preconditioner. RQI also often needs help starting in the right direction, and performing one initial PI was shown to improve performance. Using these methods, RQI converged in fewer iterations and in less time than both PI and Arnoldi for large problems on large core counts. 
 
 The methods added in this research accelerated Denovo in multiple ways. This acceleration helps enable the solution of today'Äôs ``grand challenge''Äù problems. It is hoped that improved methods will lead to improved reactor designs and systems, and that the frontier of computational challenges will be moved forward.
 
 
 
 %%---
-%Rayleigh Quotient Iteration is an old method that is an adaptation of shifted inverse iteration. Because the RQ provides an optimal shift, it is expected that using RQI in Denovo will converge in fewer iterations than power iteration for loosely coupled problems, provided that the eigenvector is converged. 
+%RQI is an old method that is an adaptation of shifted inverse iteration. Because the RQ provides an optimal shift, it is expected that using RQI in Denovo will converge in fewer iterations than PI for loosely coupled problems, provided that the eigenvector is converged. 
 %
 %Further, this solver is wrapped around the new MG Krylov solver. It has been shown that the energy decomposition improves solution time and scales well \cite{Slaybaugh2011}. It is therefore reasonable to expect that when RQI converges, decomposing the entire matrix in energy for eigenvalue calculations will work and provide the same kind of scaling improvement.
 
-This set of solvers has never been previously combined and demonstrated, nor has RQI has not been applied to the transport equation before this line of research. This is likely because it takes $O(n^{3})$ operations for full dense matrices, and without parallelization in energy it could be prohibitively expensive \cite{Stewart2001}. In the past, adding a shift to make the scattering matrix energy-block dense was difficult to handle. The system would have been solved with Gauss Seidel, which would have been restrictively slow. The multigroup Krylov algorithm has enabled energy parallelization and made the calculation of the eigenvector tractable. 
+This set of solvers has never been previously combined and demonstrated, nor has RQI has not been applied to the transport equation before this line of research. This is likely because it takes $O(n^{3})$ operations for full dense matrices, and without parallelization in energy it could be prohibitively expensive \cite{Stewart2001}. In the past, adding a shift to make the scattering matrix energy-block dense was difficult to handle. The system would have been solved with GS, which would have been restrictively slow. The multigroup Krylov algorithm has enabled energy parallelization and made the calculation of the eigenvector tractable. 
 
 The combination of the MG block Krylov solver, RQI with an initial power iteration, and the MGE preconditioner performed well for large problems. It also scaled well in energy, enabling calculations on large core counts. We expect that this collection of solvers can be highly valuable for very challenging calculations needed for detailed multiphysics, perturbation studies, and physics investigations. 
 
