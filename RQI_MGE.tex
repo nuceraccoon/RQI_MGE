@@ -464,10 +464,10 @@ Further, most problems studied were fairly small and may not represent the corre
 To ensure the best parameter choice for this new study, we ran the 3-D C5G7 benchmark on a small cluster. 
 
 To identify the best way to use the preconditioner, we looked at different combinations of reasonable values of all of the major parameters the user could choose. 
-We used 0.8, 1.0, and 1.2 for the weight used in weighted Richardson. 
+We used 0.8, 1.0, and 1.2 for the weight in weighted Richardson. 
 We used 1, 2, and 3 for both relax count and number of V-cycles. 
 Finally, we tried three different subspaces sizes: 50, 100, and 150. 
-For all tests this study used quadruple range (QR) angular quadrature \cite{Jarrell2009} with 8 azimuthal and 6 polar angles per octant (QR 8-6) in the main solver and QR 1-1 inside the preconditioner, $P_1$ scattering expansion, and 56 energy groups. 
+For all tests, this study used quadruple range (QR) angular quadrature \cite{Jarrell2009} with 8 azimuthal and 6 polar angles per octant (QR 8-6) in the main solver and QR 1-1 inside the preconditioner, $P_1$ scattering expansion, and 56 energy groups. 
 The RQI solver used an eigenvalue flux tolerance of $1\times 10^{-3}$ and $k$ tolerance of $1\times 10^{-5}$. 
 
 \begin{figure}
@@ -483,15 +483,15 @@ The lower the number and the darker the shading, the lower the runtime.
 To read the graphic:
 \begin{compactitem}
 \item Each major column corresponds to the number of V-cycles, where a major column is a set of 3 blocks going across separated from the next set of 3. 
-The first column is v=1 and the last is v=3. 
+The first column is $v = 1$ and the last is $v = 3$. 
 This is indicated across the top.
 %
 \item Each major row corresponds to the number of relaxations per level, where a major row is a set of 3 blocks going down separated from the next set of 3. 
-The first row is r=1 and the last is r=3. 
+The first row is $r = 1$ and the last is $r = 3$. 
 This is indicated along the right.
 %
 \item Each minor row corresponds to the weight, where a minor rows is each individual block going down. 
-The top minor row inside of each major row is w=0.8 and the bottom is w=1.2. 
+The top minor row inside of each major row is $w = 0.8$ and the bottom is $w = 1.2$. 
 This is indicated along the left.
 %
 \item Each minor column corresponds to the subspace size, where a minor column is each individual block going across. 
@@ -509,10 +509,10 @@ The general trends from these results indicate that $w1.2r1v1$ or $w1.2r2v1$ wit
 We next studied a large problem that is ``grand challenge'' in scale, a full pressurized water reactor (PWR) 900 core \cite{evans2009d}. This problem used 2 $\times$ 2 spatial cells/pin for 17 $\times$ 17 pins/assembly and 289 assemblies (132 reflector, 159 fuel of varying enrichment). This gave 578 $\times$ 578 $\times$ 700 mesh elements (233,858,800 cells). We used a $P_0$ scattering expansion, an $S_{12}$ angular quadrature, and 44 energy groups--all of which gave 1.73 trillion unknowns. Based on PWR calculations done previously by Evans and Davidson \cite{Evans2010}, $k$ is approximately 1.27. 
 
 \subsubsection{RQI vs.\ PI}
-We first did a study on Jaguar \cite{jaguar2010} to better characterize the performance of preconditioned RQI and compare it to preconditioned PI. The preconditioner settings were $w1r3v3$\footnote{Note that scoping calculations showed this problem needed more preconditioning to converge, hence we did not use the just-suggested defaults.}; 4 and 11 sets were used giving 11 and 4 groups per set with 6 and 4 energy grids, respectively. We used 102 $x$-blocks, 100 $y$-blocks, and 10 $z$-blocks. The results are in Table~\ref{table:full PWR}. 
+We first did a study on Jaguar \cite{jaguar2010} to better characterize the performance of preconditioned RQI and compare it to preconditioned PI. The preconditioner settings were $w1r3v3$\footnote{Note that scoping calculations showed this problem needed more preconditioning to converge, hence we did not use the just-suggested defaults.}; 4 and 11 sets were used giving 11 and 4 groups per set with 6 and 4 energy grids, respectively. We used 102 $x$-blocks, 100 $y$-blocks, and 10 $z$-blocks. The results are in Table~\ref{table:full PWR}. ``Krylov" and ``Eigenvalue" indicate the number of iterations needed for the respective sovlers.
 %
 \begin{table}[!h]
-\caption{PWR 900, Preconditioned Strong Scaling Study with RQI and PI}
+\caption{PWR 900 Preconditioned Strong Scaling Study with RQI and PI}
 \begin{center}
 \begin{tabular}{| l | c | c | c | l | c | c | l |}
 \hline
@@ -522,14 +522,14 @@ Solver & Sets & Cores & $k$ & Krylov & Eigenvalue & Time (m) \\[0.5ex]
 %PI    & 1   & 10,200   &  &  &       &  &  \\
 RQI & 4   & 40,800   & 1.269 & 76   &  6               & 802.60  \\
 %RQI w/ $S_{2}$ & 4   & 40,800   & 1.269 & 79   &  6               & 192.48    \\
-PI    & 4   & 40,800   & 1.270 & 101 & 10$^{\dag}$ & 1440.12  \\
+PI    & 4   & 40,800   & 1.270 & 101 & 10$^{+}$ & 1440.12  \\
 RQI & 11 & 112,200 & 1.269 & 76   & 6                & 331.43    \\
-PI    & 11 & 112,200 & 1.270 & 111 & 11$^{\dag}$ & 480.63     \\
+PI    & 11 & 112,200 & 1.270 & 111 & 11$^{+}$ & 480.63     \\
 %RQI & 22 & 198,528 & 1.269 & 76   & 6                & 143.62     \\
 %PI    & 22 & 198,528 & 1.271 & 161 & 16$^{*}$      & 285.92   \\
 \hline 
 \end{tabular}\\
-$^{\dag}$exceeded wall time limit %\\ 
+$^{+}$exceeded wall time limit %\\ 
 %$^{*}$machine taken down for maintenance during calculation
 \end{center}
 \label{table:full PWR}
@@ -540,9 +540,9 @@ Preconditioned RQI was significantly faster than preconditioned PI. In particula
 
 We also considered what would happen with a reduced quadrature set, in this case $S_{2}$, inside the preconditioner. With 4 sets, the time with RQI was reduced from 802.60 to 192.48 minutes and the same number of Krylov and RQI iterations were needed. Using the reduced quadrature in MGE had a big time saving impact: reducing the solver time by 76\% without affecting the solution. All further PWR 900 calculations used $S_{2}$ in the preconditioner.
 
-To more conclusively resolve the RQI-to-PI comparison, we did another study, this time on Titan. We used a V-cycle depth of 2, a reduced quadrature in the MGE preconditioner of $S_2$, and tolerances of $1 \times 10^{-3}$. This time we broke up over 112 $\times$ 112 $\times$ 10 partitions (12,544 blocks).
+To more conclusively resolve the RQI-to-PI comparison, we did another study, this time on Titan. We used a V-cycle depth of 2, a reduced quadrature in the MGE preconditioner of $S_2$, and tolerances of $1 \times 10^{-3}$. This time we broke the problem up over 112 $\times$ 112 $\times$ 10 partitions (12,544 blocks).
 
-The results using 11 energy sets are given in Table~\ref{tab:PWR all} and illustrate several things. One results is that the MGE preconditioner does not help PI; when we add it, the calculation slows down enough that it did not finish within the wall time limit here either (it does finish without it). Another result is that RQI is too slow without enough preconditioning. With $w1r1v1$ the calculation did not complete in time and with $w1r2v2$ it did. The final, and arguably most important, result is that preconditioned RQI can be much faster than PI in general. 
+The results using 11 energy sets are given in Table~\ref{tab:PWR all} and illustrate several things. One results is that the MGE preconditioner does not help PI; when we add it, the calculation slows down enough that it did not finish within the wall time limit here either (it does finish without it). Another result is that RQI is too slow without enough preconditioning. With $w1r1v1$, the calculation did not complete in time and with $w1r2v2$ it did. The final, and arguably most important, result is that preconditioned RQI can be much faster than PI in general. 
 Preconditioned RQI was better whether PI was preconditioned or not. RQI with MGE was more than 10 times faster than PI. 
 %
 \begin{table}[!h]
@@ -556,8 +556,8 @@ Preconditioned RQI was better whether PI was preconditioned or not. RQI with MGE
      % RQI & none   & info &     &                     & \\
       PI  & none   & 149 & 5602 & 1.276 $\pm$ 4.34e-6 & 612.2 \\
       %PI  & w1r1v1 & info &     &                     & \\
-      PI  & w1r2v2 & 86  & 946  & 1.275 $\pm$ 1.43e-5 & 720$^*$ \\\hline
-      RQI & w1r1v1 & 3   & 45   & 1.252 $\pm$ 1.13e-2 & 120$^*$ \\
+      PI  & w1r2v2 & 86  & 946  & 1.275 $\pm$ 1.43e-5 & 720$^+$ \\\hline
+      RQI & w1r1v1 & 3   & 45   & 1.252 $\pm$ 1.13e-2 & 120$^+$ \\
       RQI & w1r2v2 & 5   & 70   & 1.268 $\pm$ 9.75e-4 & 54.8 \\
       %\hline
       %PI  & none   & 24  & 901  & 1.272 $\pm$ 1.01e-4 & 92.1$^\dagger$ \\
@@ -566,7 +566,7 @@ Preconditioned RQI was better whether PI was preconditioned or not. RQI with MGE
       %PI  & w1r3v3 & 11  & 111   & 1.270 $\pm$ 5.09 $\times$ 10$^{-2}$ & 480$^{*,\dag}$ \\
       \hline
     \end{tabular}\\
-    $^{*}$did not converge within walltime limit\\
+    $^{+}$exceeded walltime limit\\
     %$^{\dagger}$tolerance = $1 \times 10^{-2}$, $k$ tolerance = $1 \times 10^{-2}$
     %$^{\dag}$used $S_{12}$ in MGE preconditioner; full V-cycle depth;
     %tolerance = 1 $\times$ 10$^{-4}$, $k$ tolerance = 1 $\times$ 10$^{-3}$; 
@@ -582,8 +582,7 @@ A strong scaling study with MGE has been published before, but in that case the 
 This meant that increasing energy sets decreased V-cycle depth such that the preconditioner did less work with more sets. 
 In this study, the amount of work done by the preconditioner does not vary with the number of energy sets. 
 \begin{table}[!h]
-\caption{PWR-900 RQI Strong Scaling w1r2v2 Preconditioning}
-\label{tab:PWR rqi strong scaling}
+\caption{PWR 900 RQI Strong Scaling $w1r2v2$ MGE Preconditioning on Titan}
   \begin{center}
     \begin{tabular}{| c | c | c | c | c | c | c |}
      \hline
@@ -595,14 +594,15 @@ In this study, the amount of work done by the preconditioner does not vary with 
       22  & 275,968 & 5 & 70 & 39.6  & 18.5  & 0.468\\
       \hline
     \end{tabular}
+    \label{tab:PWR rqi strong scaling}
   \end{center}
 \end{table}
 %
 \begin{figure}
-\label{fig:pwr-scaling}
-\caption{PWR900 with MGE and RQI Energy Set Scaling Study on Titan}
+\caption{PWR 900 RQI Strong Scaling $w1r2v2$ MGE Preconditioning on Titan}
 \includegraphics[scale=.75]{Results/pwr}
 \centering
+\label{fig:pwr-scaling}
 \end{figure}
 
 The scaling, which is plotted in Figure~\ref{fig:pwr-scaling}, compares quite well to previous scaling studies for Denovo. A fixed source (i.e.\ MG Krylov only) problem with a similar mesh and 44 groups scaled from 4,320 domains to 190,080 domains with an efficiency of 0.64 \cite{Slaybaugh2011}. That this problem performed similarly shows that adding RQI and the MGE preconditioner as solvers does not degrade the strong scaling achieved using the MG Krylov solver only. It is promising that the new solver system does not degrade scaling and that a problem for which RQI is decisively faster than PI is one for which this work was designed. 
@@ -629,7 +629,7 @@ The study was performed with 128, 256, 512, and 1024 cores and 1, 2, 4, and 8 en
 %
 Figure \ref{fig:small} shows the results from this scaling study. We can see favorable scaling with both preconditioned and unpreconditioned RQI. Preconditioned RQI was faster than unpreconditioned. Both RQI results were faster than Arnoldi with full partitioning (which scaled just as well, but was the slowest). Arnoldi with upscatter partitioning performed the best at low core count, but shows poor scaling performance and, after two energy sets, ended in third place with respect to time. 
 
-Finally, we used Titan to look at scaling performance with a larger version of this problem with more cores. Here the 1-set case was run with 3,136 cores (56 $x$-blocks and 56 $y$-blocks). A parallel-efficiency modeling tool developed at Oak Ridge was used to choose the optimal number of $z$-blocks for each method, which in the case of RQI with MGE preconditioning was determined to be 22. For the other three methods, using 11 $z$-blocks was determined to be optimal. We then scaled up to 2, 4, and 8 sets using 6,272, 12,544, and 25,088 cores, respectively. The upscatter and k-tolerances were $1 \times 10^{-5}$. We used 8 mesh cells/pin for a total of 336 $\times$ 336 $\times$ 154 mesh elements (17,385,984 cells). We again used $P_0$ and QR 8-6, with $w1.2r2v1$ and QR 1-1 inside the preconditioner.
+Finally, we used Titan to look at scaling performance with a larger version of this problem with more cores. Here the 1-set case was run with 3,136 cores (56 $x$-blocks and 56 $y$-blocks). A parallel-efficiency modeling tool developed at Oak Ridge was used to choose the optimal number of $z$-blocks for each method, which in the case of RQI with MGE preconditioning was determined to be 22. For the other three methods, using 11 $z$-blocks was determined to be optimal. We then scaled up to 2, 4, and 8 sets using 6,272, 12,544, and 25,088 cores, respectively. The upscatter and $k$ tolerances were $1 \times 10^{-5}$. We used 8 mesh cells/pin for a total of 336 $\times$ 336 $\times$ 154 mesh elements (17,385,984 cells). We again used $P_0$ and QR 8-6, with $w1.2r2v1$ and QR 1-1 inside the preconditioner.
 
 \begin{figure}
 \caption{BW1484  Large Energy Scaling Study on Titan}
@@ -638,13 +638,13 @@ Finally, we used Titan to look at scaling performance with a larger version of t
 \centering
 \end{figure}
 %
-The results can be seen in Figure~\ref{fig:titan}. The same trends were seen on Titan as in the small study. Arnoldi with full partitioning scaled well, but was the slowest. RQI with and without preconditioning scaled similarly, with the preconditioned version being faster. Arnoldi with upscatter partitioning started out as the fastest, but scales the least well. Thus, at 4 and 8 energy sets it ended up much slower. 
+The results can be seen in Figure~\ref{fig:titan}. The same trends were seen on Titan as in the small study. Arnoldi with full partitioning scaled well, but was the slowest. RQI with and without preconditioning scaled similarly, with the preconditioned version being faster. Arnoldi with upscatter partitioning started out as the fastest, but scales the least well. Thus, at 4 and 8 energy sets it was much slower. 
 
 We can see that RQI gives the same scaling in energy relative to Arnoldi with full partitioning. We expected this behavior as they handle energy sets the same way. Therefore, RQI is the clear winner in terms of runtime when energy groups are handled the same way. 
 
 Furthermore, the Arnoldi behavior makes sense given the way the block Krylov solver works and the way partitioning works. With full partitioning, all of the groups are divided into energy sets and solved with a Krylov solver. Thus, adding more sets increases the parallelization in energy. With only the upscattering partitioned, the downscatter only groups, which are half of the groups in this case, are always solved by every energy set solved with GS. Thus, using more sets does not result in additional parallelization in energy after the upscatter groups are fully decomposed and we see the scaling stagnate. 
 
-Another way to look at the full vs.\ upscatter partitioning helps make it clear why upscatter partitioning is faster with one energy set. With upscatter partitioning, each downscatter-only group is solved with GS--which is a one-group-sized Krylov solve and converges the group on the first multigroup iteration. That's tough to beat. With full partitioning, we're putting the downscattering groups with the upscattering groups into an all-groups-sized Krylov solve. We're now using an iteration vector that is much larger and needs all groups to converge for any group to converge. We expect that in many cases this will slow down converging the downscatter groups. 
+Another way to look at the full vs.\ upscatter partitioning helps clarify why upscatter partitioning is faster with one energy set. With upscatter partitioning, each downscatter-only group is solved with GS--which is a one-group-sized Krylov solve and converges the group on the first multigroup iteration. That's tough to beat. With full partitioning, we're putting the downscattering groups with the upscattering groups into an all-groups-sized Krylov solve. We're now using an iteration vector that is much larger and needs all groups to converge for any group to converge. We expect that in many cases this will slow down converging the downscatter groups. 
 
 These results lead us to conclude that for real, challenging problems, Arnoldi with upscatter partitioning should be used when energy parallelization is not needed. For problems that are large enough to need energy parallelization, RQI with the MGE preconditioner should be selected. This makes sense given the structure of the solvers.
 
