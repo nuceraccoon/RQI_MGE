@@ -1,69 +1,62 @@
-%%---------------------------------------------------------------------------%%
-%% NSE Article
-%% 2013: RQI+MGE
-%%---------------------------------------------------------------------------%%
+\documentclass{article}                                                                           %basic LaTeX document type
 
-\documentclass[preprint,12pt]{elsarticle}
-%\documentclass[12pt]{article}
-\usepackage{amsmath}
+\renewcommand\thesection{\Roman{section}.}                                         %set capital Roman numeral section headings
+\renewcommand\thesubsection{\thesection\Alph{subsection}.}                   %set capital Aramaic letters subsection headings
+\renewcommand\thesubsubsection{\thesubsection\arabic{subsubsection}.} %set capital Arabic numbers subsubsection headings
+
+\renewcommand*\thetable{\Roman{table}}                                              %set capital Roman numeral table numeration
+
+\usepackage[explicit]{titlesec}                                                                  %package needed for next lines
+\titleformat{\section}{\bfseries}{\thesection}{1em}{\MakeUppercase{#1}}  %makes section headings bold and upper case characters
+\titleformat{\subsubsection}{\itshape}{\thesubsubsection}{1em}{#1}          %makes subsubsection headings in italics
+
+
+%\linespread{2}                                                                                     %option 1 for making text double-spaced
+\usepackage{setspace}                                                                            %option 2 for making text double-spaced
+\doublespacing
+
+\usepackage{indentfirst}                                                                          %makes first paragraph of section indented (non-first are by default)
+\setlength{\parindent}{25pt}                                                                    %set size of indentation (15pt is default)
+
+\usepackage[margin=1.3in]{geometry}                                                     %set size of all margins
+%\usepackage[left=1in, top=1in, right=1in, bottom=1in]{geometry}            %can set margin sizes which are not the same in this way
+
+\usepackage{lastpage}                                                                             %package which returns number of last page (same as number of pages)
+\usepackage[figure,table]{totalcount}                                                        %package which counts the number of tables and/or figures
+
+\usepackage{amsmath}                                                                            %enable `align' equation types
+\usepackage{multirow}                                                                             %enable `multirow' capability in tables
+\usepackage{graphicx}                                                                             %enable figures
+
+\usepackage[]{footmisc}                                                                          %enables double spaced footnotes
+
+\usepackage{caption}                                                                              %enables subfigures
+\usepackage[labelformat=simple]{subcaption}                                           %enables subfigure captions
+\captionsetup[table]{labelsep=newline,name=TABLE}                                %sets table caption formatting options to meet NSE requirements
+\captionsetup[figure]{name=Fig.,labelsep=period}                                     %sets figure caption options to meet NSE requirements
+
+\renewcommand{\thefootnote}{\alph{footnote}}                                       %sets labeling of footnotes
+\renewcommand{\footnotelayout}{\doublespacing}                                   %double spacing of footnotes
+
+\renewcommand*\thesubfigure{(\alph{subfigure})}                                  %enables proper labeling of subfigures
+
+%--------------
+\usepackage{paralist}	
 \usepackage{amssymb,amsthm,graphicx}
 \usepackage{epsfig}
 \usepackage[mathcal]{euscript}
-%\usepackage{citesort}
 \usepackage{setspace}
-%\usepackage{tmadd,tmath}
 \usepackage{color}
 \usepackage{array}
-%\usepackage{c++}
-%\usepackage{times, mathptm}
-\usepackage{subfigure}
-%\usepackage{dsfont}
-
-\usepackage{times}
+%\usepackage{subfigure}
 \renewcommand{\ttdefault}{cmtt}
-
-\usepackage{fancyhdr} % used to put page number in header instead of footer
-
 % The float package HAS to load before hyperref
 \usepackage{float} % for psuedocode formatting
 \usepackage{xspace}
 \usepackage{mathrsfs}
 \usepackage[pdftex]{hyperref}
 
-\usepackage{graphicx}
-\graphicspath{{images/}}
-\usepackage{paralist}
-
-% Comment Packages
-% Select what to do with todonotes: 
-% \usepackage[disable]{todonotes} % notes not showed
-\usepackage[draft]{todonotes}   % notes showed
-
-%%---------------------------------------------------------------------------%%
-
-%\setlength{\textfloatsep}{8pt plus 1pt minus 1pt}
-%\setlength{\abovedisplayskip}{4pt plus 1pt minus 1pt}
-%\setlength{\belowdisplayskip}{4pt plus 1pt minus 1pt}
-%\addtolength{\oddsidemargin}{-0.5in}
-%\addtolength{\textwidth}{1.0in}
-%\addtolength{\textheight}{0.5in}
-
-\setlength{\textwidth}{6.5in}
-\setlength{\oddsidemargin}{0.0in}
-\setlength{\evensidemargin}{0.0in}
-\setlength{\textheight}{9.0in}
-\setlength{\topmargin}{0.0in}
-\setlength{\headheight}{0.0in}
-\setlength{\headsep}{0.0in}
-\setlength{\footskip}{0.5in}
-
-\renewcommand{\thefootnote}{\fnsymbol{footnote}}
-\renewcommand{\thetable}{\Roman{table}}
-
-%%---------------------------------------------------------------------------%%
-
-\newcommand{\email}[1]{$\langle$#1@pitt.edu$\rangle$}
-
+%-------------
 \DeclareMathOperator{\diag}{diag}
 \DeclareMathOperator{\low}{lower}
 \DeclareMathOperator{\upp}{upper}
@@ -89,6 +82,7 @@
 \newcommand{\apsi}[1]{\ensuremath{\psi^{\dagger\,#1}}}
 \newcommand{\aeven}[1]{\ensuremath{\phi^{\dagger\,#1}}}
 \newcommand{\aodd}[1]{\ensuremath{\vartheta^{\dagger\,#1}}}
+
 \newcommand{\asigg}[1]{\ensuremath{\sigma^{g'g}_{\text{s}\,#1}}}
 
 \newcommand{\aPsi}[1]{\ensuremath{\Psi^{\dagger\,#1}}}
@@ -114,35 +108,42 @@
 \newcommand{\osig}{\ensuremath{\overline{\sigma}}}
 \newcommand{\osigs}{\ensuremath{\overline{\sigma_{\text{s}}}}}
 
-%%---------------------------------------------------------------------------%%
-
 \begin{document}
 
-\setcounter{page}{2}
-  
-%%---------------------------------------------------------------------------%%
 
-\begin{center}
+%Define fields for \maketitle  (fields are \author, \date, \thanks, and \title)
 
-  {\large \bf Eigenvalue Solvers for Modeling Nuclear Reactors on Leadership Class Machines}
-  
-  \vspace{0.3in}
-  
-  R.N.\ Slaybaugh, M.\ Ramirez-Zweiger, Tara Pandya, Steven Hamilton, and T.M.\ Evans
-  
-\end{center}
+\title{Eigenvalue Solvers for Modeling Nuclear Reactors on Leadership Class Machines} %title of paper
 
-\doublespacing
+\author{
+\vspace{20mm}
+\\R.N.\ Slaybaugh,$^{\text{a},\ast}$ M.\ Ramirez-Zweiger,$^{\text{a}}$ \\Tara Pandya,$^\text{b}$ Steven Hamilton,$^\text{b}$ and T.M. Evans$^\text{b}$\\[4pt] %list of authors, with corresponding author marked by asterisk
+\textit{$^a$University of California, Berkeley, Nuclear Engineering Department}\\[-10pt]       %affiliations of authors
+\textit{4173 Etcheverry Hall, Berkeley, CA 94720, USA} \\[-5pt]
+\textit{$^b$Oak Ridge National Laboratory, Radiation Transport and Criticality Group} \\ [-10pt]
+\textit{P.O. Box 2008, Oak Ridge, TN 37831-6170, USA} \\ [-2pt]
+{$^\ast$slaybaugh@berkeley.edu}}       %address and email address for correspondence
 
-\vspace{0.3in}
+\date{                               %instead of returning the date, this repurposes the \maketitle command to print the number of pages, tables, and figures
+\vspace{40mm}
+Number of pages: \pageref{LastPage} \\  
+Number of tables: \totaltables \\
+Number of figures: \totalfigures \\}                                                                                           
+
+\maketitle
+
+\pagebreak
 
 \begin{abstract}
+{Three complementary methods have been implemented in the code Denovo  that accelerate neutral particle transport calculations with methods that use leadership-class computers fully and effectively: a multigroup block (MG) Krylov solver, a Rayleigh Quotient Iteration (RQI) eigenvalue solver, and a multigrid in energy (MGE) preconditioner. The MG Krylov solver converges more quickly than Gauss Seidel and enables energy decomposition such that Denovo can scale to hundreds of thousands of cores. RQI should converge in fewer iterations than power iteration (PI) for large and challenging problems. RQI creates shifted systems that would not be tractable without the MG Krylov solver. It also creates ill-conditioned matrices. The MGE preconditioner reduces iteration count significantly when used with RQI and takes advantage of the new energy decomposition such that it can scale efficiently. Each individual method has been described before, but this is the first time they have been demonstrated to work together effectively. 
 
-  Abstract
+The combination of solvers enables the RQI eigenvalue solver to work better than the other available solvers for large reactors problems on leadership class machines. Using these methods together, RQI converged in fewer iterations and in less time than PI for a full pressurized water reactor core. These solvers also performed better than an Arnoldi eigenvalue solver for a reactor benchmark problem when energy decomposition is needed. The MG Krylov, MGE preconditioner, and RQI solver combination also scales well in energy. This solver set is a strong choice for very large and challenging problems. 
 
+Keywords: Eigenvalue, massively parallel, Krylov, Rayleigh Quotient, preconditioning
+}
 \end{abstract}
 
-\newpage
+\pagebreak
 
 %%---------------------------------------------------------------------------%%
 
@@ -186,7 +187,8 @@ The steady state Boltzmann transport equation, discretized in energy (multigroup
 %
 \begin{alignat}{2}
   \ve{L}\psi &= \ve{MS}\phi + q \:, \qquad &\text{(fixed source)} \label{eq:fxdsource} \\
-  \ve{L}\psi &= \ve{MS}\phi + \frac{1}{k}\ve{M}\chi f^{T}\phi \:. \qquad &\text{(eigenvalue)} \label{eq:eigenvalue}
+  \ve{L}\psi &= \ve{MS}\phi + \frac{1}{k}\ve{M}\chi f^{T}\phi \:. \qquad &\text{(eigenvalue)} 
+  \label{eq:eigenvalue}
 \end{alignat}
 %
 Here, $\ve{L}$ is the first-order linear differential transport operator; $\ve{M}$ is the moment-to-discrete operator that projects the angular flux moments, $\phi$, onto discrete angles; $\ve{S}$ is the scattering matrix; $q$ is a source term; $f$ is the fission operator, $\nu \Macro_{f}$; $\chi$ is the energy distribution with which neutrons are born out of fission; and $k$ is the asymptotic ratio of the number of neutrons in one generation to the number in the next. The angular flux moments are related to the angular flux, $\psi$, through the discrete-to-moment operator: $\phi = \mathbf{D} \psi$. Using this relationship, Equations \eqref{eq:fxdsource} and \eqref{eq:eigenvalue} can be rearranged such that they are a function of only $\phi$. The formulation is aided by defining $\ve{T} = \ve{DL}^{-1}$ and $\ve{F} = \chi f^{T}$ \cite{Evans2011}:
@@ -472,7 +474,7 @@ The RQI solver used an eigenvalue flux tolerance of $1\times 10^{-3}$ and $k$ to
 
 \begin{figure}
 \caption{MGE Parameter Study with 3D-C5G7}
-\includegraphics[scale=.75]{Results/ml-parameters/analysis/parameter_study.png}
+\includegraphics[width=\textwidth]{Results/ml-parameters/analysis/parameter_study.png}
 \label{fig:mge-dataframe}
 \centering
 \end{figure}
@@ -660,7 +662,7 @@ The new MG Krylov solver converges more quickly than GS and enables energy decom
 
 The real motivation of this work was to add RQI, which should converge in fewer iterations and less time than PI, and possibly Arnoldi, for large and challenging problems. RQI creates shifted systems that would not be tractable without the MG Krylov solver. It also creates ill-conditioned matrices that cannot converge without the MGE preconditioner. Using these methods, RQI converged in fewer iterations and in less time than both PI and Arnoldi for large problems on large core counts. 
 
-The methods added in this research accelerated Denovo in multiple ways. This acceleration helps enable the solution of today's ``grand challenge''Äù problems. It is hoped that improved methods will lead to improved reactor designs and systems, and that the frontier of computational challenges will be moved forward.
+The methods added in this research accelerated Denovo in multiple ways. This acceleration helps enable the solution of today's ``grand challenge''¬Ä¬ù problems. It is hoped that improved methods will lead to improved reactor designs and systems, and that the frontier of computational challenges will be moved forward.
 
 
 
@@ -678,79 +680,16 @@ The combination of the MG block Krylov solver, RQI, and the MGE preconditioner p
 
 %%---------------------------------------------------------------------------%%
 
-\section{Acknowledgements}
 
-This research used resources of the Oak Ridge Leadership Computing Facility at the Oak Ridge National Laboratory, which is supported by the Office of Science of the U.S. Department of Energy under Contract No. DE-AC0500OR22725. Additional thanks to the Rickover Fellowship Program in Nuclear Engineering sponsored by Naval Reactors Division of the U.S.\ Department of Energy. This fellowship sponsored the work from which this work is derived. 
+\pagebreak
+\section*{Acknowledgments}
 
-%%%---------------------------------------------------------------------------%%
-%
-%\newpage
-%\appendix
-%
-%\section{Angular Flux Moments}
-%\label{sec:angular-flux-moments}
-%
-%Appendix
+This research used resources of the Oak Ridge Leadership Computing Facility at the Oak Ridge National Laboratory, which is supported by the Office of Science of the U.S. Department of Energy under Contract No. DE-AC0500OR22725. Additional thanks to the Rickover Fellowship Program in Nuclear Engineering sponsored by Naval Reactors Division of the U.S.\ Department of Energy. This fellowship sponsored the work from which this work is derived.
 
-%%---------------------------------------------------------------------------%%
-%% BIBLIOGRAPHY
-%%---------------------------------------------------------------------------%%
+\pagebreak
 
-\newpage
-
-\singlespacing
-
-\bibliographystyle{model1-num-names}
+\bibliographystyle{nse}
 \bibliography{RQI_MGE}
 
-%%%---------------------------------------------------------------------------%%
-%%% FIGURES
-%%%---------------------------------------------------------------------------%%
-%
-%\clearpage
-%
-%%---------------------------------------------------------------------------%%
-
-\clearpage
-
-\singlespacing
-\begin{center}
-
-  {\Large \bf Eigenvalue Solvers for Modeling Nuclear Reactors on Leadership Class Machines}
-  
-  \vspace{0.3in}
-  
-  {\large R.N.\ Slaybaugh\footnote{Corresponding author.  Telephone: +1
-      570 850 3385.  E-mail: slaybaugh@berkeley.edu} M.\ Ramirez-Zweiger\\
-    Nuclear Engineering Department\\
-    University of California, Berkeley\\
-    4173 Etcheverry Hall\\
-    Berkeley, CA 94720, USA\\\vspace{1\baselineskip}
-    Tara Pandya, Steven Hamilton, and T.M. Evans\\
-    Radiation Transport and Criticality Group\\ 
-    Oak Ridge National Laboratory\\ 
-    P.O. Box 2008\\
-    Oak Ridge, TN 37831-6170, USA\\\vspace{1\baselineskip}}
-%    P.P.H. Wilson\\
-%    Department of Nuclear Engineering and Engineering Physics\\
-%    University of Wisconsin -- Madison\\
-%    419 ERB, 1500 Engineering Drive\\
-%    Madison, WI 52706, USA\\}
-  
-  \addtocounter{page}{-1}
-
-  \vspace{2.0in}
-  \renewcommand{\thetable}{\arabic{table}}
-  \thepage\ Pages --- \thetable\ Tables --- \thefigure\ Figures \\
-
-  \setcounter{page}{1}
-
-\end{center}
-
-%%---------------------------------------------------------------------------%%
 
 \end{document}
-
-%%---------------------------------------------------------------------------%%
-%% end of paper.tex
-%%---------------------------------------------------------------------------%%
