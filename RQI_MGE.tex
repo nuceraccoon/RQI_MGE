@@ -124,7 +124,7 @@
 
 \begin{center}
 
-  {\large \bf Title}
+  {\large \bf Eigenvalue Solvers for Modeling Nuclear Reactors on Leadership Class Machines}
   
   \vspace{0.3in}
   
@@ -416,7 +416,7 @@ An important principle is that the preconditioner is only attempting to approxim
 %%---------------------------------------------------------------------------%%
 \section{Past Work}
 \label{sec:pastwork}
-This section is a summary of results using RQI without preconditioning \cite{Slaybaugh2012} and the MGE Preconditioner with fixed source problems or PI \cite{Slaybaugh2013}. The purpose of this section is to highlight the capabilities that have been demonstrated and point out the short-comings that can be overcome by using the MG Krylov solver, RQI eigenvalue solver, and MGE preconditioner together. In the following discussion, reducing the Krylov iteration count is the primary measure of success--with reduced time as the second consideration. A discussion of this choice is given at the beginning of the Section \ref{sec:results}, Results.
+This section is a summary of results using RQI without preconditioning \cite{Slaybaugh2012} and the MGE preconditioner with fixed source problems or PI \cite{Slaybaugh2013}. The purpose of this section is to highlight the capabilities that have been demonstrated and point out the short-comings that can be overcome by using the MG Krylov solver, RQI eigenvalue solver, and MGE preconditioner together. In the following discussion, reducing the Krylov iteration count is the primary measure of success--with reduced time as the second consideration--as the software was not implemented optimally at the time of these studies. 
 
 \subsection{Unpreconditioned RQI}
 The goal of the RQI studies that have been published was to find out it if RQI useful without preconditioning. We solved two small eigenvalue test problems, one with vacuum boundaries and one with reflecting, that had small dominance ratios. We found that RQI got the correct answer and converged in fewer iterations than PI. However, an intermediately-sized problem did not work so well. Each multigroup solve, except the first, used the maximum number of Krylov multigroup iterations per eigenvalue iteration. This means the eigenvector did not converge after the first iteration. The value of $k$ oscillated between 0.3966 and 0.3967 (the correct value was 0.4) until the calculation was manually terminated. In two more realistic calculations, the 2D and 3D C5G7 MOX Benchmark problems (\cite{OECD-NEA2003}, \cite{OECD-NEA2005}), RQI did not converge the eigenvector nor find an eigenvalue close to the correct one. 
@@ -425,7 +425,7 @@ These more challenging problems showed that, as expected, the Krylov solver ofte
 
 The small problems showed that RQI can require fewer Krylov iterations than PI, and has the potential to be beneficial if the multigroup iterations are converged. If the MG Krylov solver is preconditioned so that the eigenvector converges, RQI may be able to find the correct eigenvalue more efficiently than PI for cases of interest. This leads to the question: what preconditioner should we choose?
 
-Iterative methods reduce oscillatory error modes effectively, but not smooth error modes. The smooth error can prevent iterative methods from converging. This behavior is characterized by rapid error reduction in the first several iterations followed by very little error reduction. Such a trend was observed in tests where RQI failed. Multigrid methods selectively remove smoother error components and are therefore ideal for accelerating this type of problem. Thus, a multigrid preconditioner should work very well with RQI. 
+Iterative methods reduce oscillatory error modes effectively, but not smooth error modes. The smooth error can prevent iterative methods from converging. This behavior is characterized by rapid error reduction in the first several iterations followed by very little error reduction. Such a trend was observed in tests where RQI failed. Multigrid methods selectively remove smoother error components and are therefore strong candidates for improving convergence in this type of problem. Thus, a multigrid preconditioner should work very well with RQI. 
 
 \subsection{MGE Preconditioner}
 Much of the previously published work for the MGE preconditioner focused on choosing all of the options that control the preconditioner. The preconditioning parameters are the Richardson iteration weight, $w$, the number of V-cycles per preconditioner application, and the number of relaxations per level. The syntax used throughout this work will be that $w\#$ is the weight, $r\#$ is the number of relaxations per level, and $v\#$ is the number of V-cycles, e.g.\ $w1r1v1$ is one relaxation per level, one V-cycle, and a weight of one. Using more preconditioning means using larger values of $w$ and/or $r$ and/or $v$. 
@@ -435,7 +435,7 @@ Tests showed that using a reduced angle set inside the preconditioner is very va
 
 Another important area of investigation was how the preconditioner fared when using multiple energy sets because MGE was built to take advantage of multiple energy sets. The problems solved scaled about 40\% more efficiently with MGE preconditioning than without it. The main reason for the preconditioner's good scaling is that as the number of sets increases, each application of the preconditioner becomes less costly. 
 
-With multisets, the total preconditioning cost goes down because the V-cycle becomes shallower. When 27 groups are used with one set, six grids are created. When 27 groups are used with 10 sets, two grids are created for each set. With fewer grids each application of the preconditioner performs fewer total relaxations, and is therefore less time intensive. The number of GMRES iterations did not change with the number of sets in the preconditioned cases. This means convergence improvement from the preconditioner did not come from the depth of the V-cycle, at least not for the problems tested.
+With multisets, the total preconditioning cost goes down because the V-cycle becomes shallower. When 27 groups are used with one set, six grids are created. When 27 groups are used with 10 sets, two grids are created for each set. With fewer grids, each application of the preconditioner performs fewer total relaxations, and is therefore less time intensive. The number of GMRES iterations did not change with the number of sets in the preconditioned cases. This means convergence improvement from the preconditioner did not come from the depth of the V-cycle, at least not for the problems tested.
 
 The results of the multiple energy set study prompted an investigation of controlling V-cycle depth explicitly. The results from several tests confirm the multiple energy set study findings: using only a few grids is better than using many. The optimal number of grids will be problem dependent, but a default grid depth of two was recommended.
 
@@ -461,7 +461,7 @@ The Krylov solver was GMRES, which is set to limit the number of multigroup iter
 
 Since the previous work investigating the best MGE parameter choice, many of the internal workings of Denovo have been updated. 
 Further, most problems studied were fairly small and may not represent the correct behavior in more challenging problems. 
-To ensure the best parameter choice for this new study, we ran the 3-D C5G7 benchmark \cite{OECD-NEA2005} on a small cluster. 
+To ensure the best parameter choice for this new study, we ran the 3-D C5G7 benchmark on a small cluster. 
 
 To identify the best way to use the preconditioner, we looked at different combinations of reasonable values of all of the major parameters the user could choose. 
 We used 0.8, 1.0, and 1.2 for the weight used in weighted Richardson. 
@@ -716,7 +716,7 @@ This research used resources of the Oak Ridge Leadership Computing Facility at t
 \singlespacing
 \begin{center}
 
-  {\Large \bf Title}
+  {\Large \bf Eigenvalue Solvers for Modeling Nuclear Reactors on Leadership Class Machines}
   
   \vspace{0.3in}
   
