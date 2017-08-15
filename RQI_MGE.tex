@@ -139,7 +139,7 @@ Number of figures: \totalfigures \\}
 
 The combination of solvers enables the RQI eigenvalue solver to work better than the other available solvers for large reactors problems on leadership class machines. Using these methods together, RQI converged in fewer iterations and in less time than PI for a full pressurized water reactor core. These solvers also performed better than an Arnoldi eigenvalue solver for a reactor benchmark problem when energy decomposition is needed. The MG Krylov, MGE preconditioner, and RQI solver combination also scales well in energy. This solver set is a strong choice for very large and challenging problems. 
 
-Keywords: Eigenvalue, massively parallel, Krylov, Rayleigh Quotient, preconditioning
+Keywords: eigenvalue; Rayleigh Quotient; preconditioning
 }
 \end{abstract}
 
@@ -474,7 +474,7 @@ The RQI solver used an eigenvalue flux tolerance of $1\times 10^{-3}$ and $k$ to
 
 \begin{figure}
 \caption{MGE Parameter Study with 3D-C5G7}
-\includegraphics[width=\textwidth]{Results/ml-parameters/analysis/parameter_study.png}
+\includegraphics[width=\textwidth]{./parameter_study.png}
 \label{fig:mge-dataframe}
 \centering
 \end{figure}
@@ -602,7 +602,7 @@ In this study, the amount of work done by the preconditioner does not vary with 
 %
 \begin{figure}
 \caption{PWR 900 RQI Strong Scaling $w1r2v2$ MGE Preconditioning on Titan}
-\includegraphics[scale=.75]{Results/pwr}
+\includegraphics[scale=.75]{./pwr}
 \centering
 \label{fig:pwr-scaling}
 \end{figure}
@@ -624,7 +624,7 @@ The study was performed with 128, 256, 512, and 1024 cores and 1, 2, 4, and 8 en
 
 \begin{figure}
 \caption{BW1484 Energy Small Energy Scaling Study}
-\includegraphics[scale=1]{Results/bw1484-cades/bw1484-small-cades-timing.pdf}
+\includegraphics[scale=1]{./bw1484-small-cades-timing.pdf}
 \label{fig:small}
 \centering
 \end{figure}
@@ -635,7 +635,7 @@ Finally, we used Titan to look at scaling performance with a larger version of t
 
 \begin{figure}
 \caption{BW1484  Large Energy Scaling Study on Titan}
-\includegraphics[scale=1]{Results/bw1484-titan/bw1484-large-titan-timing.pdf}
+\includegraphics[scale=1]{./bw1484-large-titan-timing.pdf}
 \label{fig:titan}
 \centering
 \end{figure}
