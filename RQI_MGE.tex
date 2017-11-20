@@ -357,7 +357,9 @@ where $k$ is the eigenvalue and $\Gamma$ is the eigenvector. Note that the nonze
 \subsection{Multigrid in Energy Preconditioner}
 \label{sec:precond}
 %For many kinds of problems, the total number of multigroup iterations required to adequately converge the transport equation is large. To reduce iteration count, a preconditioner can be applied to transform the system of interest into another equivalent system that has more favorable properties and is easier to solve. 
-Preconditioning is important for increasing the robustness of Krylov methods and decreasing Krylov iteration count. This is particularly true for the MG Krylov solver. This solver can create large Krylov subspaces because it forms the subspaces with multiple-group-sized vectors. As a result, any reduction in iteration count will have a significant benefit in terms of memory and cost per iteration. 
+Preconditioning is important for increasing the robustness of Krylov methods and decreasing Krylov iteration count. This is particularly true for the MG Krylov solver. This solver can create large Krylov subspaces because it forms the subspaces with multiple-group-sized vectors. 
+Each additional Krylov iteration increases the subspace size by one multi-group-sized vector and the cost of an iteration application correspondingly increases. 
+Therefore, any reduction in iteration count will have a significant benefit in terms of memory and cost per iteration. 
  
 Right preconditioning leaves the right hand side of the equation unaffected and does not change the norm of the residual, which is used for convergence testing in most iterative methods. A right preconditioner that does multigrid in the energy dimension and is designed to work with the MG Krylov solver was implemented in Denovo \cite{Slaybaugh2013}. To understand why MGE makes sense for neutron transport, some highlights about these methods are discussed here (derived from Ref.\ \cite{Briggs2000}). 
 
@@ -395,7 +397,10 @@ The user chooses the number of V-cycles done for each preconditioner application
 %  \label{eq:NumGrids}
 %\end{equation}
 
-When using multiple energy sets, cross-set communication is prohibited by having each set do its own ``mini'' V-cycle. Each set restricts, prolongs, and relaxes on only its own groups. In the case of an unequal number of groups per set, all sets are forced to have the same grid depth to enforce energy load balancing between sets. Thus, each set restricts to one or two groups, giving approximately $num\_sets$ total groups across all sets at the coarsest level. The number of grids needed is determined by the set with the minimum number of groups, since it will be the first to reach a grid with one group:%. This modifies Equation~\eqref{eq:NumGrids} to be
+When using multiple energy sets, each energy set does its own ``mini'' V-cycle. 
+Each set restricts, prolongs, and relaxes on only its own groups. 
+This means that cross-set communication is not needed, which is advantageous for scaling in energy.
+In the case of an unequal number of groups per set, all sets use the shallowest grid depth, which is determined by the set with the fewest groups, to enforce energy load balancing between sets. Thus, each set restricts to one or two groups, giving approximately $num\_sets$ total groups across all sets at the coarsest level. The number of grids needed is determined by the set with the minimum number of groups, since it will be the first to reach a grid with one group:%. This modifies Equation~\eqref{eq:NumGrids} to be
 \begin{align}
   num\_g_{min} &= \text{floor}\bigl(\frac{num\_groups}{num\_sets}\bigr) \:, \\
   num\_grids &= \text{floor}\bigl( \log_{2}(num\_g_{min}) \bigr) + 2 \:.
