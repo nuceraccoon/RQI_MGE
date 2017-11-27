@@ -550,8 +550,12 @@ We also considered what would happen with a reduced quadrature set, in this case
 
 To more conclusively resolve the RQI-to-PI comparison, we did another study, this time on Titan. We used a V-cycle depth of 2, a reduced quadrature in the MGE preconditioner of $S_2$, and tolerances of $1 \times 10^{-3}$. This time we broke the problem up over 112 $\times$ 112 $\times$ 10 partitions (12,544 blocks).
 
-The results using 11 energy sets are given in Table~\ref{tab:PWR all} and illustrate several things. One results is that the MGE preconditioner does not help PI; when we add it, the calculation slows down enough that it did not finish within the wall time limit here either (it does finish without it). Another result is that RQI is too slow without enough preconditioning. With $w1r1v1$, the calculation did not complete in time and with $w1r2v2$ it did. The final, and arguably most important, result is that preconditioned RQI can be much faster than PI in general. 
-Preconditioned RQI was better whether PI was preconditioned or not. RQI with MGE was more than 10 times faster than PI. 
+The results using 11 energy sets are given in Table~\ref{tab:PWR all} and illustrate several things. One result is that the MGE preconditioner does not
+help PI; when we add it, the calculation slows down enough that it did not
+finish within available wall time limits, although convergence does occur
+eventually.  The most important result is that preconditioned RQI can be much
+faster than PI in general.  Preconditioned RQI was better whether PI was
+preconditioned or not. RQI with MGE was more than 10 times faster than PI.
 %
 \begin{table}[!h]
 \caption{PWR 900 Comparison of PI and RQI with and without Preconditioning, 11 Energy Sets}
@@ -561,17 +565,9 @@ Preconditioned RQI was better whether PI was preconditioned or not. RQI with MGE
       \hline
       Method & Precond. & N Eigen & N Krylov & $k$ & time (m) \\\hline
       %%
-     % RQI & none   & info &     &                     & \\
-      PI  & none   & 149 & 5602 & 1.276 $\pm$ 5.54e-6 & 612.2 \\
-      %PI  & w1r1v1 & info &     &                     & \\
-      PI  & w1r2v2 & 86  & 946  & 1.275 $\pm$ 1.82e-5 & 720$^+$ \\\hline
-      RQI & w1r1v1 & 3   & 45   & 1.252 $\pm$ 1.42e-2 & 120$^+$ \\
-      RQI & w1r2v2 & 5   & 70   & 1.268 $\pm$ 1.24e-3 & 54.8 \\
-      %\hline
-      %PI  & none   & 24  & 901  & 1.272 $\pm$ 1.01e-4 & 92.1$^\dagger$ \\
-      %PI  & w1r1v1 & info &     &                     & \#$^\dagger$\\
-      %PI  & w1r2v2 & 28  & 312  & 1.273 $\pm$ 8.24e-5 & 250.9$^\dagger$ \\
-      %PI  & w1r3v3 & 11  & 111   & 1.270 $\pm$ 5.09 $\times$ 10$^{-2}$ & 480$^{*,\dag}$ \\
+      PI   & none     & 149 & 5602 & 1.276 $\pm$ 1.85e-3 & 612.2 \\
+      PI   & w1r2v2 & 86   & 946   & 1.275 $\pm$ 1.43e-3 & 720$^+$ \\
+      RQI & w1r2v2 & 5     & 70     & 1.268 $\pm$ 1.24e-3 & 54.8 \\
       \hline
     \end{tabular}\\
     $^{+}$exceeded walltime limit\\
