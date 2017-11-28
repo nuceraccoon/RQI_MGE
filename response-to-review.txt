@@ -1,0 +1,27 @@
+Response to reviewer comments
+
+-Section II.C, last paragraph on page 12: "When using multiple energy sets, cross-set communication is prohibited by having… "
+is confusing.  Specifically, this statement
+
+"In the case of an unequal number of groups per set, all sets are forced to have the same grid depth to enforce energy load balancing between sets."
+appears to contradict the rest of the paragraph.  Are all sets forced to use the same grid depth, or is the grid depth determined
+by the set with the minimum number of groups?
+
+
+Wording was changed to clarify what is going on with the number of groups per set when energy sets are used as well as how that affects communication.
+
+
+- II.C first paragraph: What is meant by any reduction in iteration counter will have a significant benefit in terms of cost per iteration?
+
+Wording what changed to more clearly state why iterations become more expensive with each additional iteration. 
+
+
+
+- Table 2: why is the non-preconditioned PI keff significantly different with smaller errors than the RQI w1r2v2 case?  It appears
+different convergence criteria are being used and significantly different keffs have been calculated.
+
+Added explicitly what the convergence criteria were
+Removed a line of table II that wasn’t contributing
+Updated the error terms to newer and/or correct values (some were incorrect)
+
+Now it is clearer that the PI and RQI values are close to one another compared to the error. The associated description was also slightly updated for clarity. 
